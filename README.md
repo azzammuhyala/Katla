@@ -24,7 +24,7 @@ PERANGKAT LUNAK.
 
 Cara bermain?
 ---
-> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Kamu cukup menjalankan aplikasi `Katla.exe`.
+> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Untuk file executable untuk Windows (exe) sudah disediakan di Google Drive
 
 Dalam permainan ini, Kamu harus menebak kata yang dipilih secara acak dari kamus yang ada. Sebagai petunjuk akan di berikan 3 warna yang menandakan seberapa dekat Kamu dengan kata tersebut.
 
@@ -106,7 +106,7 @@ Daftar aplikasi permainan saya
 ---
 _Google Drive: https://drive.google.com/drive/folders/1WSkXju5i4SUJocQLp1yyA0ELSaff6wpo?usp=sharing_
 
-_Github: (Segera dibuatkan repositorinya)_
+_Github: https://github.com/azzammuhyala/Katla.git_
 
 * `Snake`
 * `Minesweeper`
