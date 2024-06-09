@@ -1,0 +1,8 @@
+# Katla.py
+pygame
+
+# Katla.py and Katla raw game.py
+fernet
+
+# Katla raw game.py
+asciiTUI
