@@ -50,13 +50,13 @@ Anda menemukan karakter SUKI!
 Modul yang di perlukan:
 pip install:
   - asciiTUI
-  - pycrypto
+  - fernet
   - kbbi
 
 """
 
+import components.module.jsonfl as jsonfl
 import asciiTUI
-import jsonfl
 import string
 import kbbi
 import os

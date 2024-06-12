@@ -81,6 +81,15 @@
                 "button-coins": "<COINS-PRICE>"
             }
         },
+        "text-bar": {
+            "word": "<WORD-ID>",
+            "valid-word": {
+                "label": "<VALID-WORD>",
+                "true": "",
+                "false": ""
+            },
+            "fps": "<FPS>"
+        },
         "notification": {
             "win": "",
             "lose": "\"<WORD>\"",

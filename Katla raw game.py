@@ -2,8 +2,8 @@ import asciiTUI
 import random
 import time
 import os
-from components import constants as const
-from components.json_validator import WordsValidator
+from components.katla_module import constants as const
+from components.katla_module.json_validator import WordsValidator
 
 class Katla:
 

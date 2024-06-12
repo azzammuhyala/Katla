@@ -79,6 +79,15 @@
                 "button-coins": "<COINS-PRICE> COINS"
             }
         },
+        "text-bar": {
+            "word": "Word: <WORD-ID>",
+            "valid-word": {
+                "label": "Valid-Word: <VALID-WORD>",
+                "true": "T",
+                "false": "F"
+            },
+            "fps": "FPS: <FPS>"
+        },
         "notification": {
             "win": "Congratulations You won!",
             "lose": "Sorry You lost! The selected word is \"<WORD>\"",
@@ -132,7 +141,7 @@
                 "title": "Additional settings",
                 "label": {
                     "geomatry": "Geomatry",
-                    "fps": "FPS"
+                    "fps": "Max framerate (FPS)"
                 }
             }
         }
@@ -218,6 +227,15 @@
                 "button-coins": "<COINS-PRICE> KOIN"
             }
         },
+        "text-bar": {
+            "word": "Kata: <WORD-ID>",
+            "valid-word": {
+                "label": "Kata-Valid: <VALID-WORD>",
+                "true": "B",
+                "false": "S"
+            },
+            "fps": "FPS: <FPS>"
+        },
         "notification": {
             "win": "Selamat Kamu menang!",
             "lose": "Maaf Kamu kalah! Kata yang dipilih adalah \"<WORD>\"",
@@ -271,7 +289,7 @@
                 "title": "Pengaturan tambahan",
                 "label": {
                     "geomatry": "Geometri",
-                    "fps": "FPS"
+                    "fps": "Maks kcptn bingkai (FPS)"
                 }
             }
         }
@@ -357,6 +375,15 @@
                 "button-coins": "<COINS-PRICE> KOIN"
             }
         },
+        "text-bar": {
+            "word": "Kata: <WORD-ID>",
+            "valid-word": {
+                "label": "Kata-Sah: <VALID-WORD>",
+                "true": "B",
+                "false": "S"
+            },
+            "fps": "FPS: <FPS>"
+        },
         "notification": {
             "win": "Tahniah Awak atas kemenangan!",
             "lose": "Maaf Awak kalah! Perkataan yang dipilih ialah \"<WORD>\"",
@@ -409,7 +436,7 @@
                 "title": "Tetapan tambahan",
                 "label": {
                     "geomatry": "Geometri",
-                    "fps": "FPS"
+                    "fps": "Kdr Bingkai Maks (FPS)"
                 }
             }
         }

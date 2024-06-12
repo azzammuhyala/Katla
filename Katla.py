@@ -1,5 +1,6 @@
 r"""
 Katla - Katla / Kata game - pygame
+
 ```
  _  __       _______ _               
 | |/ /    /\|__   __| |        /\    
@@ -8,22 +9,23 @@ Katla - Katla / Kata game - pygame
 | . \  / ____ \| |  | |____ / ____ \ 
 |_|\_\/_/    \_\_|  |______/_/    \_\
 ```
+
 (C) Copyright 2024 - 2026 [ Azzamuhyala ]
 
 -[ Works pretty well on Windows platforms and on Python version 1.10 and above ]-
 """
 
 import pygame
-from random                     import choice
-from tkinter                    import messagebox
-from string                     import ascii_uppercase
-from datetime                   import datetime, timedelta
-from components                 import constants as const
-from components.popup           import Popup, Notification
-from components.format_number   import NumberFormat
-from components.wraptext_pygame import wrap_text
-from components.pygamebutton    import button_color, Button, Range, SetAllCursorButtons
-from components.json_validator  import Languages, WordsValidator, SettingsValidator, GameDataValidator
+from random                                 import choice
+from tkinter                                import messagebox
+from string                                 import ascii_uppercase
+from datetime                               import datetime, timedelta
+from components.module.wraptext_pygame      import wrap_text
+from components.module.format_number        import NumberFormat
+from components.module.pygamebutton         import button_color, Button, Range, SetAllCursorButtons
+from components.katla_module                import constants as const
+from components.katla_module.popup          import Popup, Notification
+from components.katla_module.json_validator import Languages, WordsValidator, SettingsValidator, GameDataValidator
 
 class Katla:
 
@@ -56,7 +58,6 @@ class Katla:
         pygame.mixer.init()
         pygame.font.init()
 
-
         self.languages_object    = Languages()
         self.validator_settings  = SettingsValidator()
         self.validator_game_data = GameDataValidator()
@@ -83,6 +84,7 @@ class Katla:
 
         self.coins                    : const.Number               = self.game_data['coins']
         self.scroll_direction_tile    : const.Number               = 130 * self.geomatry
+        self.play_lose_or_win         : int                        = 0
         self.guess_count              : int                        = self.change_guess
         self.running                  : bool                       = True
         self.guessed                  : bool                       = False
@@ -99,7 +101,6 @@ class Katla:
         self.last_word_input          : str                        = ''
         self.keyboards                : dict[str, const.Keyboard.KeyboardList] = {key: getattr(const.Keyboard, key) for key in const.Keyboard.__all__}
         self.keyboard_feedback        : dict[str, str]             = {char: 'not-inputed' for line in self.keyboards[self.keyboard_layout] for char in line}
-
         self.isshow_NotInDictionary         : bool = False
         self.isshow_NotEnoughLength         : bool = False
         self.isshow_TileIsEmpty             : bool = False
@@ -151,12 +152,12 @@ class Katla:
         self.size_tile      = 80 * self.geomatry
         self.last_size_tile = self.size_tile
 
-        self.font_tile          = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(self.size_tile))
-        self.font_showfps       = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(20 * self.geomatry))
-        self.font_keyboard      = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(35 * self.geomatry))
-        self.font_katla         = pygame.font.Font(self.file.FONT_ROBOTO_BOLD,   int(40 * self.geomatry))
-        self.font_notification  = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(30 * self.geomatry))
-        self.font_coins         = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(35 * self.geomatry))
+        self.font_tile         = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(self.size_tile))
+        self.font_showfps      = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(20 * self.geomatry))
+        self.font_keyboard     = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(35 * self.geomatry))
+        self.font_katla        = pygame.font.Font(self.file.FONT_ROBOTO_BOLD,   int(40 * self.geomatry))
+        self.font_notification = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(30 * self.geomatry))
+        self.font_coins        = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM, int(35 * self.geomatry))
 
         self.boardRect_keyboard = pygame.Rect(0, 0, 0, 0)
 
@@ -220,6 +221,7 @@ class Katla:
         self.last_word_input          = ''
         self.guessed                  = False
         self.reset_isshow()
+        self.update_correct_tile()
         self.update_keyboard_feedback()
 
     def reset_isshow(self) -> None:
@@ -230,6 +232,18 @@ class Katla:
         self.isshow_TileIsEmpty              = False
         self.isshow_Win                      = False
         self.isshow_Lose                     = False
+
+    def is_any_notification_showing(self) -> bool:
+        return any([
+            self.isshow_NotInDictionary,
+            self.isshow_NotEnoughLength,
+            self.isshow_AllTileHintsProvided,
+            self.isshow_AllKeyboardHintsProvided,
+            self.isshow_TileIsEmpty,
+            self.isshow_Reset,
+            self.isshow_Win,
+            self.isshow_Lose
+        ])
 
     def set_volume(self) -> None:
         self.sound_music              .set_volume(self.music_volume / 100)
@@ -288,6 +302,15 @@ class Katla:
                         correct_input[i] = char
 
         return correct_input
+
+    def set_notification_default(self) -> None:
+        self.notification.edit_param(
+            start_time    = self.timeanimation_notification,
+            static_time   = 3,
+            color         = self.colors.notification['default']['background'],
+            color_outline = self.colors.notification['default']['outline'],
+            color_text    = self.colors.notification['default']['text']
+        )
 
     def update_correct_tile(self) -> None:
         self.correct_char_tile = ['not-inputed' for _ in range(self.word_length)]
@@ -351,21 +374,8 @@ class Katla:
                     if char not in self.correct_char_keyboard:
                         self.correct_char_keyboard.append(char)
 
-    def handle_screen_resize(self, event: pygame.event.Event) -> None:
-        if event.type == pygame.VIDEORESIZE:
-            x, y = event.size
-            self.screen = pygame.display.set_mode((max(self.minsize_screen[0], x), max(self.minsize_screen[1], y)), pygame.RESIZABLE)
-
     def get_time(self) -> float:
         return pygame.time.get_ticks() / 1000
-
-    def show_fps_and_version(self) -> None:
-        fps = self.font_showfps.render(f'{self.__label_version__} | {self.language_word.upper()} | FPS: {self.num_format.parse(self.clock.get_fps())}', True, self.colors.barMenu['text'], self.colors.barMenu['background'])
-        fps.set_alpha(200)
-        self.screen.blit(fps, fps.get_rect(
-            left = const.Math.get_center(self.screen.get_width(), fps.get_width()),
-            top  = self.screen.get_height() - 20 * self.geomatry - fps.get_height()
-        ))
 
     def input_event(self, event: pygame.event.Event) -> tuple[str | None, str | None]:
         if event.type == pygame.KEYDOWN:
@@ -410,11 +420,16 @@ class Katla:
             elif key == pygame.K_0: return 'shortcut', '0'
         return None, None
 
+    def handle_screen_resize(self, event: pygame.event.Event) -> None:
+        if event.type == pygame.VIDEORESIZE:
+            x, y = event.size
+            self.screen = pygame.display.set_mode((max(self.minsize_screen[0], x), max(self.minsize_screen[1], y)), pygame.RESIZABLE)
+
     def handle_input(self, char: str) -> None:
         ln     = self.input_point[1]
         len_ln = len(self.input_history[ln])
 
-        self.showKeyboard(char)
+        self.showKeyboard(char, True)
         pygame.display.flip()
         pygame.time.delay(25)
 
@@ -487,6 +502,99 @@ class Katla:
                     self.input_point[0] += 1
 
         self.update_correct_tile()
+
+    def handle_notification(self) -> None:
+        if self.is_any_notification_showing():
+
+            if self.isshow_Win:
+                self.notification.edit_param(
+                    start_time     = self.timeanimation_notification,
+                    static_time    = 5,
+                    text           = self.languages['notification']['win'],
+                    color          = self.colors.notification['win']['background'],
+                    color_outline  = self.colors.notification['win']['outline'],
+                    color_text     = self.colors.notification['win']['text']
+                )
+
+                if self.play_lose_or_win != 2:
+                    self.play_lose_or_win = 1
+
+                if self.play_lose_or_win == 1:
+                    self.sound_win.play()
+                    self.play_lose_or_win = 2
+
+                if self.notification():
+                    self.reset()
+                    self.play_lose_or_win = 0
+
+            elif self.isshow_Lose:
+                self.notification.edit_param(
+                    start_time     = self.timeanimation_notification,
+                    static_time    = 5,
+                    text           = self.languages['notification']['lose'].replace('<WORD>', self.selected_word, 1),
+                    color          = self.colors.notification['lose']['background'],
+                    color_outline  = self.colors.notification['lose']['outline'],
+                    color_text     = self.colors.notification['lose']['text']
+                )
+
+                if self.play_lose_or_win != 2:
+                    self.play_lose_or_win = 1
+
+                if self.play_lose_or_win == 1:
+                    self.sound_lose.play()
+                    self.play_lose_or_win = 2
+
+                if self.notification():
+                    self.reset()
+                    self.play_lose_or_win = 0
+
+            elif self.isshow_NotInDictionary:
+                self.set_notification_default()
+                self.notification.edit_param(text=self.languages['notification']['not-in-dictionary'].replace('<WORD>', self.last_word_input, 1))
+                if self.notification(): self.isshow_NotInDictionary = False
+
+            elif self.isshow_NotEnoughLength:
+                self.set_notification_default()
+                self.notification.edit_param(text=self.languages['notification']['less-letter-length'])
+                if self.notification(): self.isshow_NotEnoughLength = False
+
+            elif self.isshow_AllTileHintsProvided:
+                self.set_notification_default()
+                self.notification.edit_param(text=self.languages['notification']['tile-hint-provided'])
+                if self.notification(): self.isshow_AllTileHintsProvided = False
+
+            elif self.isshow_AllKeyboardHintsProvided:
+                self.set_notification_default()
+                self.notification.edit_param(text=self.languages['notification']['keyboard-hint-provided'])
+                if self.notification(): self.isshow_AllKeyboardHintsProvided = False
+
+            elif self.isshow_TileIsEmpty:
+                self.set_notification_default()
+                self.notification.edit_param(text=self.languages['notification']['tile-empty'])
+                if self.notification(): self.isshow_TileIsEmpty = False
+
+            elif self.isshow_Reset:
+                self.set_notification_default()
+                self.notification.edit_param(text=self.languages['notification']['reset'])
+                if self.notification(): self.isshow_Reset = False
+
+    def showTextBar(self) -> None:
+        LANG = self.languages['text-bar']
+        text = self.font_showfps.render(
+            '{} | {} | {} | {}'
+                .format(
+                    self.__label_version__,
+                    LANG['word']               .replace('<WORD-ID>',    self.language_word.upper(), 1),
+                    LANG['valid-word']['label'].replace('<VALID-WORD>', LANG['valid-word'][str(self.use_valid_word).lower()], 1),
+                    LANG['fps']                .replace('<FPS>',        self.num_format.parse(self.clock.get_fps()), 1)
+                ),
+            True, self.colors.barMenu['text'], self.colors.barMenu['background']
+        )
+        text.set_alpha(200)
+        self.screen.blit(text, text.get_rect(
+            left = const.Math.get_center(self.screen.get_width(), text.get_width()),
+            top  = self.screen.get_height() - 20 * self.geomatry - text.get_height()
+        ))
 
     def showKeyboard(self, letter_typing: str | None = None, justshow: bool = False) -> tuple[bool, str | None]:
         inputDetected           = (False, None)
@@ -562,7 +670,7 @@ class Katla:
                 if letter == '\b':
                     self.screen.blit(img_backspace, img_backspace.get_rect(center=keyRect.center))
                 elif letter == '\n':
-                    self.screen.blit(img_enter,     img_enter.get_rect(center=keyRect.center))
+                    self.screen.blit(img_enter,     img_enter    .get_rect(center=keyRect.center))
 
         return inputDetected
 
@@ -668,6 +776,16 @@ class Katla:
         self.screen.blit(showKatla, showKatla.get_rect(center=barTop_rect.center))
         self.screen.blit(showCoins, showCoins.get_rect(left=button_bag_coin_rect.right + 20 * self.geomatry, top=button_bag_coin_rect.top + (button_bag_coin_rect.height - showCoins.get_height()) / 2))
 
+    def showFreezeKatla(self) -> None:
+        self.screen.fill(self.colors.screen)
+
+        self.showTile()
+        self.showBarMenu (justshow=True)
+        self.showKeyboard(justshow=True)
+        self.showTextBar()
+
+        self.handle_notification()
+
     def showSettings(self) -> None:
         LANG                    = self.languages['settings']
         self.isshow_Settings    = True
@@ -693,7 +811,8 @@ class Katla:
         index_lang              = languages_list           .index(language)
         index_theme             = self.colors.__all_theme__.index(theme)
         index_keyboard_layout   = const.Keyboard.__all__   .index(keyboard_layout)
-        last_configuration      = [theme, keyboard_layout, sound_volume, music_volume, change_guess, word_length, fps, geomatry, language, language_word, use_valid_word]
+        last_configuration      = [index_theme, index_keyboard_layout, sound_volume, music_volume, change_guess, word_length, fps, geomatry, index_lang, index_lang_word, use_valid_word]
+        first_configuration     = last_configuration.copy()
         scroll_momentum_attr    = {
             'scrolled': False,
             'move': None,
@@ -702,8 +821,9 @@ class Katla:
             'time-unscroll': self.get_time()
         }
 
-        background_rect = pygame.Rect(0, 0, 0, 0)
-        navbar_rect     = background_rect.copy()
+        background_rect      = pygame.Rect(0, 0, 0, 0)
+        navbar_rect          = background_rect.copy()
+        last_background_rect = background_rect.copy()
 
         font_title       = pygame.font.Font(self.file.FONT_ROBOTO_MEDIUM,    int(35 * self.geomatry))
         font_license     = pygame.font.Font(self.file.FONT_ROBOTO_MONO_BOLD, int(15 * self.geomatry))
@@ -770,6 +890,7 @@ class Katla:
             click_speed = 0
         )
         rangeMusic = rangeSound.copy(value=music_volume)
+        wrap_license = wrap_text(font_license, self.__license__, background_rect.width - 10 * self.geomatry)
 
         def label(label_text: str, type: str, index: const.Number) -> None:
             if   type == 'group': surface_text = label_group_font.render(label_text, True, self.colors.settings['text'])
@@ -828,7 +949,6 @@ class Katla:
             rangetrackmusic_rect         = pygame.Rect(rangetracksound_rect.left,                                       navbar_rect.bottom + 300 * self.geomatry - scroll_direction, rangetracksound_rect.width, rangetracksound_rect.height)
             backgroundOutline_surface    = pygame.Surface((backgroundOutline_rect.width, backgroundOutline_rect.height))
             background_surface           = pygame.Surface((background_rect.width,        background_rect.height))
-            wrap_license = wrap_text(font_license, const.LICENSE, background_rect.width - 10 * self.geomatry)
 
             buttonLang      .edit_param(rect=buttonlang_rect,     text=language_name_list[index_lang])
             buttonLangWord  .edit_param(rect=buttonlangword_rect, text=language_word_name_list[index_lang_word])
@@ -916,28 +1036,6 @@ class Katla:
                 active_cursor   = pygame.SYSTEM_CURSOR_HAND
             )
 
-            label(LANG['languages']['title'],                        'group', navbar_rect.bottom + 10 * self.geomatry  - scroll_direction)
-            label(LANG['languages']['label']['app-language'],        'label', navbar_rect.bottom + 60 * self.geomatry  - scroll_direction)
-            label(LANG['languages']['label']['word-language'],       'label', navbar_rect.bottom + 110 * self.geomatry - scroll_direction)
-
-            label(LANG['sounds']['title'],                           'group', navbar_rect.bottom + 190 * self.geomatry - scroll_direction)
-            label(LANG['sounds']['label']['sound'],                  'label', navbar_rect.bottom + 240 * self.geomatry - scroll_direction)
-            label(LANG['sounds']['label']['music'],                  'label', navbar_rect.bottom + 290 * self.geomatry - scroll_direction)
-
-            label(LANG['game-rules']['title'],                       'group', navbar_rect.bottom + 370 * self.geomatry - scroll_direction)
-            label(LANG['game-rules']['label']['only-in-dictionary'], 'label', navbar_rect.bottom + 420 * self.geomatry - scroll_direction)
-            label(LANG['game-rules']['label']['free-dictionary'],    'label', navbar_rect.bottom + 470 * self.geomatry - scroll_direction)
-            label(LANG['game-rules']['label']['word-length'],        'label', navbar_rect.bottom + 520 * self.geomatry - scroll_direction)
-            label(LANG['game-rules']['label']['change-guess'],       'label', navbar_rect.bottom + 570 * self.geomatry - scroll_direction)
-
-            label(LANG['theme-type']['title'],                       'group', navbar_rect.bottom + 650 * self.geomatry - scroll_direction)
-            label(LANG['theme-type']['label']['app-theme'],          'label', navbar_rect.bottom + 700 * self.geomatry - scroll_direction)
-            label(LANG['theme-type']['label']['keyboard-layout'],    'label', navbar_rect.bottom + 750 * self.geomatry - scroll_direction)
-
-            label(LANG['additional-settings']['title'],              'group', navbar_rect.bottom + 830 * self.geomatry - scroll_direction)
-            label(LANG['additional-settings']['label']['geomatry'],  'label', navbar_rect.bottom + 880 * self.geomatry - scroll_direction)
-            label(LANG['additional-settings']['label']['fps'],       'label', navbar_rect.bottom + 930 * self.geomatry - scroll_direction)
-
             if not navbar_rect.collidepoint(*mousepos):
                 buttonLang                .draw_and_update()
                 buttonLangWord            .draw_and_update()
@@ -1000,6 +1098,28 @@ class Katla:
 
                 if not buttonClose.button_event.ismousehover:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+            label(LANG['languages']['title'],                        'group', navbar_rect.bottom + 10 * self.geomatry  - scroll_direction)
+            label(LANG['languages']['label']['app-language'],        'label', navbar_rect.bottom + 60 * self.geomatry  - scroll_direction)
+            label(LANG['languages']['label']['word-language'],       'label', navbar_rect.bottom + 110 * self.geomatry - scroll_direction)
+
+            label(LANG['sounds']['title'],                           'group', navbar_rect.bottom + 190 * self.geomatry - scroll_direction)
+            label(LANG['sounds']['label']['sound'],                  'label', navbar_rect.bottom + 240 * self.geomatry - scroll_direction)
+            label(LANG['sounds']['label']['music'],                  'label', navbar_rect.bottom + 290 * self.geomatry - scroll_direction)
+
+            label(LANG['game-rules']['title'],                       'group', navbar_rect.bottom + 370 * self.geomatry - scroll_direction)
+            label(LANG['game-rules']['label']['only-in-dictionary'], 'label', navbar_rect.bottom + 420 * self.geomatry - scroll_direction)
+            label(LANG['game-rules']['label']['free-dictionary'],    'label', navbar_rect.bottom + 470 * self.geomatry - scroll_direction)
+            label(LANG['game-rules']['label']['word-length'],        'label', navbar_rect.bottom + 520 * self.geomatry - scroll_direction)
+            label(LANG['game-rules']['label']['change-guess'],       'label', navbar_rect.bottom + 570 * self.geomatry - scroll_direction)
+
+            label(LANG['theme-type']['title'],                       'group', navbar_rect.bottom + 650 * self.geomatry - scroll_direction)
+            label(LANG['theme-type']['label']['app-theme'],          'label', navbar_rect.bottom + 700 * self.geomatry - scroll_direction)
+            label(LANG['theme-type']['label']['keyboard-layout'],    'label', navbar_rect.bottom + 750 * self.geomatry - scroll_direction)
+
+            label(LANG['additional-settings']['title'],              'group', navbar_rect.bottom + 830 * self.geomatry - scroll_direction)
+            label(LANG['additional-settings']['label']['geomatry'],  'label', navbar_rect.bottom + 880 * self.geomatry - scroll_direction)
+            label(LANG['additional-settings']['label']['fps'],       'label', navbar_rect.bottom + 930 * self.geomatry - scroll_direction)
 
             for i, ln in enumerate(wrap_license):
                 surface_text = font_license.render(ln, True, self.colors.settings['text'])
@@ -1066,7 +1186,7 @@ class Katla:
             getkeys              = pygame.key.get_pressed()
             mouse_y              = mouse_pos[1] // 10
             is_illelgal_scroll   = any([
-                navbar_rect.collidepoint(*mouse_pos),
+                navbar_rect               .collidepoint(*mouse_pos),
                 rangeSound                .button_event.isdragging,
                 rangeMusic                .button_event.isdragging,
                 buttonLang                .button_event.ismousehover,
@@ -1143,6 +1263,10 @@ class Katla:
             elif scroll_direction > max_scroll_direction:
                 scroll_direction = max_scroll_direction
 
+            self.showFreezeKatla()
+
+            scrolling_settings(mouse_pos)
+
             if (clk := buttonLang.button_event.value) or buttonNav_lang['l'].button_event.value or buttonNav_lang['r'].button_event.value:
                 self.sound_button_click.play()
                 index_lang += ternary(clk == 'l' or buttonNav_lang['r'].button_event.value, 1, -1)
@@ -1178,58 +1302,55 @@ class Katla:
                 self.sound_button_click.play()
                 geomatry += ternary(clk == 'l' or buttonNav_geomarty['r'].button_event.value, 1, -1)
 
-            if index_lang < 0:
-                index_lang = len(languages_list) - 1
-            elif index_lang > len(languages_list) - 1:
-                index_lang = 0
-            elif index_lang_word < 0:
-                index_lang_word = len(languages_word_id_list) - 1
-            elif index_lang_word > len(languages_word_id_list) - 1:
-                index_lang_word = 0
-            elif change_guess < 4:
-                change_guess = 10
-            elif change_guess > 10:
-                change_guess = 4
-            elif word_length < 4:
-                word_length = 9
-            elif word_length > 9:
-                word_length = 4
-            elif index_theme < 0:
-                index_theme = len(self.colors.__all_theme__) - 1
-            elif index_theme > len(self.colors.__all_theme__) - 1:
-                index_theme = 0
-            elif index_keyboard_layout < 0:
-                index_keyboard_layout = len(const.Keyboard.__all__) - 1
-            elif index_keyboard_layout > len(const.Keyboard.__all__) - 1:
-                index_keyboard_layout = 0
-            elif fps < 10:
-                fps = 120
-            elif fps > 120:
-                fps = 10
-            elif geomatry < 9:
-                geomatry = 22
-            elif geomatry > 22:
-                geomatry = 9
-
-            language        = languages_list           [index_lang]
-            language_word   = languages_word_id_list   [index_lang_word]
-            keyboard_layout = const.Keyboard.__all__   [index_keyboard_layout]
-            theme           = self.colors.__all_theme__[index_theme]
-
-            self.screen.fill(self.colors.screen)
-
-            self.showTile()
-            self.showBarMenu (justshow=True)
-            self.showKeyboard(justshow=True)
-            self.show_fps_and_version()
-
-            scrolling_settings(mouse_pos)
-
             if buttonClose.button_event.value:
                 self.sound_button_click.play()
                 self.isshow_Settings = False
 
-            if last_configuration != [theme, keyboard_layout, sound_volume, music_volume, change_guess, word_length, fps, geomatry, language, language_word, use_valid_word]:
+            if last_background_rect.width != background_rect.width:
+                wrap_license         = wrap_text(font_license, self.__license__, background_rect.width - 10 * self.geomatry)
+                last_background_rect = background_rect.copy()
+
+            if last_configuration != [index_theme, index_keyboard_layout, sound_volume, music_volume, change_guess, word_length, fps, geomatry, index_lang, index_lang_word, use_valid_word]:
+
+                if [last_configuration[2], last_configuration[3]] == [sound_volume, music_volume]:
+
+                    if index_lang < 0:
+                        index_lang = len(languages_list) - 1
+                    elif index_lang > len(languages_list) - 1:
+                        index_lang = 0
+                    elif index_lang_word < 0:
+                        index_lang_word = len(languages_word_id_list) - 1
+                    elif index_lang_word > len(languages_word_id_list) - 1:
+                        index_lang_word = 0
+                    elif change_guess < 4:
+                        change_guess = 10
+                    elif change_guess > 10:
+                        change_guess = 4
+                    elif word_length < 4:
+                        word_length = 9
+                    elif word_length > 9:
+                        word_length = 4
+                    elif index_theme < 0:
+                        index_theme = len(self.colors.__all_theme__) - 1
+                    elif index_theme > len(self.colors.__all_theme__) - 1:
+                        index_theme = 0
+                    elif index_keyboard_layout < 0:
+                        index_keyboard_layout = len(const.Keyboard.__all__) - 1
+                    elif index_keyboard_layout > len(const.Keyboard.__all__) - 1:
+                        index_keyboard_layout = 0
+                    elif fps < 10:
+                        fps = 120
+                    elif fps > 120:
+                        fps = 10
+                    elif geomatry < 9:
+                        geomatry = 22
+                    elif geomatry > 22:
+                        geomatry = 9
+
+                    language        = languages_list           [index_lang]
+                    language_word   = languages_word_id_list   [index_lang_word]
+                    keyboard_layout = const.Keyboard.__all__   [index_keyboard_layout]
+                    theme           = self.colors.__all_theme__[index_theme]
 
                 self.settings['theme']           = self.theme           = theme
                 self.settings['keyboard-layout'] = self.keyboard_layout = keyboard_layout
@@ -1242,9 +1363,10 @@ class Katla:
                 self.settings['fps']             = self.fps             = fps
                 self.settings['geomatry']        = self.geomatry        = geomatry / 10
                 self.settings['use-valid-word']  = self.use_valid_word  = use_valid_word
+
                 self.set_volume()
 
-                if [last_configuration[0], last_configuration[7], last_configuration[8]] != [theme, geomatry, language]:
+                if [last_configuration[0], last_configuration[7], last_configuration[8]] != [index_theme, geomatry, index_lang]:
                     self.languages  = self.languages_object.load(self.language)
                     self.colors     = const.Color(self.theme)
                     self.num_format = NumberFormat(self.languages['exponents-number'], decimal_places=2, rounded=False)
@@ -1374,6 +1496,7 @@ class Katla:
                             self.colors.settings['range']['track-fill']['hover']
                         )
                     )
+                    wrap_license = wrap_text(font_license, self.__license__, background_rect.width - 10 * self.geomatry)
 
                     self.notification = Notification(
                         self,
@@ -1386,24 +1509,24 @@ class Katla:
                     )
                     self.popup = Popup(self)
 
-                if last_configuration[9] != language_word:
+                if last_configuration[9] != index_lang_word:
                     self.validator_word_dictionary = WordsValidator(language_word)
                     self.word_dictionary           = self.validator_word_dictionary.load_and_validation()
 
-                if [change_guess, word_length, language_word, use_valid_word] != [last_configuration[4], last_configuration[5], last_configuration[9], last_configuration[10]]:
+                if [change_guess, word_length, index_lang_word, use_valid_word] != [last_configuration[4], last_configuration[5], last_configuration[9], last_configuration[10]]:
                     self.reset()
 
-                last_configuration = [theme, keyboard_layout, sound_volume, music_volume, change_guess, word_length, fps, geomatry, language, language_word, use_valid_word]
+                last_configuration = [index_theme, index_keyboard_layout, sound_volume, music_volume, change_guess, word_length, fps, geomatry, index_lang, index_lang_word, use_valid_word]
 
             pygame.display.flip()
 
             self.clock.tick(self.fps)
 
-        self.validator_settings.encrypt_data(self.settings)
+        if first_configuration != last_configuration:
+            self.validator_settings.encrypt_data(self.settings)
 
     def Appmainloop(self) -> None:
         last_mouse_y_pos         = 0
-        play_lose_or_win         = 0
         last_time_reset          = self.get_time()
         last_time_close_settings = self.get_time()
         last_time_backspace      = self.get_time()
@@ -1440,15 +1563,6 @@ class Katla:
         def showNotEnoughCoin() -> None:
             LANG_NOT_ENOUGH_COIN = self.languages['popup']['not-enough-coin']
             show_info_popup(LANG_NOT_ENOUGH_COIN['title'], LANG_NOT_ENOUGH_COIN['label'], LANG_NOT_ENOUGH_COIN['button-ok'])
-
-        def set_notification_default() -> None:
-            self.notification.edit_param(
-                start_time    = self.timeanimation_notification,
-                static_time   = 3,
-                color         = self.colors.notification['default']['background'],
-                color_outline = self.colors.notification['default']['outline'],
-                color_text    = self.colors.notification['default']['text']
-            )
 
         self.set_volume()
         self.sound_music.play(-1)
@@ -1553,7 +1667,7 @@ class Katla:
             self.showTile()
             self.showBarMenu()
             click_detected, keyboard_visual_letter = self.showKeyboard()
-            self.show_fps_and_version()
+            self.showTextBar()
 
             SetAllCursorButtons(
                 self.buttonhowToPlay,
@@ -1569,71 +1683,7 @@ class Katla:
                 inactive_cursor = pygame.SYSTEM_CURSOR_ARROW
             )
 
-            if self.isshow_Win:
-                self.notification.edit_param(
-                    start_time     = self.timeanimation_notification,
-                    static_time    = 5,
-                    text           = self.languages['notification']['win'],
-                    color          = self.colors.notification['win']['background'],
-                    color_outline  = self.colors.notification['win']['outline'],
-                    color_text     = self.colors.notification['win']['text']
-                )
-                if play_lose_or_win != 2:
-                    play_lose_or_win = 1
-                if play_lose_or_win == 1:
-                    self.sound_win.play()
-                    play_lose_or_win = 2
-                if self.notification():
-                    self.reset()
-                    play_lose_or_win = 0
-
-            elif self.isshow_Lose:
-                self.notification.edit_param(
-                    start_time     = self.timeanimation_notification,
-                    static_time    = 5,
-                    text           = self.languages['notification']['lose'].replace('<WORD>', self.selected_word, 1),
-                    color          = self.colors.notification['lose']['background'],
-                    color_outline  = self.colors.notification['lose']['outline'],
-                    color_text     = self.colors.notification['lose']['text']
-                )
-                if play_lose_or_win != 2:
-                    play_lose_or_win = 1
-                if play_lose_or_win == 1:
-                    self.sound_lose.play()
-                    play_lose_or_win = 2
-                if self.notification():
-                    self.reset()
-                    play_lose_or_win = 0
-
-            elif self.isshow_NotInDictionary:
-                set_notification_default()
-                self.notification.edit_param(text=self.languages['notification']['not-in-dictionary'].replace('<WORD>', self.last_word_input, 1))
-                if self.notification(): self.isshow_NotInDictionary = False
-
-            elif self.isshow_NotEnoughLength:
-                set_notification_default()
-                self.notification.edit_param(text=self.languages['notification']['less-letter-length'])
-                if self.notification(): self.isshow_NotEnoughLength = False
-
-            elif self.isshow_AllTileHintsProvided:
-                set_notification_default()
-                self.notification.edit_param(text=self.languages['notification']['tile-hint-provided'])
-                if self.notification(): self.isshow_AllTileHintsProvided = False
-
-            elif self.isshow_AllKeyboardHintsProvided:
-                set_notification_default()
-                self.notification.edit_param(text=self.languages['notification']['keyboard-hint-provided'])
-                if self.notification(): self.isshow_AllKeyboardHintsProvided = False
-
-            elif self.isshow_TileIsEmpty:
-                set_notification_default()
-                self.notification.edit_param(text=self.languages['notification']['tile-empty'])
-                if self.notification(): self.isshow_TileIsEmpty = False
-
-            elif self.isshow_Reset:
-                set_notification_default()
-                self.notification.edit_param(text=self.languages['notification']['reset'])
-                if self.notification(): self.isshow_Reset = False
+            self.handle_notification()
 
             if self.validator_game_data.file_corrupt and not done_warn[1]:
                 done_warn[1] = True
@@ -1658,15 +1708,9 @@ class Katla:
                 COINS_REWAND = 1
 
                 def take_coins() -> None:
-                    last_claim_time     = self.game_data['prize-claim-time'].split('/')
-                    last_time_int       = [int(timeday) for timeday in last_claim_time]
-                    last_claim_datetime = datetime(last_time_int[5], last_time_int[4], last_time_int[3], last_time_int[0], last_time_int[1], last_time_int[2])
-                    current_time        = datetime.now()
-                    time_difference     = current_time - last_claim_datetime
-
-                    if time_difference >= timedelta(days=1):
+                    if self.get_daily_countdown() is True:
                         self.coins += DAILY_COINS
-                        self.game_data['prize-claim-time'] = current_time.strftime(r'%H/%M/%S/%d/%m/%Y')
+                        self.game_data['prize-claim-time'] = datetime.now().strftime(r'%H/%M/%S/%d/%m/%Y')
                         self.save_game(prize_taken=True)
 
                 self.popup.edit_param(

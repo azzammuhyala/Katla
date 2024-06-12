@@ -19,12 +19,12 @@ TANGGUNG JAWAB, BAIK DALAM TINDAKAN KONTRAK, HUKUM ATAU LAINNYA, YANG TIMBUL DAR
 DILUAR ATAU SEHUBUNGAN DENGAN PERANGKAT LUNAK ATAU PENGGUNAAN ATAU HAL-HAL LAIN DALAM
 PERANGKAT LUNAK.
 
-![Tampilan Katla (1.1.2)](docs/assets/gameplay_1.1.2.gif)
+![Tampilan Katla (1.1.3)](docs/assets/gameplay_1.1.3.gif)
 *_Tampilan permainan di versi saat ini_.
 
 Cara bermain?
 ---
-> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Untuk file executable untuk Windows (exe) sudah disediakan di Google Drive
+> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Kamu cukup ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
 
 Dalam permainan ini, Kamu harus menebak kata yang dipilih secara acak dari kamus yang ada. Sebagai petunjuk akan di berikan 3 warna yang menandakan seberapa dekat Kamu dengan kata tersebut.
 
@@ -87,11 +87,10 @@ Kekurangan petunjuk ini:
 Fitur / Peningkatan
 ---
 * Perbaikan kode
+* Perbaikan notifikasi
 * Perbaikan front-end
 * Perbaikan dokumentasi
-* Perbaikan format angka
-* Perbaikan file ekstensi .katla
-* Perbaikan penamaan folder atau file
+* Perbaikan aplikasi executable
 * Kata baru di tambahkan (Akan berusaha di perbarui)
 
 Daftar versi
@@ -100,13 +99,14 @@ Daftar versi
 * `1.0.0 (Release)`: Kamis, 23/05/2024 - 21:18:00
 * `1.1.0`: Jumat, 31/05/2024 - 16:30:00
 * `1.1.1`: Minggu, 02/06/2024 - 11:42:21
-* `1.1.2`: Minggu, 09/06/2024 - 14:21:53 (baru)
+* `1.1.2`: Minggu, 09/06/2024 - 14:21:53
+* `1.1.3`: Rabu, 12/06/2024 - 13:44:42 (baru)
 
 Daftar aplikasi permainan saya
 ---
 _Google Drive: https://drive.google.com/drive/folders/1WSkXju5i4SUJocQLp1yyA0ELSaff6wpo?usp=sharing_
 
-_Github: https://github.com/azzammuhyala/Katla.git_
+_Github: Katla: https://github.com/azzammuhyala/Katla.git_
 
 * `Snake`
 * `Minesweeper`
@@ -129,7 +129,7 @@ Kamus
 
 Tanggal dirilis
 ---
-**Minggu, 09/06/2024 - 14:21:53**
+**Rabu, 12/06/2024 - 13:44:42**
 
 "_Terima kasih susah membaca / memainkan permainan yang saya buat :)_"
 
