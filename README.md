@@ -24,7 +24,7 @@ PERANGKAT LUNAK.
 
 Cara bermain?
 ---
-> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Kamu cukup ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
+> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, pergi ke link Google Drive yang disediakan lalu Kamu download, buka folder Katla lalu Kamu cukup ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
 
 Dalam permainan ini, Kamu harus menebak kata yang dipilih secara acak dari kamus yang ada. Sebagai petunjuk akan di berikan 3 warna yang menandakan seberapa dekat Kamu dengan kata tersebut.
 
