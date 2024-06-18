@@ -19,12 +19,12 @@ TANGGUNG JAWAB, BAIK DALAM TINDAKAN KONTRAK, HUKUM ATAU LAINNYA, YANG TIMBUL DAR
 DILUAR ATAU SEHUBUNGAN DENGAN PERANGKAT LUNAK ATAU PENGGUNAAN ATAU HAL-HAL LAIN DALAM
 PERANGKAT LUNAK.
 
-![Tampilan Katla (1.1.3)](docs/assets/gameplay_1.1.3.gif)
+![Tampilan Katla (1.1.4)](docs/assets/gameplay_1.1.4.gif)
 *_Tampilan permainan di versi saat ini_.
 
 Cara bermain?
 ---
-> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Kamu cukup buka link Google Drive dan kemudian download folder `Katla`. Buka folder `Katla` lalu ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
+> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Kamu cukup ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
 
 Dalam permainan ini, Kamu harus menebak kata yang dipilih secara acak dari kamus yang ada. Sebagai petunjuk akan di berikan 3 warna yang menandakan seberapa dekat Kamu dengan kata tersebut.
 
@@ -41,6 +41,8 @@ Tiap Kamu menang, Kamu mendapatkan **1 koin**. Dapatkan koin harian selama 24 ja
 
 _**Daftar tombol pintas dan maksudnya**_:
 - Tombol `Esc` _Escape_: Menutup tampilan popup / pengaturan.
+- Tombol `Tab`: Mengecilkan layar aplikasi ke ukuran minimal.
+- Tombol `F11`: Mempebesar layar aplikasi ke ukuran penuh.
 - Tombol `ATAS`, dan `BAWAH`: Menggulir tampilan papan ketik / pengaturan.
 - Tombol `1`: Membuka tampilan popup `CARA MAIN`.
 - Tombol `2`: Membuka tampilan popup `STATISTIK`.
@@ -54,43 +56,46 @@ _**Daftar tombol pintas dan maksudnya**_:
 
 _**Daftar petunjuk / bantuan dan maksudnya**_:
 
-`PETUNJUK HURUF`: Petunjuk huruf akan ditampilkan di papan ketik dari huruf awal hingga seterusnya.
+**`PETUNJUK HURUF`**: Petunjuk huruf akan ditampilkan di papan ketik dari huruf awal hingga seterusnya.
 
-Kelebihan dari petunjuk ini:
+_Kelebihan dari petunjuk ini_:
 - Memberikan bonus petunjuk keyboard.
 - Huruf akan secara langsung ditampilkan di papan ketik
 - Huruf dari bantuan, masuk dari tombol pintas ketik otomatis.
 
-Kekurangan dari petunjuk ini:
+_Kekurangan dari petunjuk ini_:
 - Tidak dapat meneruskan petunjuk huruf setelahnya dari `PETUNJUK PAPAN KEYBOARD`.
 - Harga lebih mahal
 
-`PETUNJUK PAPAN KEYBOARD`: Memberikan petunjuk pada papan keyboard. Ini hanya akan memberi petunjuk huruf yang berbeda, bukan huruf ganda atau lebih.
+**`PETUNJUK PAPAN KEYBOARD`**: Memberikan petunjuk pada papan keyboard. Ini hanya akan memberi petunjuk huruf yang berbeda, bukan huruf ganda atau lebih.
 
-Kelebihan dari petunjuk ini:
+_Kelebihan dari petunjuk ini_:
 - Dapat meneruskan petunjuk pada `PETUNJUK HURUF`.
 - Harga lebih murah.
 
-Kekurangan dari petunjuk ini:
+_Kekurangan dari petunjuk ini_:
 - Petunjuk yang diberikan hanya dari huruf yang berbeda, bukan huruf yang ganda atau lebih.
 - Huruf dari bantuan, tidak masuk dari tombol pintas ketik otomatis.
 
-`PENGHAPUS KATA PADA PAPAN KETIK`: Mengahapus salah satu kata dalam papan ketik.
+**`PENGHAPUS KATA PADA PAPAN KETIK`**: Mengahapus salah satu kata dalam papan ketik.
 
-Kelebihan petunjuk ini:
+_Kelebihan petunjuk ini_:
 - Jauh lebih murah.
 - Dapat memberikan kesempatan 1 kata tambahan.
 
-Kekurangan petunjuk ini:
+_Kekurangan petunjuk ini_:
 - Tidak memberikan petunjuk huruf sama sekali.
 
 Fitur / Peningkatan
 ---
 * Perbaikan kode
-* Perbaikan notifikasi
 * Perbaikan front-end
+* Perbaikan resize layar
+* Perbaikan pengaturan
 * Perbaikan dokumentasi
-* Perbaikan aplikasi executable
+* Fitur administrator
+* Fitur layar penuh
+* Penambahan aplikasi baru (Katla solver)
 * Kata baru di tambahkan (Akan berusaha di perbarui)
 
 Daftar versi
@@ -100,7 +105,8 @@ Daftar versi
 * `1.1.0`: Jumat, 31/05/2024 - 16:30:00
 * `1.1.1`: Minggu, 02/06/2024 - 11:42:21
 * `1.1.2`: Minggu, 09/06/2024 - 14:21:53
-* `1.1.3`: Rabu, 12/06/2024 - 13:44:42 (baru)
+* `1.1.3`: Rabu, 12/06/2024 - 13:44:42
+* `1.1.4`: Selasa, 18/06/2024 - 18:06:24 (baru)
 
 Daftar aplikasi permainan saya
 ---
@@ -129,8 +135,8 @@ Kamus
 
 Tanggal dirilis
 ---
-**Rabu, 12/06/2024 - 13:44:42**
+**Selasa, 18/06/2024 - 18:06:24**
 
-"_Terima kasih susah membaca / memainkan permainan yang saya buat :)_"
+"_Terima kasih sudah membaca / memainkan permainan yang saya buat :)_"
 
 ![Spongebob GIF](docs/assets/spongebob.gif)

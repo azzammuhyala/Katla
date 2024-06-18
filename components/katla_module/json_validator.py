@@ -8,20 +8,14 @@ classes:
 - GameDataValidator
 """
 
-import os
 from string import ascii_lowercase, ascii_uppercase
 from random import shuffle
 from warnings import warn
 from ..module.jsonfl import Json, json, _fernet
 from .katla_crypt import KatlaEncryptor
-from .constants import File, JsonData, Keyboard, Color, Any, isinf
+from .constants import File, JsonData, Keyboard, Color, Any, isinf, mkdir_data
 
 _file = File()
-
-def _mkdir_data(message: str) -> None:
-    if not os.path.exists(_file.PATH_DATA):
-        warn(message)
-        os.mkdir(_file.PATH_DATA)
 
 class Languages:
 
@@ -91,7 +85,7 @@ class SettingsValidator:
         self.words_json = Json(_file.PATH_WORDS_LIST, JsonData.LOST_DICTIONARY).load_write()
         self.languages_json = Languages()
         self.katla_crypt = KatlaEncryptor()
-        self.md = lambda : _mkdir_data(f'file "{_file.PATH_DATA}/settings.katla" doesn\'t exists')
+        self.md = lambda : mkdir_data(f'file "{_file.PATH_DATA}/settings.katla" doesn\'t exists')
         self.md()
 
     def encrypt_data(self, data) -> None:
@@ -133,7 +127,8 @@ class SettingsValidator:
             "word-length": [4, 9],
             "fps": [10, 120],
             "geomatry": [0.9, 2.2],
-            "use-valid-word": bool
+            "use-valid-word": bool,
+            "screen-size": [[550, 64000], [700, 64000]]
         }
 
         if not isinstance(self.file_data, dict):
@@ -169,6 +164,36 @@ class SettingsValidator:
                         self.set_default()
                         break
 
+                elif key == 'screen-size':
+                    if not isinstance(value, list):
+                        self.set_default()
+                        break
+
+                    elif len(value) != 2:
+                        self.set_default()
+                        break
+
+                    for size in value:
+                        if not isinstance(size, int):
+                            self.set_default()
+                            break
+
+                    if value[0] < list_req_settings[key][0][0]:
+                        self.set_default()
+                        break
+
+                    elif value[0] > list_req_settings[key][0][1]:
+                        self.set_default()
+                        break
+
+                    elif value[1] < list_req_settings[key][1][0]:
+                        self.set_default()
+                        break
+
+                    elif value[1] > list_req_settings[key][1][1]:
+                        self.set_default()
+                        break
+
         return self.file_data
 
 class GameDataValidator:
@@ -177,7 +202,7 @@ class GameDataValidator:
         self.__key = b'6B4qF6oZ64V4_Z7sdCNKErkF_eT1A_qTP8HQMAbu2Uw='
         self.file_corrupt = False
         self.katla_crypt = KatlaEncryptor()
-        self.md = lambda : _mkdir_data(f'file "{_file.PATH_DATA}/game.katla" doesn\'t exists')
+        self.md = lambda : mkdir_data(f'file "{_file.PATH_DATA}/game.katla" doesn\'t exists')
         self.md()
 
     def encrypt_data(self, data) -> None:

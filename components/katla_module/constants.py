@@ -3,13 +3,15 @@ Katla constants
 """
 
 import os
+from time import sleep
+from warnings import warn
 from math import isnan, isinf
 from typing import Any
 from .resource_path import resource_path
 
 MAJOR = 1
 MINOR = 1
-PATCH = 3
+PATCH = 4
 LABEL = ''
 VERSION = f"Katla {LABEL + (' ' if LABEL else '')}- {MAJOR}.{MINOR}.{PATCH}"
 LICENSE = f"""license and information
@@ -24,9 +26,45 @@ This application uses SDL pygame.
 100% Using Python language."""
 
 Number = int | float
+Feedback = list[dict[str, str]]
+Path = os.PathLike[str]
 inf = float('inf')
 nan = float('nan')
-Path = os.PathLike[str]
+
+def mkdir_data(message: str) -> None:
+    f = File()
+    if not os.path.exists(f.PATH_DATA):
+        warn(message)
+        os.mkdir(f.PATH_DATA)
+
+def test_read_write_delete() -> tuple[dict[str, bool | None], Exception | None]:
+    mkdir_data('katla-data not found when testing permissions')
+
+    f = File()
+    testpath = f.PATH_DATA + '/test.txt'
+    result = {
+        'write': None,
+        'read': None,
+        'delete': None
+    }
+
+    try:
+        with open(testpath, 'w') as testw:
+            testw.write('Test')
+            result['write'] = True
+
+        sleep(0.1)
+
+        with open(testpath, 'r') as testr:
+            testr.read()
+            result['read'] = True
+
+        os.remove(testpath)
+        result['delete'] = True
+    except Exception as e:
+        return result, e
+
+    return result, None
 
 class Keyboard:
     KeyboardList = list[list[str]]
@@ -95,7 +133,8 @@ class JsonData:
         "word-length": 5,
         "fps": 120,
         "geomatry": 1.0,
-        "use-valid-word": True
+        "use-valid-word": True,
+        "screen-size": [640, 980]
     }
     DEFAULT_DATA_GAME: dict[str, Any] = {
         "coins": 0,
@@ -125,7 +164,7 @@ class JsonData:
 class File:
 
     def __init__(self) -> None:
-        self.PATH_LANGUAGES = resource_path('assets/json/languages.json')
+        self.PATH_LANGUAGES = resource_path('assets/json/languages/katla-languages.json')
         self.PATH_WORDS = lambda file : resource_path('assets/json/words/' + file)
         self.PATH_WORDS_LIST = resource_path('assets/json/words/words-list.json')
         self.PATH_DATA = 'katla-data'
@@ -459,7 +498,7 @@ class Color:
                         'active': O
                     }
                 },
-                'text': self.BLACK
+                'text': self.WHITE
             }
 
             self.boxEntryTile = {

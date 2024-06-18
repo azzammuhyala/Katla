@@ -1,8 +1,9 @@
 # Katla.py
 pygame
+pyuac
 
-# Katla.py and Katla raw game.py
+# Katla.py, Katla raw game.py, and Katla solver.py
 fernet
 
-# Katla raw game.py
+# Katla raw game.py and Katla solver.py
 asciiTUI
