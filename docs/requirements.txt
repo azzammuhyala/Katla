@@ -1,5 +1,6 @@
 # Katla.py
 pygame
+pillow
 pyuac
 
 # Katla.py, Katla raw game.py, and Katla solver.py

@@ -126,8 +126,8 @@ class KatlaSolver:
         for i, attempt_feedback in enumerate(feedback):
             for char, color in attempt_feedback.items():
                 if color == 'red':
-                    # Red: char should not be in the word, unless it's also yellow/green somewhere else
-                    if (char in word and (feedback_char_counts['green'].get(char, 0) + feedback_char_counts['yellow'].get(char, 0) < word_char_frequency[char])):
+                    # Red: char should not be in the word, unless it's also yellow / green somewhere else
+                    if char == word[i] or (char in word and (feedback_char_counts['green'].get(char, 0) + feedback_char_counts['yellow'].get(char, 0) < word_char_frequency[char])):
                         return False
                 elif color == 'green':
                     # Green: char must be at the same position
@@ -142,7 +142,7 @@ class KatlaSolver:
 
         # Third filter to ensure character frequencies match feedback
         for char in feedback_char_counts['yellow'].keys():
-            if word_char_frequency.get(char, 0) != 0:
+            if word_char_frequency.get(char, 0) < 0:
                 return False
 
         # If it's safe, it means this word is passed
@@ -295,7 +295,7 @@ Button Keys:
     def main(self):
         running = True
 
-        print('KATLA SOLVER - 99.99% PROBABILITY CORRECT - V ~ 1.0.0 BETA\n')
+        print('KATLA SOLVER - 99.5% PROBABILITY CORRECT - V ~ 1.0.1 BETA\n')
         self.help()
 
         while running:

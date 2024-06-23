@@ -1,30 +1,12 @@
 # Katla - pygame - Python 3
-Lisensi Hak cipta ~ Copyright © 2024 - 2026 [ Azzamuhyala ]
+Lisensi Hak cipta ~ Copyright © 2024 - 2026 [ Azzamuhyala ] | LICENSE MIT
 
-Izin dengan ini diberikan, tanpa dipungut biaya, kepada siapa pun yang memperoleh salinannya
-perangkat lunak ini dan file dokumentasi terkait "Perangkat Lunak", untuk ditangani
-dalam Perangkat Lunak tanpa batasan, termasuk tanpa batasan hak
-untuk menggunakan, menyalin, memodifikasi, menggabungkan, menerbitkan, mendistribusikan, mensublisensikan, dan/atau menjual
-salinan Perangkat Lunak, dan untuk mengizinkan orang yang memiliki Perangkat Lunak tersebut
-diperlengkapi untuk melakukannya, dengan syarat-syarat berikut:
-
-Pemberitahuan hak cipta di atas dan pemberitahuan izin ini harus disertakan dalam keseluruhannya
-salinan atau sebagian besar Perangkat Lunak.
-
-PERANGKAT LUNAK INI DISEDIAKAN "APA ADANYA", TANPA JAMINAN APA PUN, SECARA TERSURAT MAUPUN
-TERSIRAT, TERMASUK NAMUN TIDAK TERBATAS PADA JAMINAN KELAYAKAN UNTUK DIPERDAGANGKAN,
-KESESUAIAN UNTUK TUJUAN TERTENTU DAN TIDAK PELANGGARAN. DALAM KEADAAN APA PUN
-PENULIS ATAU PEMEGANG HAK CIPTA BERTANGGUNG JAWAB ATAS KLAIM, KERUSAKAN ATAU LAINNYA
-TANGGUNG JAWAB, BAIK DALAM TINDAKAN KONTRAK, HUKUM ATAU LAINNYA, YANG TIMBUL DARI,
-DILUAR ATAU SEHUBUNGAN DENGAN PERANGKAT LUNAK ATAU PENGGUNAAN ATAU HAL-HAL LAIN DALAM
-PERANGKAT LUNAK.
-
-![Tampilan Katla (1.1.4)](docs/assets/gameplay_1.1.4.gif)
+![Tampilan Katla (1.1.5 BETA)](docs/assets/gameplay_1.1.5.gif)
 *_Tampilan permainan di versi saat ini_.
 
 Cara bermain?
 ---
-> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, pergi ke link Google Drive yang disediakan lalu Kamu download, buka folder Katla lalu Kamu cukup ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
+> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Kamu cukup ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
 
 Dalam permainan ini, Kamu harus menebak kata yang dipilih secara acak dari kamus yang ada. Sebagai petunjuk akan di berikan 3 warna yang menandakan seberapa dekat Kamu dengan kata tersebut.
 
@@ -89,13 +71,18 @@ _Kekurangan petunjuk ini_:
 Fitur / Peningkatan
 ---
 * Perbaikan kode
+* Perbaikan popup
+* Perbaikan bahasa
 * Perbaikan front-end
-* Perbaikan resize layar
 * Perbaikan pengaturan
 * Perbaikan dokumentasi
-* Fitur administrator
-* Fitur layar penuh
-* Penambahan aplikasi baru (Katla solver)
+* Perbaikan aplikasi "Katla solver"
+* Perbaikan resize layar / layar penuh
+* Penambahan tema baru
+* Fitur menang beruntun
+* Fitur blink pada papan kata
+* Fitur pengendalian suara mixer
+* Fitur gif saat menang (Dalam uji coba)
 * Kata baru di tambahkan (Akan berusaha di perbarui)
 
 Daftar versi
@@ -106,7 +93,8 @@ Daftar versi
 * `1.1.1`: Minggu, 02/06/2024 - 11:42:21
 * `1.1.2`: Minggu, 09/06/2024 - 14:21:53
 * `1.1.3`: Rabu, 12/06/2024 - 13:44:42
-* `1.1.4`: Selasa, 18/06/2024 - 18:06:24 (baru)
+* `1.1.4`: Selasa, 18/06/2024 - 18:06:24
+* `1.1.5 (BETA)`: Minggu, 23/06/2024 - 21:40:24 (baru)
 
 Daftar aplikasi permainan saya
 ---
@@ -135,7 +123,7 @@ Kamus
 
 Tanggal dirilis
 ---
-**Selasa, 18/06/2024 - 18:06:24**
+**Minggu, 23/06/2024 - 21:40:24**
 
 "_Terima kasih sudah membaca / memainkan permainan yang saya buat :)_"
 

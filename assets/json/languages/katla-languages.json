@@ -1,6 +1,7 @@
-{
-    "en-us": {
-        "lang-name": "English (US)",
+[
+    {
+        "id": "en-us",
+        "name": "English (US)",
         "exponents-number": {
             "decimal": ".",
             "separator": ",",
@@ -26,6 +27,10 @@
                     "title": "Katla - Settings",
                     "message": "File settings data is corrupted. Settings have been changed to default settings."
                 },
+                "sound-mixer": {
+                    "title": "Sound mixer",
+                    "message": "Unable to load sound. Please check the audio settings / device and try again."
+                },
                 "button-ok": "OK"
             },
             "how-to-play": {
@@ -46,6 +51,8 @@
                     "hints": "Hints",
                     "wins": "Wins",
                     "losses": "Losses",
+                    "wins-streak": "Wins streak",
+                    "max-wins-streak": "Max wins streak",
                     "distribution": "Guess Distribution"
                 }
             },
@@ -74,8 +81,8 @@
                 "button-coins": "<COINS-PRICE> COINS"
             },
             "delete-tile": {
-                "title": "DELETING WORDS ON THE KEYBOARD",
-                "label": "Use coins to delete one of the words guessed on the keyboard?\n\n(One of the keyboards will be deleted)",
+                "title": "DELETING WORDS ON THE BOARD",
+                "label": "Use coins to delete one of the words guessed on the board?\n\n(One of the board will be deleted)",
                 "button-coins": "<COINS-PRICE> COINS"
             }
         },
@@ -95,7 +102,7 @@
             "less-letter-length": "Letter length is not enough!",
             "tile-hint-provided": "All letter hints are available",
             "keyboard-hint-provided": "All keyboard hints are available",
-            "tile-empty": "The keyboard is still empty",
+            "tile-empty": "The board is still empty",
             "reset": "The game is reset, the word is now chosen randomly!",
             "unfullscreen": "To exit full screen, press F11"
         },
@@ -118,7 +125,7 @@
             "game-rules": {
                 "title": "Game rules",
                 "label": {
-                    "only-in-dictionary": "Just words in the dictionary",
+                    "only-in-dictionary": "Only words in the dictionary",
                     "word-length": "Word length",
                     "change-guess": "Change guess"
                 }
@@ -132,6 +139,7 @@
                 "buttons-label": {
                     "app-theme": {
                         "dark": "Dark",
+                        "dark-gray": "Dark gray",
                         "light": "Light",
                         "solid": "Solid"
                     }
@@ -147,8 +155,9 @@
         }
     },
 
-    "idn": {
-        "lang-name": "Indonesia",
+    {
+        "id": "idn",
+        "name": "Indonesia",
         "exponents-number": {
             "decimal": ",",
             "separator": ".",
@@ -174,6 +183,10 @@
                     "title": "Katla - Pengaturan",
                     "message": "File data pengaturan korup. Pengaturan telah diubah ke pengaturan default."
                 },
+                "sound-mixer": {
+                    "title": "Mixer suara",
+                    "message": "Tidak dapat memuat suara. Harap periksa pengaturan / perangkat audio lalu coba kembali."
+                },
                 "button-ok": "OKE"
             },
             "how-to-play": {
@@ -194,6 +207,8 @@
                     "hints": "Bantuan",
                     "wins": "Menang",
                     "losses": "Kalah",
+                    "wins-streak": "Menang beruntun",
+                    "max-wins-streak": "Maksimal menang beruntun",
                     "distribution": "Distribusi Tebakan"
                 }
             },
@@ -280,6 +295,7 @@
                 "buttons-label": {
                     "app-theme": {
                         "dark": "Gelap",
+                        "dark-gray": "Gelap abu",
                         "light": "Terang",
                         "solid": "Solid"
                     }
@@ -295,8 +311,9 @@
         }
     },
 
-    "mys": {
-        "lang-name": "Malaysia (Melayu)",
+    {
+        "id": "mys",
+        "name": "Malaysia (Melayu)",
         "exponents-number": {
             "decimal": ",",
             "separator": ".",
@@ -322,6 +339,10 @@
                     "title": "Katla - Susunan",
                     "message": "Fail data tetapan rosak. Tetapan telah ditukar kepada tetapan lalai."
                 },
+                "sound-mixer": {
+                    "title": "Bunyi mixer",
+                    "message": "Tidak dapat memuatkan suara. Sila semak tetapan / peranti audio dan cuba lagi."
+                },
                 "button-ok": "OK"
             },
             "how-to-play": {
@@ -342,6 +363,8 @@
                     "hints": "Bantuan",
                     "wins": "Menang",
                     "losses": "Kalah",
+                    "wins-streak": "Menang beruntun",
+                    "max-wins-streak": "Maksimal menang beruntun",
                     "distribution": "Teka Edaran"
                 }
             },
@@ -427,6 +450,7 @@
                 "buttons-label": {
                     "app-theme": {
                         "dark": "Gelap",
+                        "dark-gray": "Gelap abu",
                         "light": "Terang",
                         "solid": "Solid"
                     }
@@ -441,4 +465,4 @@
             }
         }
     }
-}
+]

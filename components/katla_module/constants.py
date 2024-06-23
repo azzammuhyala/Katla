@@ -2,17 +2,16 @@
 Katla constants
 """
 
-import os
 from time import sleep
 from warnings import warn
 from math import isnan, isinf
-from typing import Any
-from .resource_path import resource_path
+from typing import Any, Literal
+from .resource_path import resource_path, os
 
 MAJOR = 1
 MINOR = 1
-PATCH = 4
-LABEL = ''
+PATCH = 5
+LABEL = 'BETA'
 VERSION = f"Katla {LABEL + (' ' if LABEL else '')}- {MAJOR}.{MINOR}.{PATCH}"
 LICENSE = f"""license and information
 =======================
@@ -23,10 +22,11 @@ Version: {VERSION}
 
 This application uses SDL pygame.
 
-100% Using Python language."""
+100% Using Python language. So, don't expect the FPS is high and stable. Lol"""
 
 Number = int | float
 Feedback = list[dict[str, str]]
+KeyboardList = list[list[str]]
 Path = os.PathLike[str]
 inf = float('inf')
 nan = float('nan')
@@ -53,7 +53,7 @@ def test_read_write_delete() -> tuple[dict[str, bool | None], Exception | None]:
             testw.write('Test')
             result['write'] = True
 
-        sleep(0.1)
+        sleep(.1)
 
         with open(testpath, 'r') as testr:
             testr.read()
@@ -66,9 +66,17 @@ def test_read_write_delete() -> tuple[dict[str, bool | None], Exception | None]:
 
     return result, None
 
+class LiteralConst:
+    all_keyboard = ['QWERTY', 'QWERTZ', 'AZERTY', 'COLEMAK', 'ABCDEF_1', 'ABCDEF_2', 'ABCDEF_3', 'ZYXWVU_1', 'ZYXWVU_2', 'ZYXWVU_3']
+    all_theme    = ['dark', 'dark-gray', 'light', 'solid']
+
+    literal_keyboard = Literal['QWERTY', 'QWERTZ', 'AZERTY', 'COLEMAK', 'ABCDEF_1', 'ABCDEF_2', 'ABCDEF_3', 'ZYXWVU_1', 'ZYXWVU_2', 'ZYXWVU_3']
+    literal_theme    = Literal['dark', 'dark-gray', 'light', 'solid']
+
 class Keyboard:
-    KeyboardList = list[list[str]]
-    __all__ = ['QWERTY', 'QWERTZ', 'AZERTY', 'COLEMAK', 'ABCDEF_1', 'ABCDEF_2', 'ABCDEF_3', 'ZYXWVU_1', 'ZYXWVU_2', 'ZYXWVU_3']
+
+    __all__ = LiteralConst.all_keyboard
+
     QWERTY: KeyboardList = [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
@@ -121,7 +129,7 @@ class Keyboard:
     ]
 
 class JsonData:
-    LOST_DICTIONARY: dict[str, str] = {"lost-dictionary": "lost dictionary"}
+    LOST_DICTIONARY: dict[str, str] = {"error-message": "lost dictionary"}
     DEFAULT_SETTINGS: dict[str, Any] = {
         "theme": "dark",
         "keyboard-layout": "QWERTY",
@@ -157,6 +165,8 @@ class JsonData:
             "8": 0,
             "9": 0,
             "10": 0,
+            "streak": 0,
+            "max-streak": 0,
             "total": 0
         }
     }
@@ -183,14 +193,274 @@ class File:
 
 class Color:
 
-    __all_theme__ = ['dark', 'light', 'solid']
-
-    def __init__(self, theme: str) -> None:
+    def __init__(self, theme: LiteralConst.literal_theme) -> None:
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
         self.GRAY = (127, 127, 127)
 
-        if theme == 'light':
+        if theme == 'dark':
+            self.screen = (14, 20, 33)
+
+            self.barMenu = {
+                'background': (10, 28, 46),
+                'indicator': (175, 15, 1),
+                'text': self.WHITE
+            }
+
+            self.keyboard = {
+                'background': (10, 28, 46),
+                'button': {
+                    'not-inputed': {
+                        'inactive': (17, 22, 33),
+                        'active': (23, 31, 46),
+                        'hover': (32, 43, 64)
+                    },
+                    'green': {
+                        'inactive': (61, 153, 61),
+                        'active': (61, 123, 61),
+                        'hover': (61, 183, 61)
+                    },
+                    'yellow': {
+                        'inactive': (153, 138, 61),
+                        'active': (123, 108, 61),
+                        'hover': (183, 168, 61)
+                    },
+                    'red': {
+                        'inactive': (153, 61, 61),
+                        'active': (123, 61, 61),
+                        'hover': (183, 61, 61)
+                    },
+                    'outline': {
+                        'inactive': (59, 59, 87),
+                        'active': (109, 184, 227)
+                    }
+                },
+                'text': self.WHITE
+            }
+
+            self.boxEntryTile = {
+                'box': {
+                    'not-inputed': (17, 22, 33),
+                    'green': (61, 153, 61),
+                    'yellow': (153, 138, 61),
+                    'red': (153, 61, 61),
+                    'outline': {
+                        'point-inactive': (59, 59, 87),
+                        'point-active': (109, 184, 227)
+                    }
+                },
+                'text': self.WHITE
+            }
+
+            self.notification = {
+                'default': {
+                    'background': (17, 22, 33),
+                    'outline': (59, 59, 87),
+                    'text': self.WHITE
+                },
+                'win': {
+                    'background': (61, 153, 61),
+                    'outline': (61, 103, 61),
+                    'text': self.WHITE
+                },
+                'lose': {
+                    'background': (153, 61, 61),
+                    'outline': (103, 61, 61),
+                    'text': self.WHITE
+                }
+            }
+
+            self.popup = {
+                'background': (17, 22, 33),
+                'shadow': self.BLACK,
+                'outline': (59, 59, 87),
+                'button': {
+                    'close': (17, 22, 33),
+                    'buy': {
+                        'inactive': (12, 20, 59),
+                        'active': (16, 25, 74),
+                        'hover': (17, 28, 87)
+                    },
+                },
+                'text': self.WHITE
+            }
+
+            self.settings = {
+                'background': (17, 22, 33),
+                'outline': (59, 59, 87),
+                'navbar': (10, 28, 46),
+                'button': {
+                    'close': (10, 28, 46),
+                    'set': {
+                        'inactive': (32, 44, 66),
+                        'active': (23, 31, 46),
+                        'hover': (45, 63, 94)
+                    },
+                    'switch': {
+                        'true': {
+                            'inactive': (61, 153, 61),
+                            'active': (61, 123, 61),
+                            'hover': (61, 183, 61)
+                        },
+                        'false': {
+                            'inactive': (153, 61, 61),
+                            'active': (123, 61, 61),
+                            'hover': (183, 61, 61)
+                        }
+                    }
+                },
+                'range': {
+                    'thumb': {
+                        'inactive': (212, 212, 212),
+                        'active': (224, 225, 231),
+                        'hover': self.WHITE
+                    },
+                    'track': {
+                        'inactive': (32, 44, 66),
+                        'active': (23, 31, 46),
+                        'hover': (45, 63, 94)
+                    },
+                    'track-fill': {
+                        'inactive': (23, 133, 48),
+                        'active': (26, 74, 37),
+                        'hover': (28, 163, 59)
+                    }
+                },
+                'text': self.WHITE
+            }
+
+        elif theme == 'dark-gray':
+            self.screen = (30, 30, 30)
+
+            self.barMenu = {
+                'background': (60, 60, 60),
+                'indicator': (120, 2, 2),
+                'text': self.WHITE
+            }
+
+            self.keyboard = {
+                'background': (26, 24, 24),
+                'button': {
+                    'not-inputed': {
+                        'inactive': (69, 69, 71),
+                        'active': (60, 59, 63),
+                        'hover': (78, 80, 79)
+                    },
+                    'green': {
+                        'inactive': (21, 128, 61),
+                        'active': (61, 123, 61),
+                        'hover': (61, 183, 61)
+                    },
+                    'yellow': {
+                        'inactive': (202, 138, 4),
+                        'active': (123, 108, 61),
+                        'hover': (183, 168, 61)
+                    },
+                    'red': {
+                        'inactive': (50, 50, 54),
+                        'active': (40, 41, 43),
+                        'hover': (59, 60, 61)
+                    },
+                    'outline': {
+                        'inactive': (51, 51, 51),
+                        'active': (163, 162, 162)
+                    }
+                },
+                'text': self.WHITE
+            }
+
+            self.boxEntryTile = {
+                'box': {
+                    'not-inputed': (69, 69, 71),
+                    'green': (21, 128, 61),
+                    'yellow': (202, 138, 4),
+                    'red': (50, 50, 54),
+                    'outline': {
+                        'point-inactive': (51, 51, 51),
+                        'point-active': (183, 182, 182)
+                    }
+                },
+                'text': self.WHITE
+            }
+
+            self.notification = {
+                'default': {
+                    'background': (69, 69, 71),
+                    'outline': (51, 51, 51),
+                    'text': self.WHITE
+                },
+                'win': {
+                    'background': (21, 128, 61),
+                    'outline': (15, 110, 51),
+                    'text': self.WHITE
+                },
+                'lose': {
+                    'background': (50, 50, 54),
+                    'outline': (44, 56, 70),
+                    'text': self.WHITE
+                }
+            }
+
+            self.popup = {
+                'background': (30, 30, 30),
+                'shadow': self.BLACK,
+                'outline': (51, 51, 51),
+                'button': {
+                    'close': (30, 30, 30),
+                    'buy': {
+                        'inactive': (19, 20, 23),
+                        'active': (12, 14, 15),
+                        'hover': (27, 29, 30)
+                    },
+                },
+                'text': self.WHITE
+            }
+
+            self.settings = {
+                'background': (30, 30, 30),
+                'outline': (66, 63, 62),
+                'navbar': (60, 60, 60),
+                'button': {
+                    'close': (60, 60, 60),
+                    'set': {
+                        'inactive': (19, 20, 23),
+                        'active': (12, 14, 15),
+                        'hover': (27, 29, 30)
+                    },
+                    'switch': {
+                        'true': {
+                            'inactive': (21, 128, 61),
+                            'active': (61, 123, 61),
+                            'hover': (61, 183, 61)
+                        },
+                        'false': {
+                            'inactive': (50, 50, 54),
+                            'active': (40, 41, 43),
+                            'hover': (59, 60, 61)
+                        }
+                    }
+                },
+                'range': {
+                    'thumb': {
+                        'inactive': (212, 212, 212),
+                        'active': (224, 225, 231),
+                        'hover': self.WHITE
+                    },
+                    'track': {
+                        'inactive': (19, 20, 23),
+                        'active': (12, 14, 15),
+                        'hover': (27, 29, 30)
+                    },
+                    'track-fill': {
+                        'inactive': (202, 138, 4),
+                        'active': (123, 108, 61),
+                        'hover': (183, 168, 61)
+                    }
+                },
+                'text': self.WHITE
+            }
+
+        elif theme == 'light':
 
             self.screen = (232, 232, 232)
 
@@ -320,137 +590,6 @@ class Color:
                     }
                 },
                 'text': self.BLACK
-            }
-
-        elif theme == 'dark':
-            self.screen = (14, 20, 33)
-
-            self.barMenu = {
-                'background': (10, 28, 46),
-                'indicator': (175, 15, 1),
-                'text': self.WHITE
-            }
-
-            self.keyboard = {
-                'background': (10, 28, 46),
-                'button': {
-                    'not-inputed': {
-                        'inactive': (17, 22, 33),
-                        'active': (23, 31, 46),
-                        'hover': (32, 43, 64)
-                    },
-                    'green': {
-                        'inactive': (61, 153, 61),
-                        'active': (61, 123, 61),
-                        'hover': (61, 183, 61)
-                    },
-                    'yellow': {
-                        'inactive': (153, 138, 61),
-                        'active': (123, 108, 61),
-                        'hover': (183, 168, 61)
-                    },
-                    'red': {
-                        'inactive': (153, 61, 61),
-                        'active': (123, 61, 61),
-                        'hover': (183, 61, 61)
-                    },
-                    'outline': {
-                        'inactive': (59, 59, 87),
-                        'active': (109, 184, 227)
-                    }
-                },
-                'text': self.WHITE
-            }
-
-            self.boxEntryTile = {
-                'box': {
-                    'not-inputed': (17, 22, 33),
-                    'green': (61, 153, 61),
-                    'yellow': (153, 138, 61),
-                    'red': (153, 61, 61),
-                    'outline': {
-                        'point-inactive': (59, 59, 87),
-                        'point-active': (109, 184, 227)
-                    }
-                },
-                'text': self.WHITE
-            }
-
-            self.notification = {
-                'default': {
-                    'background': (17, 22, 33),
-                    'outline': (59, 59, 87),
-                    'text': self.WHITE
-                },
-                'win': {
-                    'background': (61, 153, 61),
-                    'outline': (61, 103, 61),
-                    'text': self.WHITE
-                },
-                'lose': {
-                    'background': (153, 61, 61),
-                    'outline': (103, 61, 61),
-                    'text': self.WHITE
-                }
-            }
-
-            self.popup = {
-                'background': (17, 22, 33),
-                'shadow': self.BLACK,
-                'outline': (59, 59, 87),
-                'button': {
-                    'close': (17, 22, 33),
-                    'buy': {
-                        'inactive': (12, 20, 59),
-                        'active': (16, 25, 74),
-                        'hover': (17, 28, 87)
-                    },
-                },
-                'text': self.WHITE
-            }
-
-            self.settings = {
-                'background': (17, 22, 33),
-                'outline': (59, 59, 87),
-                'navbar': (10, 28, 46),
-                'button': {
-                    'close': (10, 28, 46),
-                    'set': {
-                        'inactive': (32, 44, 66),
-                        'active': (23, 31, 46),
-                        'hover': (45, 63, 94)
-                    },
-                    'switch': {
-                        'true': {
-                            'inactive': (61, 153, 61),
-                            'active': (61, 123, 61),
-                            'hover': (61, 183, 61)
-                        },
-                        'false': {
-                            'inactive': (153, 61, 61),
-                            'active': (123, 61, 61),
-                            'hover': (183, 61, 61)
-                        }
-                    }
-                },
-                'range': {
-                    'thumb': {
-                        'inactive': (212, 212, 212),
-                        'active': (224, 225, 231),
-                        'hover': self.WHITE
-                    },
-                    'track': {
-                        'inactive': (32, 44, 66),
-                        'active': (23, 31, 46),
-                        'hover': (45, 63, 94)
-                    },
-                    'track-fill': {
-                        'inactive': (23, 133, 48),
-                        'active': (26, 74, 37),
-                        'hover': (28, 163, 59)
-                    }
-                },
-                'text': self.WHITE
             }
 
         elif theme == 'solid':
@@ -594,63 +733,56 @@ class Color:
 
 class _Images:
 
-    def __init__(self, theme: str) -> None:
+    def __init__(self, theme: LiteralConst.literal_theme) -> None:
         self.ICON = resource_path('assets/images/icon.png')
+        self.ICO = resource_path('assets/images/icon.ico')
+        self.WINS_GIF = resource_path('assets/images/wins-gif.gif')
 
-        if theme == 'light':
+        if theme in ['light']:
+            # BLACK IMAGES
             self.CLOSE = resource_path('assets/images/close-black.png')
             self.BACKSPACE = resource_path('assets/images/backspace-black.png')
             self.ENTER = resource_path('assets/images/enter-black.png')
             self.QUESTION_MARK = resource_path('assets/images/question-mark-black.png')
             self.STATS = resource_path('assets/images/stats-black.png')
             self.RIGHT_ARROW = resource_path('assets/images/right-arrow-black.png')
-            self.REFRESH = resource_path('assets/images/refresh-black.png')
+            self.RESET = resource_path('assets/images/reset-black.png')
             self.SETTINGS = resource_path('assets/images/settings-black.png')
             self.COIN_BAG = resource_path('assets/images/coin-bag-black.png')
             self.LAMP = resource_path('assets/images/lamp-black.png')
             self.KEYBOARD = resource_path('assets/images/keyboard-black.png')
             self.HAMMER = resource_path('assets/images/hammer-black.png')
+            self.CHECK = resource_path('assets/images/check-black.png')
 
-        elif theme == 'dark':
+        elif theme in ['dark', 'dark-gray', 'solid']:
+            # WHITE IMAGES
             self.CLOSE = resource_path('assets/images/close-white.png')
             self.BACKSPACE = resource_path('assets/images/backspace-white.png')
             self.ENTER = resource_path('assets/images/enter-white.png')
             self.QUESTION_MARK = resource_path('assets/images/question-mark-white.png')
             self.STATS = resource_path('assets/images/stats-white.png')
             self.RIGHT_ARROW = resource_path('assets/images/right-arrow-white.png')
-            self.REFRESH = resource_path('assets/images/refresh-white.png')
+            self.RESET = resource_path('assets/images/reset-white.png')
             self.SETTINGS = resource_path('assets/images/settings-white.png')
             self.COIN_BAG = resource_path('assets/images/coin-bag-white.png')
             self.LAMP = resource_path('assets/images/lamp-white.png')
             self.KEYBOARD = resource_path('assets/images/keyboard-white.png')
             self.HAMMER = resource_path('assets/images/hammer-white.png')
-
-        elif theme == 'solid':
-            self.CLOSE = resource_path('assets/images/close-white.png')
-            self.BACKSPACE = resource_path('assets/images/backspace-white.png')
-            self.ENTER = resource_path('assets/images/enter-white.png')
-            self.QUESTION_MARK = resource_path('assets/images/question-mark-white.png')
-            self.STATS = resource_path('assets/images/stats-white.png')
-            self.RIGHT_ARROW = resource_path('assets/images/right-arrow-white.png')
-            self.REFRESH = resource_path('assets/images/refresh-white.png')
-            self.SETTINGS = resource_path('assets/images/settings-white.png')
-            self.COIN_BAG = resource_path('assets/images/coin-bag-white.png')
-            self.LAMP = resource_path('assets/images/lamp-white.png')
-            self.KEYBOARD = resource_path('assets/images/keyboard-white.png')
-            self.HAMMER = resource_path('assets/images/hammer-white.png')
+            self.CHECK = resource_path('assets/images/check-white.png')
 
 class _Math:
 
     def __init__(self) -> None:
-        self.pygame = None
+        self.Rect = None
 
     def Rect_outline(self, rect, size_outline: Number):
         """ Formula : pygame.Rect(rect.left - size_outline, rect.top - size_outline, rect.width + size_outline * 2, rect.height + size_outline * 2) """
-        if self.pygame is None:
+        if self.Rect is None:
             os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'HIDE'
-            import pygame
-            self.pygame = pygame
-        return self.pygame.Rect(rect.left - size_outline, rect.top - size_outline, rect.width + size_outline * 2, rect.height + size_outline * 2)
+            from pygame import Rect
+            self.Rect = Rect
+
+        return self.Rect(rect.left - size_outline, rect.top - size_outline, rect.width + size_outline * 2, rect.height + size_outline * 2)
 
     def isnan(self, number: Number) -> bool:
         return isnan(number)
@@ -667,6 +799,6 @@ class _Math:
         v = (pos_end - pos_start) / time_end
         return pos_start + v * (current_time - start_time)
 
-Math = _Math()
+math = _Math()
 
 del _Math

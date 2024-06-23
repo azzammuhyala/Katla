@@ -4,7 +4,7 @@ from math import (isinf as _isinf, isnan as _isnan)
 RealNumber = int | float
 
 class exponents:
-    exponents_en_us = {
+    en_us = {
         "decimal": ".",
         "separator": ",",
         "scientific": "E+",
@@ -19,7 +19,7 @@ class exponents:
         "octillion": "Oc",
         "nonillion": "Nn"
     }
-    exponents_id = {
+    idn = {
         "decimal": ",",
         "separator": ".",
         "scientific": "E+",
@@ -37,7 +37,7 @@ class exponents:
 
 class NumberFormat:
 
-    def __init__(self, config_exponents: dict[str, str] = exponents.exponents_en_us, decimal_places: int = 1, use_exponent: bool = True, rounded: bool = True, anchor_decimal_places: bool = False) -> None:
+    def __init__(self, config_exponents: dict[str, str] = exponents.en_us, decimal_places: int = 1, use_exponent: bool = True, rounded: bool = True, anchor_decimal_places: bool = False) -> None:
         self.config_exponents = config_exponents
         tenpow = lambda x : 10 ** x
         self.exponents_mapping = {

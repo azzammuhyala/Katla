@@ -14,7 +14,7 @@ Features:
 
 import json
 import os as _os
-from typing import Union as _Union
+import typing as _typ
 from warnings import warn as _warn
 try:
     import fernet as _fernet
@@ -22,11 +22,12 @@ except ModuleNotFoundError:
     _warn('The `fernet` module is not installed. please install with the command `pip install fernet`')
     exit(-1)
 
-JsonType = _Union[dict, list, tuple, int, float, str, bool, None]
+JsonObj = dict | list | int | float | str | bool | None
+Path = _os.PathLike[str]
 
-class read: ...
-class encrypt: ...
-class jsonen: ...
+class mode:
+    def __init__(self, id) -> None:
+        self.id = id
 
 class Json:
 
@@ -39,7 +40,7 @@ class Json:
     - `encoding`: `str` -> File encoding (default "utf-8")
     """
 
-    def __init__(self, file_path: str, default: JsonType = None, indent: int | None = 4, encoding: str = "utf-8") -> None:
+    def __init__(self, file_path: Path, default: JsonObj = None, indent: int | None = 4, encoding: str = "utf-8") -> None:
         self.file_path = file_path
         self.default = default
         self.encoding = encoding
@@ -58,35 +59,41 @@ class Json:
         if not bool(condition):
             raise raise_exception
 
-    def __validation(self, data: JsonType = None, key: bytes = b'', moderead=b'') -> None:
-        self.__assert(isinstance(data, JsonType), TypeError(f'data: must be valid json type not {type(data).__name__}'))
+    def __validation(self, data: JsonObj = None, key: bytes = b'', moderead: bytes | mode =b'') -> None:
+        self.__assert(isinstance(data, JsonObj), TypeError(f'data: must be valid json type not {type(data).__name__}'))
         self.__assert(isinstance(key, bytes), TypeError(f'key: must be bytes not {type(key).__name__}'))
-        self.__assert(isinstance(moderead, _Union[bytes, jsonen]), TypeError(f'split_item: must be bytes or jsonen not {type(data).__name__}'))
+        self.__assert(isinstance(moderead, bytes | mode), TypeError(f'split_item: must be bytes or mode not {type(data).__name__}'))
         self.__assert(isinstance(self.file_path, str), TypeError(f'file: must be str not {type(self.file_path).__name__}'))
-        self.__assert(isinstance(self.default, JsonType), TypeError(f'default: must be dict or list or None (no default) not {type(self.default).__name__}'))
-        self.__assert(isinstance(self.indent, _Union[int, None]), TypeError(f'indent: must be int or None (no default) not {type(self.indent).__name__}'))
+        self.__assert(isinstance(self.default, JsonObj), TypeError(f'default: must be dict or list or None (no default) not {type(self.default).__name__}'))
+        self.__assert(isinstance(self.indent, int | None), TypeError(f'indent: must be int or None (no default) not {type(self.indent).__name__}'))
 
-    def __write(self, data: JsonType = None) -> None:
+    def __write(self, data: JsonObj) -> None:
         with open(self.file_path, 'w', encoding=self.encoding) as w:
-            if isinstance(data, JsonType):
+
+            if isinstance(data, JsonObj):
                 json.dump(data, w, indent=self.indent)
             else:
                 w.write('')
+
             self.new_data = data
 
     def copy(self):
         return Json(
             file_path = self.file_path,
             default = self.default,
-            indent = self.indent
+            indent = self.indent,
+            encoding = self.encoding
         )
 
     @property
     def file_exists(self) -> bool:
         return _os.path.exists(self.file_path)
 
-    def load_write(self, new_data: _Union[JsonType, read] = read()) -> JsonType:
-        is_read = isinstance(new_data, read)
+    def load_write(self, new_data: JsonObj | mode = mode('read')) -> JsonObj:
+        is_read = False
+
+        if isinstance(new_data, mode):
+            is_read = True
 
         if not is_read:
             self.__validation(new_data)
@@ -120,11 +127,11 @@ class Json:
     def get_json_dumps(self) -> str:
         return json.dumps(self.load_write())
 
-    def encrypt_data(self, key: bytes, data: _Union[JsonType, encrypt] = encrypt()) -> dict[str, bytes]:
+    def encrypt_data(self, key: bytes, data: JsonObj | mode = mode('encrypt')) -> dict[_typ.Literal['ct-bytes'], bytes]:
 
         self.__validation(data, key)
 
-        if isinstance(data, encrypt):
+        if isinstance(data, mode):
             data_str = self.get_json_dumps()
         else:
             data_str = json.dumps(data)
@@ -134,12 +141,13 @@ class Json:
         ct_bytes = cipher.encrypt(data_bytes)
         return {'ct-bytes': ct_bytes}
 
-    def decrypt_data(self, key: bytes, moderead: _Union[jsonen, bytes] = jsonen()) -> str:
+    def decrypt_data(self, key: bytes, moderead: bytes | mode = mode('jsonen')) -> str:
 
         self.__validation(key=key, moderead=moderead)
 
-        if isinstance(moderead, jsonen):
+        if isinstance(moderead, mode):
             ct_bytes = self.load_write()['ct-bytes'].encode()
+
         elif isinstance(moderead, bytes):
             with open(self.file_path, 'rb') as data:
                 ct_bytes = data.read()
@@ -148,13 +156,13 @@ class Json:
         pt = cipher.decrypt(ct_bytes)
         return pt.decode()
 
-    def encrypt_json(self, key: bytes, data: _Union[JsonType, encrypt] = encrypt()) -> None:
+    def encrypt_json(self, key: bytes, data: JsonObj | mode = mode('encrypt')) -> None:
 
         ct_bytes = self.encrypt_data(key, data)
         ct_bytes['ct-bytes'].decode()
         self.load_write(ct_bytes)
 
-    def decrypt_json(self, key: bytes, moderead: _Union[bytes, jsonen] = jsonen()) -> JsonType:
+    def decrypt_json(self, key: bytes, moderead: bytes | mode = mode('jsonen')) -> JsonObj:
 
         try:
             return json.loads(self.decrypt_data(key, moderead))
