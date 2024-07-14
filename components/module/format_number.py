@@ -1,10 +1,28 @@
 from re import sub as _sub
+from typing import Literal as _Literal
 from math import (isinf as _isinf, isnan as _isnan)
 
 RealNumber = int | float
 
 class exponents:
-    en_us = {
+
+    literal_exponents_attr = _Literal[
+        "decimal"
+        "separator",
+        "scientific",
+        "thousand",
+        "million",
+        "billion",
+        "trillion",
+        "quadrillion",
+        "quintillion",
+        "sextillion",
+        "septillion",
+        "octillion",
+        "nonillion"
+    ]
+
+    en_us: dict[literal_exponents_attr, str] = {
         "decimal": ".",
         "separator": ",",
         "scientific": "E+",
@@ -19,7 +37,8 @@ class exponents:
         "octillion": "Oc",
         "nonillion": "Nn"
     }
-    idn = {
+
+    idn: dict[literal_exponents_attr, str] = {
         "decimal": ",",
         "separator": ".",
         "scientific": "E+",
@@ -37,9 +56,20 @@ class exponents:
 
 class NumberFormat:
 
-    def __init__(self, config_exponents: dict[str, str] = exponents.en_us, decimal_places: int = 1, use_exponent: bool = True, rounded: bool = True, anchor_decimal_places: bool = False) -> None:
-        self.config_exponents = config_exponents
-        tenpow = lambda x : 10 ** x
+    def __init__(
+            
+            self,
+            config_exponents: dict[exponents.literal_exponents_attr, str] = exponents.en_us,
+            decimal_places: int = 1,
+            use_exponent: bool = True,
+            rounded: bool = True,
+            anchor_decimal_places: bool = False,
+            reach: tuple[_Literal[1, 2, 3], exponents.literal_exponents_attr] = (1, "thousand")
+
+        ) -> None:
+
+        tenpow = lambda x : int(10 ** x)
+
         self.exponents_mapping = {
             'thousand': tenpow(3),
             'million': tenpow(6),
@@ -52,6 +82,8 @@ class NumberFormat:
             'octillion': tenpow(27),
             'nonillion': tenpow(30)
         }
+
+        self.config_exponents = config_exponents
         self.decimal_separator = self.config_exponents['decimal']
         self.thousands_separator = self.config_exponents['separator']
         self.scientific_seperator = self.config_exponents['scientific']
@@ -60,6 +92,7 @@ class NumberFormat:
         self.use_exponent = use_exponent
         self.rounded = rounded
         self.anchor_decimal_places = anchor_decimal_places
+        self.reach = reach
 
     def __validation(self, number) -> None:
         nametype = lambda x : type(x).__name__
@@ -67,6 +100,8 @@ class NumberFormat:
             raise TypeError('type error at number -> ' + nametype(number))
         elif not isinstance(self.decimal_places, int):
             raise TypeError('type error at NumberParse.decimal_places -> ' + nametype(self.decimal_places))
+        elif not isinstance(self.reach, tuple):
+            raise TypeError('type error at NumberParse.reach -> ' + nametype(self.decimal_places))
         elif self.decimal_places < 0:
             raise ValueError('value error at NumberParse.decimal_places -> ' + str(self.decimal_places))
 
@@ -111,7 +146,16 @@ class NumberFormat:
 
     def _parse_exponent(self, number: RealNumber, exponent_key: str) -> str:
         if self.use_exponent:
-            return ('-' if number < 0 else '') + self.parse_precision(abs(number) / self.exponents_mapping[exponent_key]) + ' ' + self.config_exponents[exponent_key]
+            n = abs(number) / self.exponents_mapping[exponent_key]
+            minus_sign = ('-' if number < 0 else '')
+
+            if len(str(n).split('.')[0]) >= self.reach[0] and exponent_key == self.reach[1]:
+                return minus_sign + self.parse_precision(abs(number) / self.exponents_mapping[exponent_key]) + ' ' + self.config_exponents[exponent_key]
+
+            if not self.anchor_decimal_places:
+                self.decimal_places = 0
+            return self.parse_precision(number)
+    
         return self.parse_precision(number)
 
     def parse(self, number: RealNumber) -> str:
@@ -119,7 +163,9 @@ class NumberFormat:
         abs_number = abs(number)
         self.decimal_places = self._const_decimal_places
 
-        if abs_number < self.exponents_mapping['thousand']:
+        if _isinf(number) or _isnan(number):
+            return number
+        elif abs_number < self.exponents_mapping['thousand']:
             if not self.anchor_decimal_places:
                 self.decimal_places = 0
             return self.parse_precision(number)
@@ -143,7 +189,5 @@ class NumberFormat:
             return self._parse_exponent(number, 'octillion')
         elif self.exponents_mapping['nonillion'] <= abs_number < self.exponents_mapping['nonillion'] * 1000:
             return self._parse_exponent(number, 'nonillion')
-        elif _isinf(number) or _isnan(number):
-            return number
         else:
             return self.parse_scientific(number)

@@ -1,12 +1,12 @@
 # Katla - pygame - Python 3
-Lisensi Hak cipta ~ Copyright © 2024 - 2026 [ Azzamuhyala ] | LICENSE MIT
+Lisensi Hak cipta ~ Copyright © 2024 - 2026 [ Azzamuhyala ] ~ LICENSE MIT (Selengkapnya ada di file `LICENSE`)
 
-![Tampilan Katla (1.1.5 BETA)](docs/assets/gameplay_1.1.5.gif)
+![Tampilan Katla (1.1.5 BETA)](docs/assets/gameplay.gif)
 *_Tampilan permainan di versi saat ini_.
 
 Cara bermain?
 ---
-> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar #) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Kamu cukup ekstrak file `Katla.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`.
+> Jika Kamu ingin menjalankan permainan ini dengan Python install modul yang diperlukan di file "`docs/requirements.txt`" (Hiraukan komentar tagar **#**) atau jalankan perintah berikut: `pip install -r docs/requirements.txt`. Jika Kamu menggunakan Windows, Silahkan buka link Google Drive lalu buka folder Katla dan kemudian Kamu pilih Katla.zip lalu klik ikon atau opsi unduh lalu Kamu cukup ekstrak file `win.katla.onefile.zip` kemudian buka folder `Katla` dan jalankan aplikasi `Katla.exe`. Jika Kamu tidak menemukan file zip yang di maksud di Google Drive kemungkinan besar Google membatasinya karena masalah kecurigaan aplikasi yang dianggap berbahaya. **APLIKASI EXE INI SAMA DENGAN SOURCE KODE PYTHON**.
 
 Dalam permainan ini, Kamu harus menebak kata yang dipilih secara acak dari kamus yang ada. Sebagai petunjuk akan di berikan 3 warna yang menandakan seberapa dekat Kamu dengan kata tersebut.
 
@@ -19,7 +19,7 @@ _**Daftar warna dan maksudnya**_:
 - *KUNING*: Ada dalam kata yang dipilih akan tetapi tempatnya salah.
 - *MERAH*: Tidak ada dalam semua tempat.
 
-Tiap Kamu menang, Kamu mendapatkan **1 koin**. Dapatkan koin harian selama 24 jam untuk mendapatkan **50 koin**. Koin berfungsi untuk membeli 3 bantuan yakni `PETUNJUK HURUF`, `PETUNJUK PAPAN KEYBOARD`, dan `PENGHAPUS KATA PADA PAPAN KETIK`. Tiap bantuan memiliki fungsinya tersendiri sesuai dengan namanya.
+Tiap Kamu menang, Kamu mendapatkan **1 koin** (_Bonus 1 koin tambahan di panjang kata 9 huruf_). Dapatkan koin harian selama 24 jam untuk mendapatkan **50 koin**. Koin berfungsi untuk membeli 3 bantuan yakni `PETUNJUK HURUF`, `PETUNJUK PAPAN KEYBOARD`, dan `PENGHAPUS KATA PADA PAPAN KETIK`. Tiap bantuan memiliki fungsinya tersendiri sesuai dengan namanya.
 
 _**Daftar tombol pintas dan maksudnya**_:
 - Tombol `Esc` _Escape_: Menutup tampilan popup / pengaturan.
@@ -31,6 +31,7 @@ _**Daftar tombol pintas dan maksudnya**_:
 - Tombol `3`: Menulis kata yang benar / kata dari bantuan secara otomatis.
 - Tombol `4`: Permainan diulang.
 - Tombol `5`: Membuka tampilan `PENGATURAN`.
+- Tombol `6`: Membuka tampilan `CATATAN`.
 - Tombol `7`: Membuka tampilan popup `KOIN HARIAN`.
 - Tombol `8`: Membuka tampilan popup `PETUNJUK HURUF`.
 - Tombol `9`: Membuka tampilan popup `PETUNJUK PAPAN KEYBOARD`.
@@ -70,20 +71,30 @@ _Kekurangan petunjuk ini_:
 
 Fitur / Peningkatan
 ---
-* Perbaikan kode
-* Perbaikan popup
-* Perbaikan bahasa
-* Perbaikan front-end
-* Perbaikan pengaturan
-* Perbaikan dokumentasi
-* Perbaikan aplikasi "Katla solver"
-* Perbaikan resize layar / layar penuh
-* Penambahan tema baru
-* Fitur menang beruntun
-* Fitur blink pada papan kata
-* Fitur pengendalian suara mixer
-* Fitur gif saat menang (Dalam uji coba)
-* Kata baru di tambahkan (Akan berusaha di perbarui)
+1. Perbaikan kata
+2. Perbaikan kode
+3. Perbaikan bahasa
+4. Perbaikan performa
+5. Perbaikan front-end
+6. Perbaikan data katla
+7. Perbaikan load screen
+8. Perbaikan pengaturan
+9. Perbaikan dokumentasi
+10. Perbaikan popup statistik
+11. Perubahan ikon
+12. Perubahan kode
+13. Perubahan format angka
+14. Perubahan tombol pintas
+15. Perubahan FPS, sekarang FPS maksimal adalah 140
+16. Perubahan ukuran geometri, sekarang geometri minimal adalah 0,5x
+17. Penambahan tema baru
+18. Penambahan pengaturan baru
+19. Penambahan tampilan baru "**Catatan / Logs**"
+20. Menang beruntun sekarang dihitung perhari
+21. Harga petunjuk berubah di panjang kata 8 dan 9 huruf
+22. Maksimal kesempatan menebak jika kata bebas adalah 7
+23. Bonus 1 koin tambahan saat menang di panjang kata 9 huruf
+24. Maksimal kesempatan berubah saat tidak menggunakan kata valid
 
 Daftar versi
 ---
@@ -94,7 +105,8 @@ Daftar versi
 * `1.1.2`: Minggu, 09/06/2024 - 14:21:53
 * `1.1.3`: Rabu, 12/06/2024 - 13:44:42
 * `1.1.4`: Selasa, 18/06/2024 - 18:06:24
-* `1.1.5 (BETA)`: Minggu, 23/06/2024 - 21:40:24 (baru)
+* `1.1.5 (BETA)`: Minggu, 23/06/2024 - 21:40:24
+* `1.2.0`: ???, ??/??/?? ??:??:?? (baru)
 
 Daftar aplikasi permainan saya
 ---
@@ -123,7 +135,7 @@ Kamus
 
 Tanggal dirilis
 ---
-**Minggu, 23/06/2024 - 21:40:24**
+**???, ??/??/?? ??:??:??**
 
 "_Terima kasih sudah membaca / memainkan permainan yang saya buat :)_"
 

@@ -52,8 +52,7 @@ class Json:
         self.__validation()
 
     def __repr__(self) -> str:
-        encode_esc = lambda string : str(string).encode("unicode_escape").decode("utf-8").replace('"', '\\"')
-        return f'Json(file_path="{encode_esc(self.file_path)}", default={encode_esc(self.default)}, indent={self.indent})'
+        return f'Json(file_path={repr(self.file_path)}, default={repr(self.default)}, indent={repr(self.indent)})'
 
     def __assert(self, condition: bool, raise_exception: Exception) -> None:
         if not bool(condition):

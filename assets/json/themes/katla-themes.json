@@ -1,0 +1,716 @@
+[
+    {
+        "id": "dark",
+        "screen": "#0e1421",
+        "barMenu": {
+            "background": "#0a1c2e",
+            "indicator": "#af0f01",
+            "text": "white"
+        },
+        "logs": {
+            "background": "black",
+            "button": {
+                "inactive": "#202c42",
+                "active": "#171f2e",
+                "hover": "#2d3f5e",
+                "outline": "#3b3b57"
+            },
+            "text": {
+                "info": "white",
+                "warn": "#e6eb1a",
+                "error": "#800d0d",
+                "license": "#51b6f5",
+                "label-color": "white",
+                "label-background": "#202c42"
+            }
+        },
+        "keyboard": {
+            "background": "#0a1c2e",
+            "button": {
+                "not-inputed": {
+                    "inactive": "#111621",
+                    "active": "#171f2e",
+                    "hover": "#202b40"
+                },
+                "green": {
+                    "inactive": "#3d993d",
+                    "active": "#3d7b3d",
+                    "hover": "#3db73d"
+                },
+                "yellow": {
+                    "inactive": "#998a3d",
+                    "active": "#7b6c3d",
+                    "hover": "#b7a83d"
+                },
+                "red": {
+                    "inactive": "#993d3d",
+                    "active": "#7b3d3d",
+                    "hover": "#b73d3d"
+                },
+                "outline": {
+                    "inactive": "#3b3b57",
+                    "active": "#6db8e3"
+                }
+            },
+            "text": "white"
+        },
+        "boxEntryTile": {
+            "box": {
+                "not-inputed": "#111621",
+                "green": "#3d993d",
+                "yellow": "#998a3d",
+                "red": "#993d3d",
+                "outline": {
+                    "point-inactive": "#3b3b57",
+                    "point-active": "#6db8e3"
+                }
+            },
+            "text": "white"
+        },
+        "notification": {
+            "default": {
+                "background": "#111621",
+                "outline": "#3b3b57",
+                "text": "white"
+            },
+            "win": {
+                "background": "#3d993d",
+                "outline": "#3d673d",
+                "text": "white"
+            },
+            "lose": {
+                "background": "#993d3d",
+                "outline": "#673d3d",
+                "text": "white"
+            }
+        },
+        "popup": {
+            "background": "#111621",
+            "shadow": "black",
+            "outline": "#3b3b57",
+            "win-bar": "#3d993d",
+            "button": {
+                "buy": {
+                    "inactive": "#0c143b",
+                    "active": "#10194a",
+                    "hover": "#111c57"
+                }
+            },
+            "text": "white"
+        },
+        "settings": {
+            "background": "#111621",
+            "outline": "#3b3b57",
+            "navbar": "#0a1c2e",
+            "button": {
+                "set": {
+                    "inactive": "#202c42",
+                    "active": "#171f2e",
+                    "hover": "#2d3f5e"
+                },
+                "switch": {
+                    "true": {
+                        "inactive": "#3d993d",
+                        "active": "#3d7b3d",
+                        "hover": "#3db73d"
+                    },
+                    "false": {
+                        "inactive": "#993d3d",
+                        "active": "#7b3d3d",
+                        "hover": "#b73d3d"
+                    }
+                }
+            },
+            "range": {
+                "thumb": {
+                    "inactive": "#d4d4d4",
+                    "active": "#e0e1e7",
+                    "hover": "white"
+                },
+                "track": {
+                    "inactive": "#202c42",
+                    "active": "#171f2e",
+                    "hover": "#2d3f5e"
+                },
+                "track-fill": {
+                    "inactive": "#178530",
+                    "active": "#1a4a25",
+                    "hover": "#1ca33b"
+                }
+            },
+            "text": "white"
+        }
+    },
+
+    {
+        "id": "dark-gray",
+        "screen": "#1e1e1e",
+        "barMenu": {
+            "background": "#3c3c3c",
+            "indicator": "#780202",
+            "text": "white"
+        },
+        "logs": {
+            "background": "black",
+            "button": {
+                "inactive": "#131417",
+                "active": "#0c0e0f",
+                "hover": "#1b1d1e",
+                "outline": "#333333"
+            },
+            "text": {
+                "info": "white",
+                "warn": "#e6eb1a",
+                "error": "#800d0d",
+                "license": "#51b6f5",
+                "label-color": "white",
+                "label-background": "#131417"
+            }
+        },
+        "keyboard": {
+            "background": "#1a1818",
+            "button": {
+                "not-inputed": {
+                    "inactive": "#454547",
+                    "active": "#3c3b3f",
+                    "hover": "#4e504f"
+                },
+                "green": {
+                    "inactive": "#15803d",
+                    "active": "#3d7b3d",
+                    "hover": "#3db73d"
+                },
+                "yellow": {
+                    "inactive": "#ca8a04",
+                    "active": "#7b6c3d",
+                    "hover": "#b7a83d"
+                },
+                "red": {
+                    "inactive": "#323236",
+                    "active": "#28292b",
+                    "hover": "#3b3c3d"
+                },
+                "outline": {
+                    "inactive": "#333333",
+                    "active": "#a3a2a2"
+                }
+            },
+            "text": "white"
+        },
+        "boxEntryTile": {
+            "box": {
+                "not-inputed": "#454547",
+                "green": "#15803d",
+                "yellow": "#ca8a04",
+                "red": "#323236",
+                "outline": {
+                    "point-inactive": "#333333",
+                    "point-active": "#b7b6b6"
+                }
+            },
+            "text": "white"
+        },
+        "notification": {
+            "default": {
+                "background": "#454547",
+                "outline": "#333333",
+                "text": "white"
+            },
+            "win": {
+                "background": "#15803d",
+                "outline": "#0f6e33",
+                "text": "white"
+            },
+            "lose": {
+                "background": "#323236",
+                "outline": "#2c3846",
+                "text": "white"
+            }
+        },
+        "popup": {
+            "background": "#1e1e1e",
+            "shadow": "black",
+            "outline": "#333333",
+            "win-bar": "#15803d",
+            "button": {
+                "buy": {
+                    "inactive": "#131417",
+                    "active": "#0c0e0f",
+                    "hover": "#1b1d1e"
+                }
+            },
+            "text": "white"
+        },
+        "settings": {
+            "background": "#1e1e1e",
+            "outline": "#423f3e",
+            "navbar": "#3c3c3c",
+            "button": {
+                "set": {
+                    "inactive": "#131417",
+                    "active": "#0c0e0f",
+                    "hover": "#1b1d1e"
+                },
+                "switch": {
+                    "true": {
+                        "inactive": "#15803d",
+                        "active": "#3d7b3d",
+                        "hover": "#3db73d"
+                    },
+                    "false": {
+                        "inactive": "#323236",
+                        "active": "#28292b",
+                        "hover": "#3b3c3d"
+                    }
+                }
+            },
+            "range": {
+                "thumb": {
+                    "inactive": "#d4d4d4",
+                    "active": "#e0e1e7",
+                    "hover": "white"
+                },
+                "track": {
+                    "inactive": "#131417",
+                    "active": "#0c0e0f",
+                    "hover": "#1b1d1e"
+                },
+                "track-fill": {
+                    "inactive": "#ca8a04",
+                    "active": "#7b6c3d",
+                    "hover": "#b7a83d"
+                }
+            },
+            "text": "white"
+        }
+    },
+
+    {
+        "id": "light",
+        "screen": "#e8e8e8",
+        "barMenu": {
+            "background": "#dadeeb",
+            "indicator": "#af0f01",
+            "text": "black"
+        },
+        "logs": {
+            "background": "black",
+            "button": {
+                "inactive": "#ccd0ff",
+                "active": "#c1c6ff",
+                "hover": "#dde0ff",
+                "outline": "#948da8"
+            },
+            "text": {
+                "info": "white",
+                "warn": "#e6eb1a",
+                "error": "#800d0d",
+                "license": "#51b6f5",
+                "label-color": "black",
+                "label-background": "#ccd0ff"
+            }
+        },
+        "keyboard": {
+            "background": "#dadeeb",
+            "button": {
+                "not-inputed": {
+                    "inactive": "#d1d5db",
+                    "active": "#d2d3db",
+                    "hover": "#eff6f9"
+                },
+                "green": {
+                    "inactive": "#3d993d",
+                    "active": "#3d7b3d",
+                    "hover": "#3db73d"
+                },
+                "yellow": {
+                    "inactive": "#998a3d",
+                    "active": "#7b6c3d",
+                    "hover": "#b7a83d"
+                },
+                "red": {
+                    "inactive": "#993d3d",
+                    "active": "#7b3d3d",
+                    "hover": "#b73d3d"
+                },
+                "outline": {
+                    "inactive": "#948da8",
+                    "active": "#d6b25c"
+                }
+            },
+            "text": "black"
+        },
+        "boxEntryTile": {
+            "box": {
+                "not-inputed": "#d1d5db",
+                "green": "#3d993d",
+                "yellow": "#998a3d",
+                "red": "#993d3d",
+                "outline": {
+                    "point-inactive": "#948da8",
+                    "point-active": "#d6b25c"
+                }
+            },
+            "text": "black"
+        },
+        "notification": {
+            "default": {
+                "background": "#dadeeb",
+                "outline": "#948da8",
+                "text": "black"
+            },
+            "win": {
+                "background": "#29ce29",
+                "outline": "#3d673d",
+                "text": "black"
+            },
+            "lose": {
+                "background": "#ce2929",
+                "outline": "#673d3d",
+                "text": "black"
+            }
+        },
+        "popup": {
+            "background": "#d1d5db",
+            "shadow": "black",
+            "outline": "#948da8",
+            "win-bar": "#29ce29",
+            "button": {
+                "buy": {
+                    "inactive": "#ccd0ff",
+                    "active": "#c1c6ff",
+                    "hover": "#dde0ff"
+                }
+            },
+            "text": "black"
+        },
+        "settings": {
+            "background": "#d1d5db",
+            "outline": "#948da8",
+            "navbar": "#dadeeb",
+            "button": {
+                "set": {
+                    "inactive": "#ccd0ff",
+                    "active": "#c1c6ff",
+                    "hover": "#dde0ff"
+                },
+                "switch": {
+                    "true": {
+                        "inactive": "#3d993d",
+                        "active": "#3d7b3d",
+                        "hover": "#3db73d"
+                    },
+                    "false": {
+                        "inactive": "#993d3d",
+                        "active": "#7b3d3d",
+                        "hover": "#b73d3d"
+                    }
+                }
+            },
+            "range": {
+                "thumb": {
+                    "inactive": "#686475",
+                    "active": "#47454d",
+                    "hover": "#8d8a96"
+                },
+                "track": {
+                    "inactive": "#ccd0ff",
+                    "active": "#c1c6ff",
+                    "hover": "#dde0ff"
+                },
+                "track-fill": {
+                    "inactive": "#178530",
+                    "active": "#1a4a25",
+                    "hover": "#1ca33b"
+                }
+            },
+            "text": "black"
+        }
+    },
+
+    {
+        "id": "light-blue",
+        "screen": "#daedf2",
+        "barMenu": {
+            "background": "#35b1c4",
+            "indicator": "#b05541",
+            "text": "black"
+        },
+        "logs": {
+            "background": "black",
+            "button": {
+                "inactive": "#8cbcd4",
+                "active": "#7ea6bf",
+                "hover": "#79a1ba",
+                "outline": "#626499"
+            },
+            "text": {
+                "info": "white",
+                "warn": "#d1ce26",
+                "error": "#993129",
+                "license": "#35a8bd",
+                "label-color": "black",
+                "label-background": "#8cbcd4"
+            }
+        },
+        "keyboard": {
+            "background": "#35b1c4",
+            "button": {
+                "not-inputed": {
+                    "inactive": "#98c8d4",
+                    "active": "#7ea6bf",
+                    "hover": "#79a1ba"
+                },
+                "green": {
+                    "inactive": "#48d490",
+                    "active": "#3eb57b",
+                    "hover": "#3fe895"
+                },
+                "yellow": {
+                    "inactive": "#d4d448",
+                    "active": "#c0c238",
+                    "hover": "#e1e33b"
+                },
+                "red": {
+                    "inactive": "#d45448",
+                    "active": "#d94c34",
+                    "hover": "#d67463"
+                },
+                "outline": {
+                    "inactive": "#626499",
+                    "active": "#6db8e3"
+                }
+            },
+            "text": "black"
+        },
+        "boxEntryTile": {
+            "box": {
+                "not-inputed": "#98c8d4",
+                "green": "#48d490",
+                "yellow": "#d4d448",
+                "red": "#d45448",
+                "outline": {
+                    "point-inactive": "#626499",
+                    "point-active": "#b679f2"
+                }
+            },
+            "text": "black"
+        },
+        "notification": {
+            "default": {
+                "background": "#98c8d4",
+                "outline": "#626499",
+                "text": "black"
+            },
+            "win": {
+                "background": "#48d490",
+                "outline": "#32a16b",
+                "text": "black"
+            },
+            "lose": {
+                "background": "#d45448",
+                "outline": "#8c3830",
+                "text": "black"
+            }
+        },
+        "popup": {
+            "background": "#98c8d4",
+            "shadow": "black",
+            "outline": "#626499",
+            "win-bar": "#48d490",
+            "button": {
+                "buy": {
+                    "inactive": "#689fb0",
+                    "active": "#4d8799",
+                    "hover": "#65b8bf"
+                }
+            },
+            "text": "black"
+        },
+        "settings": {
+            "background": "#98c8d4",
+            "outline": "#626499",
+            "navbar": "#35b1c4",
+            "button": {
+                "set": {
+                    "inactive": "#8cbcd4",
+                    "active": "#7ea6bf",
+                    "hover": "#79a1ba"
+                },
+                "switch": {
+                    "true": {
+                        "inactive": "#48d490",
+                        "active": "#3eb57b",
+                        "hover": "#3fe895"
+                    },
+                    "false": {
+                        "inactive": "#d45448",
+                        "active": "#d94c34",
+                        "hover": "#d67463"
+                    }
+                }
+            },
+            "range": {
+                "thumb": {
+                    "inactive": "#d4d4d4",
+                    "active": "#e0e1e7",
+                    "hover": "white"
+                },
+                "track": {
+                    "inactive": "#8cbcd4",
+                    "active": "#7ea6bf",
+                    "hover": "#79a1ba"
+                },
+                "track-fill": {
+                    "inactive": "#725ab0",
+                    "active": "#5d4d91",
+                    "hover": "#7c6bb5"
+                }
+            },
+            "text": "black"
+        }
+    },
+
+    {
+        "id": "solid",
+        "screen": "gray",
+        "barMenu": {
+            "background": "black",
+            "indicator": "red",
+            "text": "white"
+        },
+        "logs": {
+            "background": "black",
+            "button": {
+                "inactive": "blue",
+                "active": "blue",
+                "hover": "blue",
+                "outline": "yellow"
+            },
+            "text": {
+                "info": "white",
+                "warn": "yellow",
+                "error": "red",
+                "license": "cyan",
+                "label-color": "black",
+                "label-background": "white"
+            }
+        },
+        "keyboard": {
+            "background": "black",
+            "button": {
+                "not-inputed": {
+                    "inactive": "gray",
+                    "active": "gray",
+                    "hover": "gray"
+                },
+                "green": {
+                    "inactive": "green",
+                    "active": "green",
+                    "hover": "green"
+                },
+                "yellow": {
+                    "inactive": "yellow",
+                    "active": "yellow",
+                    "hover": "yellow"
+                },
+                "red": {
+                    "inactive": "red",
+                    "active": "red",
+                    "hover": "red"
+                },
+                "outline": {
+                    "inactive": "magenta",
+                    "active": "orange"
+                }
+            },
+            "text": "white"
+        },
+        "boxEntryTile": {
+            "box": {
+                "not-inputed": "gray",
+                "green": "green",
+                "yellow": "yellow",
+                "red": "red",
+                "outline": {
+                    "point-inactive": "magenta",
+                    "point-active": "orange"
+                }
+            },
+            "text": "black"
+        },
+        "notification": {
+            "default": {
+                "background": "gray",
+                "outline": "magenta",
+                "text": "black"
+            },
+            "win": {
+                "background": "green",
+                "outline": "yellow",
+                "text": "black"
+            },
+            "lose": {
+                "background": "red",
+                "outline": "yellow",
+                "text": "black"
+            }
+        },
+        "popup": {
+            "background": "gray",
+            "shadow": "black",
+            "outline": "magenta",
+            "win-bar": "green",
+            "button": {
+                "buy": {
+                    "inactive": "blue",
+                    "active": "blue",
+                    "hover": "blue"
+                }
+            },
+            "text": "black"
+        },
+        "settings": {
+            "background": "gray",
+            "outline": "yellow",
+            "navbar": "black",
+            "button": {
+                "set": {
+                    "inactive": "blue",
+                    "active": "blue",
+                    "hover": "blue"
+                },
+                "switch": {
+                    "true": {
+                        "inactive": "green",
+                        "active": "green",
+                        "hover": "green"
+                    },
+                    "false": {
+                        "inactive": "red",
+                        "active": "red",
+                        "hover": "red"
+                    }
+                }
+            },
+            "range": {
+                "thumb": {
+                    "inactive": "white",
+                    "active": "white",
+                    "hover": "white"
+                },
+                "track": {
+                    "inactive": "magenta",
+                    "active": "magenta",
+                    "hover": "magenta"
+                },
+                "track-fill": {
+                    "inactive": "cyan",
+                    "active": "cyan",
+                    "hover": "cyan"
+                }
+            },
+            "text": "white"
+        }
+    }
+]

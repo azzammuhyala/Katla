@@ -37,7 +37,7 @@ class Katla:
         self.words_list = [word.upper() for word in self.dictionary[f'length-{self.word_length}']]
         self.keyboards_feedback_history = []
         self.guess_count = self.change_guess
-        self.selected_word = random.choice(self.words_list)
+        self.selected_word = 'SAWUT'#random.choice(self.words_list)
         self.guessed = False
 
     def reset(self) -> None:
@@ -57,10 +57,10 @@ class Katla:
         time.sleep(sleep)
 
     def get_feedback_colors(self, guess_word: str) -> const.Feedback:
-        feedback = []
+        feedback               = []
         # Calculate the frequency of each character in the guess and the selected word
-        guess_char_frequency = {char: guess_word.count(char) for char in set(guess_word)}
-        selected_char_frequecy = {char: guess_word.count(char) for char in set(self.selected_word)}
+        guess_char_frequency   = {char: guess_word.count(char) for char in set(guess_word)}
+        selected_char_frequecy = {char: self.selected_word.count(char) for char in set(self.selected_word)}
 
         for i, char in enumerate(guess_word):
 
@@ -95,8 +95,8 @@ class Katla:
                 for j, item in enumerate(feedback):
                     if list(item.keys())[0] == char:
                         if feedback[j][char] in ["green", "yellow"] and guess_char_frequency[char] > 0:
-                            guess_char_frequency[char] -= 1
                             feedback.append({char: "red"})
+                            guess_char_frequency[char] -= 1
                             break
 
         return feedback

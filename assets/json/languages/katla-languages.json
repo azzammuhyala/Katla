@@ -51,7 +51,7 @@
                     "hints": "Hints",
                     "wins": "Wins",
                     "losses": "Losses",
-                    "wins-streak": "Wins streak",
+                    "wins-streak": "Wins streak today",
                     "max-wins-streak": "Max wins streak",
                     "distribution": "Guess Distribution"
                 }
@@ -130,17 +130,19 @@
                     "change-guess": "Change guess"
                 }
             },
-            "theme-type": {
-                "title": "Theme / Type",
+            "display": {
+                "title": "Display",
                 "label": {
                     "app-theme": "App theme",
-                    "keyboard-layout": "Keyboard type"
+                    "keyboard-layout": "Keyboard type",
+                    "show-keyboard": "Show keyboard"
                 },
                 "buttons-label": {
                     "app-theme": {
                         "dark": "Dark",
                         "dark-gray": "Dark gray",
                         "light": "Light",
+                        "light-blue": "Light blue",
                         "solid": "Solid"
                     }
                 }
@@ -149,7 +151,11 @@
                 "title": "Additional settings",
                 "label": {
                     "geomatry": "Geomatry",
-                    "fps": "Max framerate (FPS)"
+                    "fps": "Max framerate (FPS)",
+                    "logs": {
+                        "label": "Logs",
+                        "button-label": "Open logs"
+                    }
                 }
             }
         }
@@ -207,7 +213,7 @@
                     "hints": "Bantuan",
                     "wins": "Menang",
                     "losses": "Kalah",
-                    "wins-streak": "Menang beruntun",
+                    "wins-streak": "Menang beruntun hari ini",
                     "max-wins-streak": "Maksimal menang beruntun",
                     "distribution": "Distribusi Tebakan"
                 }
@@ -286,17 +292,19 @@
                     "change-guess": "Jumlah percobaan"
                 }
             },
-            "theme-type": {
-                "title": "Tema / Tipe",
+            "display": {
+                "title": "Tampilan",
                 "label": {
                     "app-theme": "Tema aplikasi",
-                    "keyboard-layout": "Papan keyboard"
+                    "keyboard-layout": "Papan keyboard",
+                    "show-keyboard": "Tampilkan keyboard"
                 },
                 "buttons-label": {
                     "app-theme": {
                         "dark": "Gelap",
                         "dark-gray": "Gelap abu",
                         "light": "Terang",
+                        "light-blue": "Terang biru",
                         "solid": "Solid"
                     }
                 }
@@ -305,7 +313,11 @@
                 "title": "Pengaturan tambahan",
                 "label": {
                     "geomatry": "Geometri",
-                    "fps": "Maks kcptn bingkai"
+                    "fps": "Maks kcptn bingkai",
+                    "logs": {
+                        "label": "Catatan",
+                        "button-label": "Buka catatan"
+                    }
                 }
             }
         }
@@ -363,8 +375,8 @@
                     "hints": "Bantuan",
                     "wins": "Menang",
                     "losses": "Kalah",
-                    "wins-streak": "Menang beruntun",
-                    "max-wins-streak": "Maksimal menang beruntun",
+                    "wins-streak": "Rentak kemenangan hari ini",
+                    "max-wins-streak": "Maksimal rentak kemenangan",
                     "distribution": "Teka Edaran"
                 }
             },
@@ -441,17 +453,19 @@
                     "change-guess": "Jumlah percubaan"
                 }
             },
-            "theme-type": {
-                "title": "Tema / Jenis",
+            "display": {
+                "title": "Penampilan",
                 "label": {
                     "app-theme": "Tema aplikasi",
-                    "keyboard-layout": "Papan kekunci"
+                    "keyboard-layout": "Papan kekunci",
+                    "show-keyboard": "Tunjukkan papan kekunci"
                 },
                 "buttons-label": {
                     "app-theme": {
                         "dark": "Gelap",
                         "dark-gray": "Gelap abu",
                         "light": "Terang",
+                        "light-blue": "Terang biru",
                         "solid": "Solid"
                     }
                 }
@@ -460,7 +474,11 @@
                 "title": "Tetapan tambahan",
                 "label": {
                     "geomatry": "Geometri",
-                    "fps": "Kdr Bingkai Maks"
+                    "fps": "Kdr bingkai maks",
+                    "logs": {
+                        "label": "Nota",
+                        "button-label": "Buka nota"
+                    }
                 }
             }
         }

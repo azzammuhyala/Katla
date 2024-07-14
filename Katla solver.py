@@ -207,7 +207,7 @@ Button Keys:
             return input(prompt)
 
         elif self.input_type == 'color':
-            prompt = f"\033[36;3mFeedback\033[0;35m #{len(self.feedbacks) + 1}\033[32m > \033[0m"
+            prompt = f"\033[36;3mFeedback\033[0;{35 if len(self.feedbacks) < self.settings['change-guess'] else 31}m #{len(self.feedbacks) + 1}\033[32m > \033[0m"
             enteredLetter = []
             enteredMask = []
             enteredColor = []
@@ -319,7 +319,7 @@ Button Keys:
                 print('-' * 30)
                 for key, value in self.settings.items():
                     key, value = map(str, [key, value])
-                    print(justify(key, 30 - len(value), 'left') + value.upper() + (' #' if key in ('language-word', 'word-length', 'use-valid-word') else ''))
+                    print(justify(key, 30 - len(value), 'left') + value.upper() + (' #' if key in ('language-word', 'word-length', 'change-guess', 'use-valid-word') else ''))
                 print("\n[NOTE] To change the settings, please run the Katla application then change it in Katla settings then the close settings. (Make sure the application position with the main settings file is in the same folder)")
 
             # Refresh current settings and words

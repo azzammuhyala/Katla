@@ -1,0 +1,20 @@
+[
+    {
+        "id": "en-us",
+        "miss-words": [
+
+        ],
+        "not-exists-words": [
+
+        ]
+    },
+    {
+        "id": "idn",
+        "miss-words": [
+
+        ],
+        "not-exists-words": [
+            
+        ]
+    }
+]
