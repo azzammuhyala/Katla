@@ -106,7 +106,7 @@ Daftar versi
 * `1.1.3`: Rabu, 12/06/2024 - 13:44:42
 * `1.1.4`: Selasa, 18/06/2024 - 18:06:24
 * `1.1.5 (BETA)`: Minggu, 23/06/2024 - 21:40:24
-* `1.2.0`: ???, ??/??/?? ??:??:?? (baru)
+* `1.2.0`: Minggu, 14/07/2024 12:44:59 (baru)
 
 Daftar aplikasi permainan saya
 ---
@@ -135,7 +135,7 @@ Kamus
 
 Tanggal dirilis
 ---
-**???, ??/??/?? ??:??:??**
+**Minggu, 14/07/2024 12:44:59**
 
 "_Terima kasih sudah membaca / memainkan permainan yang saya buat :)_"
 
