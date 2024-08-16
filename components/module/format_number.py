@@ -4,9 +4,9 @@ from math import (isinf as _isinf, isnan as _isnan)
 
 RealNumber = int | float
 
-class exponents:
+class Exponents:
 
-    literal_exponents_attr = _Literal[
+    ExponentName = _Literal[
         "decimal"
         "separator",
         "scientific",
@@ -22,7 +22,7 @@ class exponents:
         "nonillion"
     ]
 
-    en_us: dict[literal_exponents_attr, str] = {
+    en_us: dict[ExponentName, str] = {
         "decimal": ".",
         "separator": ",",
         "scientific": "E+",
@@ -38,7 +38,7 @@ class exponents:
         "nonillion": "Nn"
     }
 
-    idn: dict[literal_exponents_attr, str] = {
+    idn: dict[ExponentName, str] = {
         "decimal": ",",
         "separator": ".",
         "scientific": "E+",
@@ -57,14 +57,15 @@ class exponents:
 class NumberFormat:
 
     def __init__(
-            
+
             self,
-            config_exponents: dict[exponents.literal_exponents_attr, str] = exponents.en_us,
+            config_exponents: dict[Exponents.ExponentName, str] = Exponents.en_us,
             decimal_places: int = 1,
             use_exponent: bool = True,
             rounded: bool = True,
             anchor_decimal_places: bool = False,
-            reach: tuple[_Literal[1, 2, 3], exponents.literal_exponents_attr] = (1, "thousand")
+            remove_trailing_zeros: bool = True,
+            reach: tuple[_Literal[1, 2, 3], Exponents.ExponentName] = (1, 'thousand')
 
         ) -> None:
 
@@ -92,9 +93,12 @@ class NumberFormat:
         self.use_exponent = use_exponent
         self.rounded = rounded
         self.anchor_decimal_places = anchor_decimal_places
+        self.remove_trailing_zeros = remove_trailing_zeros
         self.reach = reach
 
-    def __validation(self, number) -> None:
+        del tenpow
+
+    def __validate(self, number) -> None:
         nametype = lambda x : type(x).__name__
         if not isinstance(number, RealNumber):
             raise TypeError('type error at number -> ' + nametype(number))
@@ -106,38 +110,35 @@ class NumberFormat:
             raise ValueError('value error at NumberParse.decimal_places -> ' + str(self.decimal_places))
 
     def rounded_number(self, number: RealNumber) -> str:
-        self.__validation(number)
+        """Parse the number to the specified decimal places with rounding and optional removal of trailing zeros."""
+        self.__validate(number)
 
         if self.rounded:
-            return f"{number:.{self.decimal_places}f}".replace('.', self.decimal_separator)
+            nstring = f"{number:.{self.decimal_places}f}"
+            integer_part, decimal_part = (nstring.split('.') if '.' in nstring else (nstring, ''))
+            if self.remove_trailing_zeros:
+                decimal_part = decimal_part.rstrip('0')
+            return integer_part + (self.decimal_separator + decimal_part if decimal_part else '')
 
         parts = str(float(number)).split('.')
-        interger_part = parts[0]
-
-        if self.decimal_places > 0:
-            decimal_part = self.decimal_separator + parts[1][:self.decimal_places]
-        else:
-            decimal_part = ''
-
-        return interger_part + decimal_part
+        integer_part = parts[0]
+        decimal_part = parts[1][:self.decimal_places]
+        if self.remove_trailing_zeros:
+            decimal_part = decimal_part.rstrip('0')
+        return integer_part + (self.decimal_separator + decimal_part if decimal_part else '')
 
     def parse_precision(self, number: RealNumber) -> str:
+        """Parse the number with thousands separator and specified precision."""
         formatted_number = self.rounded_number(number)
         parts = formatted_number.split(self.decimal_separator)
         integer_part = parts[0]
-
-        if self.decimal_places > 0:
-            decimal_part = self.decimal_separator + parts[1]
-        else:
-            decimal_part = ''
-
+        decimal_part = self.decimal_separator + parts[1] if len(parts) == 2 and self.decimal_places > 0 else ''
         integer_part_with_separator = _sub(r'(?<=\d)(?=(\d{3})+$)', self.thousands_separator, integer_part)
-
         return integer_part_with_separator + decimal_part
 
     def parse_scientific(self, number: RealNumber) -> str:
-        self.__validation(number)
-
+        """Parse the number in scientific notation."""
+        self.__validate(number)
         return (
             f"{number:.{self.decimal_places}e}"
                 .replace('.', self.decimal_separator)
@@ -145,26 +146,26 @@ class NumberFormat:
         )
 
     def _parse_exponent(self, number: RealNumber, exponent_key: str) -> str:
+        """Parse the number using the specified exponent."""
         if self.use_exponent:
-            n = abs(number) / self.exponents_mapping[exponent_key]
-            minus_sign = ('-' if number < 0 else '')
 
-            if len(str(n).split('.')[0]) >= self.reach[0] and exponent_key == self.reach[1]:
-                return minus_sign + self.parse_precision(abs(number) / self.exponents_mapping[exponent_key]) + ' ' + self.config_exponents[exponent_key]
+            if number >= self.exponents_mapping[self.reach[1]] * self.reach[0] ** 10:
+                return ('-' if number < 0 else '') + self.parse_precision(abs(number) / self.exponents_mapping[exponent_key]) + ' ' + self.config_exponents[exponent_key]
 
             if not self.anchor_decimal_places:
                 self.decimal_places = 0
             return self.parse_precision(number)
-    
+
         return self.parse_precision(number)
 
     def parse(self, number: RealNumber) -> str:
-        self.__validation(number)
+        """Parse the number based on its value, using exponents or scientific notation if necessary."""
+        self.__validate(number)
         abs_number = abs(number)
         self.decimal_places = self._const_decimal_places
 
         if _isinf(number) or _isnan(number):
-            return number
+            return str(number)
         elif abs_number < self.exponents_mapping['thousand']:
             if not self.anchor_decimal_places:
                 self.decimal_places = 0

@@ -45,14 +45,17 @@
             "stats": {
                 "title": "STATISTICS",
                 "label": {
-                    "has-been-played": "Has been played",
-                    "daily-coins": "Daily rewands",
+                    "joined-date": "Joined date:",
+                    "play-time-hours": "Play time:",
+                    "has-been-played": "Has been played:",
+                    "daily-coins": "Daily rewands:",
+                    "hours": "Hours",
                     "coins": "Coins",
-                    "hints": "Hints",
-                    "wins": "Wins",
-                    "losses": "Losses",
-                    "wins-streak": "Wins streak today",
-                    "max-wins-streak": "Max wins streak",
+                    "hints": "Hints:",
+                    "wins": "Wins:",
+                    "losses": "Losses:",
+                    "wins-streak": "Wins streak today:",
+                    "max-wins-streak": "Max wins streak:",
                     "distribution": "Guess Distribution"
                 }
             },
@@ -99,12 +102,19 @@
             "win": "Congratulations You won!",
             "lose": "Sorry You lost! The selected word is \"<WORD>\"",
             "not-in-dictionary": "The word \"<WORD>\" doesn't exist",
+            "not-in-dictionary-corrector": ". Did You mean \"<WORD>\"?",
             "less-letter-length": "Letter length is not enough!",
             "tile-hint-provided": "All letter hints are available",
             "keyboard-hint-provided": "All keyboard hints are available",
             "tile-empty": "The board is still empty",
             "reset": "The game is reset, the word is now chosen randomly!",
             "unfullscreen": "To exit full screen, press F11"
+        },
+        "logs": {
+            "warnings": "Warn",
+            "errors": "Err",
+            "total": "Ttl",
+            "lines": "Ln"
         },
         "settings": {
             "title": "SETTINGS",
@@ -126,7 +136,8 @@
                 "title": "Game rules",
                 "label": {
                     "only-in-dictionary": "Only words in the dictionary",
-                    "word-length": "Word length",
+                    "word-correction": "Word correction",
+                    "word-length": "Word length (<WORDS-LENGTH> Words)",
                     "change-guess": "Change guess"
                 }
             },
@@ -207,14 +218,17 @@
             "stats": {
                 "title": "STATISTIK",
                 "label": {
-                    "has-been-played": "Sudah dimainkan",
-                    "daily-coins": "Hadiah harian",
+                    "joined-date": "Tanggal bergabung:",
+                    "play-time-hours": "Waktu bermain:",
+                    "has-been-played": "Sudah dimainkan:",
+                    "daily-coins": "Hadiah harian:",
+                    "hours": "Jam",
                     "coins": "Koin",
-                    "hints": "Bantuan",
-                    "wins": "Menang",
-                    "losses": "Kalah",
-                    "wins-streak": "Menang beruntun hari ini",
-                    "max-wins-streak": "Maksimal menang beruntun",
+                    "hints": "Bantuan:",
+                    "wins": "Menang:",
+                    "losses": "Kalah:",
+                    "wins-streak": "Menang beruntun hari ini:",
+                    "max-wins-streak": "Maksimal menang beruntun:",
                     "distribution": "Distribusi Tebakan"
                 }
             },
@@ -261,12 +275,19 @@
             "win": "Selamat Kamu menang!",
             "lose": "Maaf Kamu kalah! Kata yang dipilih adalah \"<WORD>\"",
             "not-in-dictionary": "Kata \"<WORD>\" tidak ada",
+            "not-in-dictionary-corrector": ". Mungkin yang Anda maksud \"<WORD>\"?",
             "less-letter-length": "Panjang huruf kurang!",
             "tile-hint-provided": "Semua petunjuk huruf tersedia",
             "keyboard-hint-provided": "Semua petunjuk keyboard tersedia",
             "tile-empty": "Papan ketik masih kosong",
             "reset": "Permainan diulang, kata sekarang dipilih secara acak!",
             "unfullscreen": "Untuk keluar layar penuh, tekan F11"
+        },
+        "logs": {
+            "warnings": "Prngtn",
+            "errors": "Kslhn",
+            "total": "Ttl",
+            "lines": "Brs"
         },
         "settings": {
             "title": "PENGATURAN",
@@ -288,7 +309,8 @@
                 "title": "Aturan Permainan",
                 "label": {
                     "only-in-dictionary": "Hanya kata-kata dalam kamus",
-                    "word-length": "Panjang huruf",
+                    "word-correction": "Koreksi kata",
+                    "word-length": "Panjang huruf (<WORDS-LENGTH> Kata)",
                     "change-guess": "Jumlah percobaan"
                 }
             },
@@ -369,14 +391,17 @@
             "stats": {
                 "title": "STATISTIK",
                 "label": {
-                    "has-been-played": "Sudah dimainkan",
-                    "daily-coins": "Ganjaran harian",
+                    "joined-date": "Tarikh sertaan:",
+                    "play-time-hours": "Masa bermain:",
+                    "has-been-played": "Sudah dimainkan:",
+                    "daily-coins": "Ganjaran harian:",
+                    "hours": "Jam",
                     "coins": "Koin",
-                    "hints": "Bantuan",
-                    "wins": "Menang",
-                    "losses": "Kalah",
-                    "wins-streak": "Rentak kemenangan hari ini",
-                    "max-wins-streak": "Maksimal rentak kemenangan",
+                    "hints": "Bantuan:",
+                    "wins": "Menang:",
+                    "losses": "Kalah:",
+                    "wins-streak": "Rentak kemenangan hari ini:",
+                    "max-wins-streak": "Maksimal rentak kemenangan:",
                     "distribution": "Teka Edaran"
                 }
             },
@@ -423,11 +448,18 @@
             "win": "Tahniah Awak atas kemenangan!",
             "lose": "Maaf Awak kalah! Perkataan yang dipilih ialah \"<WORD>\"",
             "not-in-dictionary": "Perkataan \"<WORD>\" tiada",
-            "less-letter-length": "Panjang surat tidak mencukupi!",
+            "not-in-dictionary-corrector": ". Mungkin maksud Awak \"<WORD>\"?",
+            "less-letter-length": "Panjang kata tidak mencukupi!",
             "keyboard-hint-provided": "Semua petunjuk papan kekunci tersedia",
             "tile-empty": "Papan kekunci masih kosong",
             "reset": "Permainan diulang, perkataan kini dipilih secara rawak!",
             "unfullscreen": "Untuk keluar dari skrin penuh, tekan F11"
+        },
+        "logs": {
+            "warnings": "Amrn",
+            "errors": "Rlt",
+            "total": "Jmlh",
+            "lines": "Tln"
         },
         "settings": {
             "title": "SUSUNAN",
@@ -449,7 +481,8 @@
                 "title": "Peraturan permainan",
                 "label": {
                     "only-in-dictionary": "Hanya perkataan dalam kamus",
-                    "word-length": "Panjang surat",
+                    "word-correction": "Pembetulan kata",
+                    "word-length": "Panjang kata (<WORDS-LENGTH> Kata)",
                     "change-guess": "Jumlah percubaan"
                 }
             },

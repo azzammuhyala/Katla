@@ -1,7 +1,7 @@
 # Katla - pygame - Python 3
 Lisensi Hak cipta ~ Copyright © 2024 - 2026 [ Azzamuhyala ] ~ LICENSE MIT (Selengkapnya ada di file `LICENSE`)
 
-![Tampilan Katla (1.1.5 BETA)](docs/assets/gameplay.gif)
+![Tampilan Katla (1.2.1 [TEST])](docs/assets/gameplay.gif)
 *_Tampilan permainan di versi saat ini_.
 
 Cara bermain?
@@ -77,24 +77,17 @@ Fitur / Peningkatan
 4. Perbaikan performa
 5. Perbaikan front-end
 6. Perbaikan data katla
-7. Perbaikan load screen
-8. Perbaikan pengaturan
-9. Perbaikan dokumentasi
-10. Perbaikan popup statistik
-11. Perubahan ikon
-12. Perubahan kode
-13. Perubahan format angka
-14. Perubahan tombol pintas
-15. Perubahan FPS, sekarang FPS maksimal adalah 140
-16. Perubahan ukuran geometri, sekarang geometri minimal adalah 0,5x
-17. Penambahan tema baru
-18. Penambahan pengaturan baru
-19. Penambahan tampilan baru "**Catatan / Logs**"
-20. Menang beruntun sekarang dihitung perhari
-21. Harga petunjuk berubah di panjang kata 8 dan 9 huruf
-22. Maksimal kesempatan menebak jika kata bebas adalah 7
-23. Bonus 1 koin tambahan saat menang di panjang kata 9 huruf
-24. Maksimal kesempatan berubah saat tidak menggunakan kata valid
+7. Perbaikan pengaturan
+8. Perbaikan dokumentasi
+9. Perbaikan popup statistik
+10. Perubahan kode
+11. Perubahan total modul
+12. Perubahan simpan data
+13. Perubahan popup statistik
+14. Penambahan game data baru
+15. Penambahan pengaturan baru
+16. Minimal FPS adalah 15
+17. Maksimal kesempatan berubah saat tidak menggunakan kata valid
 
 Daftar versi
 ---
@@ -106,7 +99,8 @@ Daftar versi
 * `1.1.3`: Rabu, 12/06/2024 - 13:44:42
 * `1.1.4`: Selasa, 18/06/2024 - 18:06:24
 * `1.1.5 (BETA)`: Minggu, 23/06/2024 - 21:40:24
-* `1.2.0`: Minggu, 14/07/2024 12:44:59 (baru)
+* `1.2.0`: Minggu, 14/07/2024 12:44:59
+* `1.2.1 (TEST)`: Sabtu, 17/08/2024 00:00:00 (baru)
 
 Daftar aplikasi permainan saya
 ---
@@ -135,7 +129,7 @@ Kamus
 
 Tanggal dirilis
 ---
-**Minggu, 14/07/2024 12:44:59**
+**Sabtu, 17/08/2024 00:00:00 _(Kemerdekaan Indonesia yang ke 79)_**
 
 "_Terima kasih sudah membaca / memainkan permainan yang saya buat :)_"
 

@@ -52,13 +52,13 @@ class Json:
         self.__validation()
 
     def __repr__(self) -> str:
-        return f'Json(file_path={repr(self.file_path)}, default={repr(self.default)}, indent={repr(self.indent)})'
+        return f'Json(file_path={repr(self.file_path)}, default={repr(self.default)}, indent={repr(self.indent)}, encoding={repr(self.encoding)})'
 
     def __assert(self, condition: bool, raise_exception: Exception) -> None:
         if not bool(condition):
             raise raise_exception
 
-    def __validation(self, data: JsonObj = None, key: bytes = b'', moderead: bytes | mode =b'') -> None:
+    def __validation(self, data: JsonObj = None, key: bytes = b'', moderead: bytes | mode = b'') -> None:
         self.__assert(isinstance(data, JsonObj), TypeError(f'data: must be valid json type not {type(data).__name__}'))
         self.__assert(isinstance(key, bytes), TypeError(f'key: must be bytes not {type(key).__name__}'))
         self.__assert(isinstance(moderead, bytes | mode), TypeError(f'split_item: must be bytes or mode not {type(data).__name__}'))
@@ -135,8 +135,8 @@ class Json:
         else:
             data_str = json.dumps(data)
 
-        data_bytes = data_str.encode()
         cipher = _fernet.Fernet(key)
+        data_bytes = data_str.encode()
         ct_bytes = cipher.encrypt(data_bytes)
         return {'ct-bytes': ct_bytes}
 

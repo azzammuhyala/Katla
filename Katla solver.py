@@ -8,8 +8,47 @@ from os import name, system
 from random import choice
 from time import sleep
 # importing file components
-from components.katla_module.json_validator import WordsValidator, SettingsValidator
-from components.katla_module.constants import Feedback
+from components.katla_components.json_validator import WordsValidator, SettingsValidator
+from components.katla_components.constants import Feedback
+
+
+# help strings
+HELP_NORMAL = """To enter a word, enter the word then continue with a period '.' then proceed with the color type of the word. After that, add a space to the next word.
+
+Example (word HELLO with color RGYRR):
+
+> H.R E.G L.Y L.R O.R"""
+HELP_COLOR = """Enter word/letters. If all the word have reached the length limit in the settings, then enter the color type (in ansi color form). If everything has been entered then press enter to continue.
+
+Example (word HELLO with color RGYRR):
+
+#STEP 1:
+> HELLO
+
+#STEP 2:
+* Pressing 'R'
+> \033[31mH\033[0mELLO
+
+#STEP 3:
+> \033[31mH\033[32mE\033[33mL\033[31mLO\033[0m"""
+HELP_MEANING = """
+Meaning of color code:
+
+G: (Green)  Be in the right place.
+Y: (Yellow) It's in the chosen word but in the wrong place.
+R: (Ed)     Not everywhere.
+
+Button Keys:
+
+1: Reset
+2: Reset + clear terminal
+3: Open current settings
+4: Refresh current settings and words
+5: Automatic writing of try word
+9: Open this help
+0: Exit
+"""
+
 
 # importing getch for input
 if name == 'nt':
@@ -79,12 +118,13 @@ class KatlaSolver:
             char = splits[0]
             color = splits[1]
 
-            if color == 'R':
-                color = 'red'
-            elif color == 'Y':
-                color = 'yellow'
-            elif color == 'G':
-                color = 'green'
+            match color:
+                case 'R':
+                    color = 'red'
+                case 'Y':
+                    color = 'yellow'
+                case 'G':
+                    color = 'green'
 
             feedback.append({char: color})
 
@@ -151,52 +191,11 @@ class KatlaSolver:
     # Method to display help information
     def help(self) -> None:
         if self.input_type == 'normal':
-            print(
-"""
-To enter a word, enter the word then continue with a period '.' then proceed with the color type of the word. After that, add a space to the next word.
-
-Example (word HELLO with color RGYRR):
-
-> H.R E.G L.Y L.R O.R
-""".strip('\n')
-            )
+            print(HELP_NORMAL)
         elif self.input_type == 'color':
-            print(
-"""
-Enter word/letters. If all the word have reached the length limit in the settings, then enter the color type (in ansi color form). If everything has been entered then press enter to continue.
+            print(HELP_COLOR)
 
-Example (word HELLO with color RGYRR):
-
-#STEP 1:
-> HELLO
-
-#STEP 2:
-* Pressing 'R'
-> \033[31mH\033[0mELLO
-
-#STEP 3:
-> \033[31mH\033[32mE\033[33mL\033[31mLO\033[0m
-""".strip('\n')
-            )
-        print(
-"""
-Meaning of color code:
-
-G: (Green)  Be in the right place.
-Y: (Yellow) It's in the chosen word but in the wrong place.
-R: (Ed)     Not everywhere.
-
-Button Keys:
-
-1: Reset
-2: Reset + clear terminal
-3: Open current settings
-4: Refresh current settings and words
-5: Automatic writing of try word
-9: Open this help
-0: Exit
-"""
-        )
+        print(HELP_MEANING)
 
     # Method to handle user input
     def input(self) -> str:
@@ -295,74 +294,76 @@ Button Keys:
     def main(self):
         running = True
 
-        print('KATLA SOLVER - 99.5% PROBABILITY CORRECT - V ~ 1.0.1 BETA\n')
+        print('KATLA SOLVER - 99.5% PROBABILITY CORRECT - V ~ 1.0.2 BETA\n')
         self.help()
 
         while running:
             word_input = self.input().strip().upper()
             self.choose_word = ''
 
-            # Reset
-            if word_input == '1':
-                self.reset()
+            match word_input:
 
-            # Reset + clear terminal
-            elif word_input == '2':
-                self.reset()
-                system('cls' if name == 'nt' else 'clear')
+                # Reset
+                case '1':
+                    self.reset()
 
-            # Show display current settings
-            elif word_input == '3':
-                print(justify('Current settings', 30))
-                print('=' * 30)
-                print(justify('KEYS', 24, 'left') + 'VALUES')
-                print('-' * 30)
-                for key, value in self.settings.items():
-                    key, value = map(str, [key, value])
-                    print(justify(key, 30 - len(value), 'left') + value.upper() + (' #' if key in ('language-word', 'word-length', 'change-guess', 'use-valid-word') else ''))
-                print("\n[NOTE] To change the settings, please run the Katla application then change it in Katla settings then the close settings. (Make sure the application position with the main settings file is in the same folder)")
+                # Reset + clear terminal
+                case '2':
+                    self.reset()
+                    system('cls' if name == 'nt' else 'clear')
 
-            # Refresh current settings and words
-            elif word_input == '4':
-                self.settings = SettingsValidator().load_and_validation()
-                self.validator_word_dictionary = WordsValidator(lang_id=self.settings['language-word'])
-                self.word_dictionary = self.validator_word_dictionary.load_and_validation(readonly=True)
-                self.words_list: list[str] = [word.upper() for word in self.word_dictionary[f"length-{self.settings['word-length']}"]]
-                self.feedbacks: list[Feedback] = []
-                self.choose_word = ''
-                sleep(.5)
+                # Show display current settings
+                case '3':
+                    print(justify('Current settings', 30))
+                    print('=' * 30)
+                    print(justify('KEYS', 24, 'left') + 'VALUES')
+                    print('-' * 30)
+                    for key, value in self.settings.items():
+                        key, value = map(str, [key, value])
+                        print(justify(key, 30 - len(value), 'left') + value.upper() + (' #' if key in ('language-word', 'word-length', 'change-guess', 'use-valid-word') else ''))
+                    print("\n[NOTE] To change the settings, please run the Katla application then change it in Katla settings then the close settings. (Make sure the application position with the main settings file is in the same folder)")
 
-            # Show display help
-            elif word_input == '9':
-                self.help()
+                # Refresh current settings and words
+                case '4':
+                    self.settings = SettingsValidator().load_and_validation()
+                    self.validator_word_dictionary = WordsValidator(lang_id=self.settings['language-word'])
+                    self.word_dictionary = self.validator_word_dictionary.load_and_validation(readonly=True)
+                    self.words_list: list[str] = [word.upper() for word in self.word_dictionary[f"length-{self.settings['word-length']}"]]
+                    self.feedbacks: list[Feedback] = []
+                    self.choose_word = ''
+                    sleep(.5)
 
-            # Quit / Exit program
-            elif word_input == '0':
-                running = False
+                # Show display help
+                case '9':
+                    self.help()
 
-            else:
-                validation = self.validate_format(word_input)
+                # Quit / Exit program
+                case '0':
+                    running = False
 
-                if validation is True:
-                    possible_words = self.find_possible_words(word_input)
+                case _:
+                    validation = self.validate_format(word_input)
 
-                    if len(possible_words) > 1:
-                        print('List possibilities: ', end='')
-                        for word in possible_words:
-                            print(word, end=' ')
-                        self.choose_word = choice(possible_words)
-                        print('\nTry word:', self.choose_word)
+                    if validation is True:
+                        possible_words = self.find_possible_words(word_input)
 
-                    elif len(possible_words) == 1:
-                        print('Most likely, the word are:', possible_words[0])
-                        self.reset()
+                        if len(possible_words) > 1:
+                            print('List possibilities: ', end='')
+                            for word in possible_words:
+                                print(word, end=' ')
+                            self.choose_word = choice(possible_words)
+                            print('\nTry word:', self.choose_word)
+
+                        elif len(possible_words) == 1:
+                            print('Most likely, the word are:', possible_words[0])
+                            self.reset()
+
+                        else:
+                            print('No possible words')
+                            self.reset()
 
                     else:
-                        print('No possible words')
-                        self.reset()
-
-                else:
-                    print(validation)
+                        print(validation)
 
 # Run the KatlaSolver if the script is executed directly
 if __name__ == '__main__':
