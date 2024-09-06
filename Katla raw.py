@@ -100,7 +100,7 @@ class Katla:
                             break
 
         return feedback
-    
+
     def showKeyboard(self) -> None:
         # Display the keyboard with color-coded feedback
         layout_keyboard = const.Keyboard.QWERTY
@@ -139,6 +139,21 @@ class Katla:
         for ln in keyboard_ascii.split('\n'):
             print(asciiTUI.justify(ln, asciiTUI.terminal_size('x'), wrap=False))
 
+    def showOver(self, over: const.Literal['win', 'lose']) -> None:
+        self.cls()
+        self.showBoardGame()
+
+        if over == 'win':
+            print('\033[32mHORRY! YOU GUESSED THE WORD!\033[0m\n')
+
+        elif over == 'lose':
+            print(f'\033[31mGAME OVER - Selected word: "{self.selected_word}"\033[0m\n')
+
+        input('[Press \033[36mENTER\033[0m to continue] \033[?25l')
+        print('\033[?25h', end='')
+        # Reset the game for a new round
+        self.reset()
+
     def showBoardGame(self) -> None:
         # Display the game board with feedback for each guess
         word_ascii = ''
@@ -172,9 +187,7 @@ class Katla:
 
                 # Check if no guesses left
                 if self.guess_count <= 0:
-                    print(f'\033[31mGAME OVER - Selected word: "{self.selected_word}"\033[0m\n')
-                    input('[Press enter to continue] ')
-                    self.reset()
+                    self.showOver('lose')
                     continue
 
                 # Get user guess input
@@ -210,13 +223,7 @@ class Katla:
                     self.guessed = True
 
             # Display final board state and congratulatory message
-            self.cls()
-            self.showBoardGame()
-            print('\033[32mHORRY! YOU GUESSED THE WORD!\033[0m\n')
-            input('[Press enter to continue] ')
-
-            # Reset the game for a new round
-            self.reset()
+            self.showOver('win')
 
 # Start the game if the script is executed directly
 if __name__ == '__main__':

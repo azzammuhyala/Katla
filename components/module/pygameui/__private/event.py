@@ -24,11 +24,11 @@ for mods in ModsElementEvent.values():
 
 class ElementEvent:
 
-    """ ButtonEvent - The event of button function """
+    """ ElementEvent - The event of element function """
 
     def __init__(self, element: ModElementEvent, id: _ElementID = None) -> None:
 
-        _prvt.asserting(element in AllElement, TypeError(f"element: unknown element {repr(element)}"))
+        _prvt.asserting(element in AllElement, TypeError(f'element: unknown element {repr(element)}'))
 
         self.element: ModElementEvent = element
         self.id: _ElementID = id
@@ -49,29 +49,51 @@ class ElementEvent:
             self.isscrolling: bool = None
             self.iskeyscrolling: bool = None
 
-        if element == 'Button':
-            self.isbuttoninactive: bool = None
-            self.isbuttonhover: bool = None
-            self.isbuttonactive: bool = None
+        match element:
 
-        elif element == 'Range':
-            self.israngeinactive: bool = None
-            self.israngehover: bool = None
-            self.israngeactive: bool = None
-            self.isdragging: bool = None
-            self.range_value: _RealNumber = None
+            case 'Button':
+                self.isbuttoninactive: bool = None
+                self.isbuttonhover: bool = None
+                self.isbuttonactive: bool = None
 
-        elif element == 'Scroller':
-            self.offset_x: _RealNumber = None
-            self.offset_y: _RealNumber = None
+            case 'Range':
+                self.israngeinactive: bool = None
+                self.israngehover: bool = None
+                self.israngeactive: bool = None
+                self.isdragging: bool = None
+                self.rect_thumb: pygame.Rect = None
+                self.rect_track_fill: pygame.Rect = None
+                self.range_value: _RealNumber = None
 
-        elif element == 'ScrollerX':
-            self.offset_x: _RealNumber = None
-            self.y_pos: _RealNumber = None
+            case 'Scroller':
+                self.offset_x: _RealNumber = None
+                self.offset_y: _RealNumber = None
 
-        elif element == 'ScrollerY':
-            self.offset_y: _RealNumber = None
-            self.x_pos: _RealNumber = None
+            case 'ScrollerX':
+                self.offset_x: _RealNumber = None
+                self.y_pos: _RealNumber = None
+
+            case 'ScrollerY':
+                self.offset_y: _RealNumber = None
+                self.x_pos: _RealNumber = None
+
+    def __copy__(self):
+        return self.copy()
+
+    def __repr__(self) -> str:
+        return f'ElementEvent(element={repr(self.element)}, id={repr(self.id)})'
+
+    def __str__(self) -> str:
+        return f'element={repr(self.element)},id={repr(self.id)}'
+
+    def __eq__(self, order) -> bool | None:
+        if isinstance(order, ElementEvent):
+            return (self.element, self.id) == (order.element, order.id)
+        return None
+
+    def __ne__(self, order) -> bool | None:
+        eq = self.__eq__(order)
+        return (not eq if eq is not None else None)
 
     def _reset_property(self) -> None:
         self.__init__(self.element, self.id)
@@ -133,18 +155,3 @@ class ElementEvent:
 
     def copy(self):
         return ElementEvent(element=self.element, id=self.id)
-
-    def __repr__(self) -> str:
-        return f'ElementEvent(element={repr(self.element)}, id={repr(self.id)})'
-
-    def __str__(self) -> str:
-        return f'element={repr(self.element)},id={repr(self.id)}'
-
-    def __eq__(self, order) -> bool | None:
-        if isinstance(order, ElementEvent):
-            return [self.element, self.id] == [order.element, order.id]
-        return None
-
-    def __ne__(self, order) -> bool | None:
-        eq = self.__eq__(order)
-        return (not eq if eq is not None else None)

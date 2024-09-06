@@ -1,20 +1,3 @@
-"""
-MARKDOWN DOCUMENTATION
-
-# `pygameui.vgif` / `pygamegif` module
-Version: 1.0.0.beta
-
-pygame gif surface.
-
-Modules
--------
-- `pillow` If you haven't installed it, use this command: `pip install pillow`
-
-
-*next documentation will be created soon..*
-"""
-
-
 from .__private.private import (
     pygame,
     typing,
@@ -23,15 +6,15 @@ from .__private.private import (
 from .__private.const import (
     Path as _Path
 )
-from .__decorator.decorator import (
-    ClassInterface
+from .__private.decorator import (
+    ElementInterface
 )
 from PIL import (
     Image as _Image
 )
 
 
-class GIF(ClassInterface):
+class GIF(ElementInterface):
 
     """ GIF - Load a gif image and converting it to surface pygame """
 
@@ -39,9 +22,9 @@ class GIF(ClassInterface):
 
         """
         Parameters:
-            * `gif_path`: gift path
-            * `rect`: rect gif
-            * `frame_delay`: delay per frame
+            :param `gif_path`: gift path.
+            :param `rect`: rect gif.
+            :param `frame_delay`: delay per frame.
         """
 
         self.frame_delay = frame_delay
@@ -57,6 +40,17 @@ class GIF(ClassInterface):
         self.__time_played: int | None = None
         self.__frame_index: int = 0
 
+    def __copy__(self) -> 'GIF':
+
+        """
+        Copy the GIF class. (No kwargs).
+
+        Returns:
+            `GIF`
+        """
+
+        return self.copy()
+
     @property
     def gif_path(self) -> _Path:
         return self.__gif_path
@@ -71,33 +65,39 @@ class GIF(ClassInterface):
     
     @rect.setter
     def rect(self, rect: pygame.Rect) -> None:
-        _prvt.asserting(isinstance(rect, pygame.Rect), TypeError(f"rect -> rect (setter): must be pygame.Rect not {_prvt.get_type(rect)}"))
+        _prvt.asserting(isinstance(rect, pygame.Rect), TypeError(f'rect -> rect (setter): must be pygame.Rect not {_prvt.get_type(rect)}'))
         self.__rect = rect
 
     @frame_delay.setter
     def frame_delay(self, delay: int) -> None:
-        _prvt.asserting(isinstance(delay, int), TypeError(f"frame_delay -> delay (setter): must be int not {_prvt.get_type(delay)}"))
+        _prvt.asserting(isinstance(delay, int), TypeError(f'frame_delay -> delay (setter): must be int not {_prvt.get_type(delay)}'))
         _prvt.asserting(delay >= 0, ValueError(f'frame_delay -> delay (setter): illegal below 0 -> {delay}'))
         self.__frame_delay = delay
 
-    def copy(self, **kwargs) -> None:
+    def copy(self, **kwargs) -> 'GIF':
 
         """
         Copy the GIF class.
 
-        return -> `GIF(...)`
+        Parameters:
+            kwargs: in the form of a GIF init parameters.
+
+        Returns:
+            `GIF`
         """
 
-        clonescroller = GIF(**(self.get_param() | kwargs))
-
-        return clonescroller
+        return GIF(**(self.get_param() | kwargs))
 
     def edit_param(self, **kwargs) -> None:
 
         """
         Edit parameters via the key argument of this function.
 
-        return -> `None`
+        Parameters:
+            kwargs: in the form of an init parameters for the gif to be edited.
+
+        Returns:
+            `None`
         """
 
         param = self.get_param()
@@ -111,7 +111,8 @@ class GIF(ClassInterface):
         """
         Get class parameters in the form dictionary type.
 
-        return -> `dict[str, object]`
+        Returns:
+            `dict[str, object]`
         """
 
         return {
@@ -120,32 +121,13 @@ class GIF(ClassInterface):
             'frame_delay': self.__frame_delay
         }
 
-    def get_private_attr(self, remove_underscore: bool = False) -> dict[str, object]:
-
-        """
-        Get private property.
-
-        return -> `dict[str, object]`
-        """
-
-        attr_dict = {
-            '__gif_path': self.__gif_path,
-            '__last_update_time': self.__last_update_time,
-            '__time_played': self.__time_played,
-            '__frame_index': self.__frame_index
-        }
-
-        if remove_underscore:
-            return {attr.lstrip('_'): value for attr, value in attr_dict}
-
-        return attr_dict
-
     def get_frames(self) -> list[pygame.Surface]:
 
         """
         Get a list surfaces.
 
-        return -> `list[pygame.Surface]`
+        Returns:
+            `list[pygame.Surface]`
         """
 
         return self.__frames
@@ -155,7 +137,8 @@ class GIF(ClassInterface):
         """
         Get a gif Image class.
 
-        return -> `Image`
+        Returns:
+            `Image`
         """
 
         return self.__gif
@@ -165,7 +148,8 @@ class GIF(ClassInterface):
         """
         Reads frame data to frame surface pygame.
         
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__frames.clear()
@@ -187,34 +171,40 @@ class GIF(ClassInterface):
             else:
                 frame_image = frame_image.resize((self.rect.width, self.rect.height))
 
-            mode = frame_image.mode
-            size = frame_image.size
-            data = frame_image.tobytes()
-
-            pygame_image = pygame.image.fromstring(data, size, mode)
-            self.__frames.append(pygame_image)
+            self.__frames.append(
+                pygame.image.fromstring(
+                    frame_image.tobytes(),
+                    frame_image.size,
+                    frame_image.mode
+                )
+            )
 
     def reset_frame(self) -> None:
 
         """
         Reset the frame to initial settings.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
-        self.__frame_index: int = 0
-        self.__last_update_time: int = pygame.time.get_ticks()
-        self.__time_played: int | None = None
+        self.__frame_index = 0
+        self.__last_update_time = pygame.time.get_ticks()
+        self.__time_played = None
 
-    def draw_and_update(self, surface: typing.Optional[pygame.Surface]) -> pygame.Surface:
+    def draw_and_update(self, surface_screen: typing.Optional[pygame.Surface]) -> pygame.Surface:
 
         """
         Draw or update the frame.
 
-        return -> `pygame.Surface`
+        Parameters:
+            :param `surface_screen`: directly display gif images that occur on the main surface screen.
+
+        Returns:
+            `pygame.Surface`
         """
 
-        _prvt.asserting(isinstance(surface, pygame.Surface | None), TypeError('Objects are not pygame surface or (None for not draw)'))
+        _prvt.asserting(isinstance(surface_screen, pygame.Surface | None), TypeError('Objects are not pygame surface or (None for not draw)'))
 
         current_time = pygame.time.get_ticks()
 
@@ -227,13 +217,12 @@ class GIF(ClassInterface):
 
         frame = self.__frames[self.__frame_index]
 
-        if surface is not None:
-            surface.blit(frame, self.rect.topleft)
+        if surface_screen is not None:
+            surface_screen.blit(frame, self.rect.topleft)
 
         return frame
 
 
-__version__ = '1.0.0.beta'
 __all__ = [
     'GIF'
 ]
@@ -241,6 +230,6 @@ __all__ = [
 
 del (
     _Path,
-    ClassInterface,
+    ElementInterface,
     typing
 )

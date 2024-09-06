@@ -1,254 +1,3 @@
-"""
-MARKDOWN DOCUMENTATION
-
-# `pygameui.button` / `pygamebutton` module
-Version: 1.2.0
-
-pygame elements. Button and Range.
-
-Explanations
-------------
-pygamebutton is a special tool module for displaying general button elements.
-Pygame does not provide a button media element. However, the functions and
-methods provided by the pygame module provide various ways to create this
-button elements. And this module is used as a buttons function that is
-ready-made and ready to use.
-
-Events
-------
-How to get input from pygame button? There are several ways to get button
-input and execute it according to its function.
-
-1. Method `ElementEvent`
-
-Each button class consists of the button_event attribute which is a class
-object ElementEvent. This class plays a role in getting events that occur on
-the button such as mousehover, inactive, active, value when clicked, etc.
-Every type buttons have different attributes.
-
-How to use:
-
-Create a variable to contain the button.
-```py
-button1_rect = pygame.Rect(25, 25, 50, 50)
-button1 = button.Button(
-    surface_screen=screen,
-    rect=button1_rect,
-    id='button1' # The id function will be used in the second event method
-)
-```
-
-Then create an event loop and call the draw_and_update method for interaction
-knob.
-```py
-# loops game
-while ...:
-    for event in pygame.event.get():
-        ... # your events
-        button1.handle_event(event)
-
-    button1.draw_and_update()
-```
-
-Check if the button is pressed or not.
-```py
-    if button1.button_event.click:
-        # do something..
-```
-
-You can get the button event from the return of the draw_and_update method.
-```py
-    button1_event = button1.draw_and_update()
-
-    if button1_event.click:
-        # do something..
-```
-
-2. Method `pygame.Event`
-
-This event method captures button events from the pygame event loop. Will
-However, this feature requires an id parameter to be able to differentiate
-between button.
-
-How to use:
-
-Create a variable to contain the button, enter the id type of the button.
-```py
-button1_rect = pygame.Rect(...)
-button1 = button.Button(
-    ...
-    id='button1' # enter the id
-)
-```
-
-How to catch the events.
-```py
-# loops game
-while ...:
-    for event in pygame.event.get():
-        ... # your events
-        button1.handle_event(event)
-
-        if event.type == button.BUTTON_CLICK:
-            if event.id == button1.id:
-                # do something..
-            ...
-
-    button1.draw_and_update()
-```
-
-Properties of the event that can be obtained:
-* id
-* element
-* click (for Button button)
-* range_value (for Range button)
-* element_event (ElementEvent)
-
-Information
------------
-This latest version allows you to edit properties directly like this without
-using the `edit_param` method:
-```py
-button1.id = 'btn1'
-```
-
-The `edit_param` method is still available on the button. Just adjust it to
-your needs:
-```py
-button1.edit_param(id='btn1')
-```
-
-For the latest version editing values from Range ​​still uses the `set_value`
-method:
-```py
-myrange.set_value(25)
-```
-If you change it via properties it may cause minor errors or out of sync in
-the Range display with the given value.
-
-Examples
---------
-Here is a example of a basic setup (opens the window, updates the screen, and
-handles events):
-```py
-import pygame # import the pygame
-from pygameui import button # import the pygameui button
-
-# pygame setup
-pygame.init()
-running = True
-
-screen = pygame.display.set_mode((500, 500))
-clock = pygame.time.Clock()
-
-pygame.display.set_caption('Button Test')
-
-font = pygame.font.SysFont('Monospace', 25, True)
-showtext = lambda text : font.render(text, True, 'white')
-text = showtext('Press one of the buttons')
-
-# button rects
-rect_button1 = pygame.Rect(100, (screen.get_height() - 100) / 2, 100, 100)
-rect_button2 = pygame.Rect(screen.get_width() - 200, (screen.get_height() - 100) / 2, 100, 100)
-# Range rects
-rect_range = pygame.Rect((screen.get_width() - 400) / 2, 100, 400, 10)
-
-# initialization button (Do not initialization Buttons in the game loop because this will be affected by time, events, etc)
-button1 = button.Button(
-    surface_screen=screen,
-    rect=rect_button1,
-    id='button1',
-    text='BUTTON 1'
-)
-
-# if you want to copy an element, use the copy() method and fill it with new parameters if necessary
-button2 = button1.copy(
-    id='button2',
-    rect=rect_button2,
-    text='BUTTON 2',
-    outline_size=5,
-    only_click='lrc',
-    click_speed=250
-)
-
-# input range parameters
-range_button = button.Range(
-    surface_screen=screen,
-    rect=rect_range,
-    id='range_button',
-    thumb_size=(17, 17),
-    min_value=0,
-    max_value=100,
-    value=50,
-    step=1, 
-    range_value_output=int
-)
-
-# manager (Optional) set events, draws, etc. in several buttons at once
-manager = button.Manager(
-    button1,
-    button2,
-    range_button,
-
-    inactive_cursor=pygame.SYSTEM_CURSOR_ARROW,
-    active_cursor=pygame.SYSTEM_CURSOR_HAND
-)
-
-# screen loop
-while running:
-
-    # events
-    for event in pygame.event.get():
-        # when the user clicks the X to close the screen (pygame)
-        if event.type == pygame.QUIT:
-            running = False
-
-        # handle events of all buttons
-        manager.handle_event(event)
-
-        # event when one of the buttons is pressed
-        if event.type == button.BUTTON_CLICK:
-            # your case
-            print(
-                f'button event property: id:{event.id}, ' +
-                f'element:{event.element}, ' +
-                f'click:{event.click}, ' + 
-                (f'range_value:{event.range_value}, ' if event.element == 'Range' else '') +
-                f'ElementEvent:({event.element_event})'
-            )
-
-    # fill screen black
-    screen.fill('black')
-
-    # blit or draw and update the button
-    manager.draw_and_update()
-
-    text_range = showtext(f'Value Range: {range_button.button_event.range_value}')
-
-    # get button event
-    if button1.button_event.click:
-        text = showtext('Pressed BUTTON 1 -> ' + button1.button_event.click)
-
-    elif button2.button_event.click:
-        text = showtext('Pressed BUTTON 2 -> ' + button2.button_event.click)
-
-    # show the range event text
-    screen.blit(text_range, ((screen.get_width() - text_range.get_width()) / 2, 115))
-    # show the button event text
-    screen.blit(text, ((screen.get_width() - text.get_width()) / 2, 450))
-    # flip() the display to put your work on screen
-    pygame.display.flip()
-    # Set the frame-rate speed to 60 (fps)
-    clock.tick(60)
-
-# clean up pygame resources
-pygame.quit()
-```
-
-Thank you to those of you who have read the documentation and code examples.
-"""
-
-
 from .__private.private import (
     pygame,
     typing,
@@ -272,7 +21,7 @@ from .__private.event import (
     BUTTON_CLICK,
     ElementEvent
 )
-from .__decorator.decorator import (
+from .__private.decorator import (
     ButtonInterface
 )
 
@@ -289,7 +38,7 @@ class border_radius:
         top_right_radius: int = -1,
         bottom_left_radius: int = -1,
         bottom_right_radius: int = -1
- 
+
     ) -> None:
 
         self.radius = radius
@@ -301,7 +50,7 @@ class border_radius:
         for key, value in self.get_param().items():
             _prvt.asserting(isinstance(value, int), TypeError(f'{key}: must be int type not {_prvt.get_type(value)}'))
 
-    def copy(self):
+    def copy(self) -> 'border_radius':
         return border_radius(**self.get_param())
 
     def get_param(self) -> dict[str, int]:
@@ -344,7 +93,7 @@ class button_color:
         for key, value in self.get_param().items():
             _prvt.asserting(isinstance(value, _ColorValue | None), TypeError(f'{key}: must be ColorType or (None for default) not {_prvt.get_type(value)}'))
 
-    def copy(self):
+    def copy(self) -> 'button_color':
         return button_color(**self.get_param())
 
     def get_param(self) -> dict[str, _ColorValue | None]:
@@ -368,6 +117,7 @@ class Button(ButtonInterface):
             text: str = '',
             font: typing.Optional[pygame.font.Font] = None,
             hide: bool = False,
+            alpha_transparency: int = 255,
             all_click: bool = True,
             outline_size: typing.Optional[_RealNumber] = None,
             antialias_text: bool | typing.Literal[0, 1] = True,
@@ -388,27 +138,28 @@ class Button(ButtonInterface):
 
         """
         Parameters:
-            * `surface_screen`: screen surface -> pygame.display.set_mode((x, y)) or pygame.Surface
-            * `rect`: rect button
-            * `id`: ID Button for events
-            * `text`: text button
-            * `font`: font text
-            * `hide`: Hides the button but can still receive input. (Doesn't apply to text, image, outline (if not None value))
-            * `all_click`: loads all clicks that occur. (Works for without event handle)
-            * `outline_size`: outline size of the button
-            * `antialias_text`: param at -> font.render(text, antialias=..., ...)
-            * `image`: image or icon on the button. (Use pygame.transform.scale(<Surface image source>, (rect button size))) to fit and fit the main button
-            * `image_scale`: scaled the size of the image surface. (If the type is numeric, then the size will be the size of the rect button with a margin of the numbers entered. If the type is tuple[number, number], then it will follow the scale of the contents of the tuple)
-            * `get_rect_image_kwargs`: param at -> image.get_rect(...)
-            * `get_rect_text_kwargs`: param at -> font.render.get_rect(...)
-            * `color`: button color
-            * `text_color`: text color
-            * `outline_color`: outline color
-            * `inactive_cursor`: change the cursor (un-hover)
-            * `active_cursor`: change the cursor (hover)
-            * `only_click`: click response ('r', 'c', 'l')
-            * `click_speed`: click speed (ms)
-            * `borders`: pygame.draw.rect borders. Use border_radius class
+            :param `surface_screen`: screen surface, `pygame.display.set_mode((x, y))` or `pygame.Surface`.
+            :param `rect`: rect button.
+            :param `id`: ID Button for events.
+            :param `text`: text button.
+            :param `font`: font text.
+            :param `hide`: hides the button but can still receive input. (Doesn't apply to text, image, outline (if not None value)).
+            :param `alpha_transparency`: change alpha transparency.
+            :param `all_click`: loads all clicks that occur. (Works for without event handle).
+            :param `outline_size`: outline size of the button.
+            :param `antialias_text`: param at `font.render(text, antialias=..., ...)`.
+            :param `image`: image or icon on the button.
+            :param `image_scale`: scaled the size of the image surface. (If the type is numeric, then the size will be the size of the rect button with a margin of the numbers entered. If the type is tuple[number, number], then it will follow the scale of the contents of the tuple).
+            :param `get_rect_image_kwargs`: param `image.get_rect(...)`.
+            :param `get_rect_text_kwargs`: param at `font.render.get_rect(...)`.
+            :param `color`: button color.
+            :param `text_color`: text color.
+            :param `outline_color`: outline color.
+            :param `inactive_cursor`: change the cursor (un-hover).
+            :param `active_cursor`: change the cursor (hover).
+            :param `only_click`: click response 'r' or 'c' or 'l'.
+            :param `click_speed`: click speed (ms).
+            :param `borders`: pygame.draw.rect borders. Use border_radius class.
         """
 
         self.button_event: ElementEvent = ElementEvent('Button', id)
@@ -423,6 +174,7 @@ class Button(ButtonInterface):
         self.text = text
         self.font = font
         self.hide = hide
+        self.alpha_transparency = alpha_transparency
         self.all_click = all_click
         self.outline_size = outline_size
         self.antialias_text = antialias_text
@@ -448,38 +200,53 @@ class Button(ButtonInterface):
 
         self.__initialization = False
 
+    def __copy__(self) -> 'Button':
+
+        """
+        Copy the Button class. (No kwargs). 
+
+        Returns:
+            `Button`
+        """
+
+        return self.copy()
+
     def __render_active_button(self, current_time: int, change_config: bool) -> None:
 
         """
         Private method. Render the active button.
-        
-        return -> `None`
+
+        Parameters:
+            :param `current_time`: change Button.__last_click_time to the current time.
+            :param `change_config`: change the configuration.
+
+        Returns:
+            `None`
         """
 
         if not self.__button_outside:
 
             if isinstance(self.__outline_size, _RealNumber):
-                pygame.draw.rect(
+                outline_size = int(self.__outline_size)
+                _prvt.draw_srect(
                     self.__surface_screen,
                     self.__outline_color.active_color,
-                    pygame.Rect(
+                    (
                         self.__rect.left - self.__outline_size,
                         self.__rect.top - self.__outline_size,
                         self.__rect.width + self.__outline_size * 2,
                         self.__rect.height + self.__outline_size * 2
                     ),
-                    (
-                        int(self.__outline_size) + 1)
-                        if self.__outline_size - int(self.__outline_size) > 0.1 else
-                        int(self.__outline_size
-                    ),
+                    self.__alpha_transparency,
+                    (outline_size + 1) if self.__outline_size - outline_size > 0.1 else outline_size,
                     **self.__borders.draw_rect_kwargs
                 )
 
             if not self.__hide:
-                pygame.draw.rect(self.__surface_screen, self.__color.active_color, self.__rect, **self.__borders.draw_rect_kwargs)
+                _prvt.draw_srect(self.__surface_screen, self.__color.active_color, self.__rect, self.__alpha_transparency, **self.__borders.draw_rect_kwargs)
 
             if self.__image is not None:
+                self.__scaled_image.set_alpha(self.__alpha_transparency)
                 if self.__get_rect_image_kwargs is None:
                     self.__surface_screen.blit(self.__scaled_image, self.__scaled_image.get_rect(center=self.__rect.center))
                 else:
@@ -487,6 +254,7 @@ class Button(ButtonInterface):
 
             if self.__text:
                 text_surface = self.__font.render(self.__text, self.__antialias_text, self.__text_color.active_color)
+                text_surface.set_alpha(self.__alpha_transparency)
 
                 if self.__get_rect_text_kwargs is None:
                     text_rect = text_surface.get_rect(center=self.__rect.center)
@@ -504,44 +272,42 @@ class Button(ButtonInterface):
         """
         Private method. Render the inactive or hover button.
 
-        return -> `None`
+        Parameters:
+            :param `ismousehover`: get mouse hovered.
+
+        Returns:
+            `None`
         """
 
         if not self.__button_outside:
 
             if isinstance(self.__outline_size, _RealNumber):
-                pygame.draw.rect(
+                outline_size = int(self.__outline_size)
+                _prvt.draw_srect(
                     self.__surface_screen,
+                    self.__outline_color.hover_color if (self.__outline_color.hover_color is not None) and ismousehover else self.__outline_color.inactive_color,
                     (
-                        self.__outline_color.hover_color
-                        if (self.__outline_color.hover_color is not None) and ismousehover else
-                        self.__outline_color.inactive_color
-                    ),
-                    pygame.Rect(
                         self.__rect.left - self.__outline_size,
                         self.__rect.top - self.__outline_size,
                         self.__rect.width + self.__outline_size * 2,
                         self.__rect.height + self.__outline_size * 2
                     ),
-                    (
-                        int(self.__outline_size) + 1)
-                        if self.__outline_size - int(self.__outline_size) > 0.1 else
-                        int(self.__outline_size
-                    ),
+                    self.__alpha_transparency,
+                    (outline_size + 1) if self.__outline_size - outline_size > 0.1 else outline_size,
                     **self.__borders.draw_rect_kwargs
                 )
 
             if not self.__hide:
-                pygame.draw.rect(
+                _prvt.draw_srect(
                     self.__surface_screen,
-                    (
-                        self.__color.hover_color
-                        if (self.__color.hover_color is not None) and ismousehover else
-                        self.__color.inactive_color
-                    ), self.__rect, **self.__borders.draw_rect_kwargs
+                    self.__color.hover_color if (self.__color.hover_color is not None) and ismousehover else self.__color.inactive_color,
+                    self.__rect,
+                    self.__alpha_transparency,
+                    **self.__borders.draw_rect_kwargs
                 )
 
             if self.__image is not None:
+                self.__scaled_image.set_alpha(self.__alpha_transparency)
                 if self.__get_rect_image_kwargs is None:
                     self.__surface_screen.blit(self.__scaled_image, self.__scaled_image.get_rect(center=self.__rect.center))
                 else:
@@ -549,6 +315,7 @@ class Button(ButtonInterface):
 
             if self.__text:
                 text_surface = self.font.render(self.__text, self.__antialias_text, (self.__text_color.hover_color if (self.__text_color.hover_color is not None) and ismousehover else self.__text_color.inactive_color))
+                text_surface.set_alpha(self.__alpha_transparency)
 
                 if self.__get_rect_text_kwargs is None:
                     text_rect = text_surface.get_rect(center=self.rect.center)
@@ -562,7 +329,8 @@ class Button(ButtonInterface):
         """
         Private method. Send the button event.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         if self._send_event:
@@ -591,6 +359,10 @@ class Button(ButtonInterface):
     @property
     def hide(self) -> bool:
         return self.__hide
+
+    @property
+    def alpha_transparency(self) -> int:
+        return self.__alpha_transparency
 
     @property
     def all_click(self) -> bool:
@@ -654,12 +426,12 @@ class Button(ButtonInterface):
 
     @surface_screen.setter
     def surface_screen(self, surface: pygame.Surface) -> None:
-        _prvt.asserting(isinstance(surface, pygame.Surface), TypeError(f"surface_screen -> surface (setter): must be pygame.Surface not {_prvt.get_type(surface)}"))
+        _prvt.asserting(isinstance(surface, pygame.Surface), TypeError(f'surface_screen -> surface (setter): must be pygame.Surface not {_prvt.get_type(surface)}'))
         self.__surface_screen = surface
 
     @rect.setter
     def rect(self, rect: pygame.Rect) -> None:
-        _prvt.asserting(isinstance(rect, pygame.Rect), TypeError(f"rect -> rect (setter): must be pygame.Rect not {_prvt.get_type(rect)}"))
+        _prvt.asserting(isinstance(rect, pygame.Rect), TypeError(f'rect -> rect (setter): must be pygame.Rect not {_prvt.get_type(rect)}'))
         self.__rect = rect
         if not self.__initialization:
             if isinstance(self.__image_scale, _RealNumber) and self.image:
@@ -688,13 +460,19 @@ class Button(ButtonInterface):
     def hide(self, hide: bool) -> None:
         self.__hide = bool(hide)
 
+    @alpha_transparency.setter
+    def alpha_transparency(self, alpha: int) -> None:
+        _prvt.asserting(isinstance(alpha, int), TypeError(f'alpha_transparency -> alpha (setter): must be int not {_prvt.get_type(alpha)}'))
+        _prvt.asserting(0 <= alpha <= 255, ValueError(f'alpha_transparency -> alpha (setter): illegal below 0 and above 255 -> {alpha}'))
+        self.__alpha_transparency = alpha
+
     @all_click.setter
     def all_click(self, boolean: bool) -> None:
         self.__all_click = bool(boolean)
 
     @outline_size.setter
     def outline_size(self, size: typing.Optional[_RealNumber]) -> None:
-        _prvt.asserting(isinstance(size, _RealNumber | None), TypeError(f"outline_size -> size (setter): must be ArgsList or (None for no outline) not {_prvt.get_type(size)}"))
+        _prvt.asserting(isinstance(size, _RealNumber | None), TypeError(f'outline_size -> size (setter): must be ArgsList or (None for no outline) not {_prvt.get_type(size)}'))
         self.__outline_size = size
 
     @antialias_text.setter
@@ -703,7 +481,7 @@ class Button(ButtonInterface):
 
     @image.setter
     def image(self, image: typing.Optional[pygame.Surface]) -> None:
-        _prvt.asserting(isinstance(image, pygame.Surface | None), TypeError(f"image -> image (setter): must be pygame.Surface or (None for no image) not {_prvt.get_type(image)}"))
+        _prvt.asserting(isinstance(image, pygame.Surface | None), TypeError(f'image -> image (setter): must be pygame.Surface or (None for no image) not {_prvt.get_type(image)}'))
         self.__image = image
         self.__scaled_image = image if isinstance(image, pygame.Surface) else None
 
@@ -761,24 +539,30 @@ class Button(ButtonInterface):
         _prvt.asserting(isinstance(borders, border_radius), TypeError(f'borders -> borders (setter): must be border_radius not {_prvt.get_type(borders)}'))
         self.__borders = borders
 
-    def copy(self, **kwargs):
+    def copy(self, **kwargs) -> 'Button':
 
         """
         Copy the Button class.
 
-        return -> `Button(...)`
+        Parameters:
+            kwargs: in the form of a Button init parameters.
+
+        Returns:
+            `Button`
         """
 
-        clonebutton = Button(**(self.get_param() | kwargs))
-
-        return clonebutton
+        return Button(**(self.get_param() | kwargs))
 
     def edit_param(self, **kwargs) -> None:
 
         """
         Edit parameters via the key argument of this function.
 
-        return -> `None`
+        Parameters:
+            kwargs: in the form of an init parameters for the button to be edited.
+
+        Returns:
+            `None`
         """
 
         param = self.get_param()
@@ -792,7 +576,8 @@ class Button(ButtonInterface):
         """
         Get class parameters in the form dictionary type.
 
-        return -> `dict[str, object]`
+        Returns:
+            `dict[str, object]`
         """
 
         return {
@@ -802,6 +587,7 @@ class Button(ButtonInterface):
             'text': self.__text,
             'font': self.__font,
             'hide': self.__hide,
+            'alpha_transparency': self.__alpha_transparency,
             'all_click': self.__all_click,
             'outline_size': self.__outline_size,
             'antialias_text': self.__antialias_text,
@@ -819,35 +605,13 @@ class Button(ButtonInterface):
             'borders': self.__borders
         }
 
-    def get_private_attr(self, remove_underscore: bool = False) -> dict[str, object]:
-
-        """
-        Get private property.
-
-        return -> `dict[str, object]`
-        """
-
-        attr_dict = {
-            '__initialization': self.__initialization,
-            '__font_default': self.__font_default,
-            '__last_click_time': self.__last_click_time,
-            '__clicked_button': self.__clicked_button,
-            '__button_outside': self.__button_outside,
-            '__initial_click_state': self.__initial_click_state,
-            '__scaled_image': self.__scaled_image.copy() if self.__scaled_image else None
-        }
-
-        if remove_underscore:
-            return {attr.lstrip('_'): value for attr, value in attr_dict}
-
-        return attr_dict
-
     def scale_image(self) -> None:
 
         """
         Set image size based on image_scale.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         if isinstance(self.__image_scale, _RealNumber | _ArgsList) and self.__image is None:
@@ -860,9 +624,13 @@ class Button(ButtonInterface):
     def handle_event(self, event: pygame.event.Event) -> None:
 
         """
-        Handling mouse input via pygame events.
+        Handling input via pygame events.
 
-        return -> `None`
+        Parameters:
+            :param `event`: events that occur in the pygame event loop.
+
+        Returns:
+            `None`
         """
 
         _prvt.asserting(isinstance(event, pygame.event.Event), TypeError(f'event: must be event.Event type not {_prvt.get_type(event)}'))
@@ -892,13 +660,13 @@ class Button(ButtonInterface):
         """
         Draw and update button. Draw a button and then update it according to the events obtained.
 
-        return -> `ButtonEvent` or via `Button.button_event`
+        Returns:
+            `ElementEvent` or via `Button.button_event`
         """
 
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
 
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        ismousehover = self.__rect.collidepoint(mouse_x, mouse_y)
+        ismousehover = self.__rect.collidepoint(pygame.mouse.get_pos())
 
         self.button_event.click = ''
         self.button_event.ismousehover = ismousehover
@@ -910,7 +678,7 @@ class Button(ButtonInterface):
 
         if not self.__button_outside:
             current_time = pygame.time.get_ticks()
-            get_pressed = _prvt.get_mouse_pressed(self.__only_click)
+            get_pressed = _prvt.button_get_mouse_pressed(self.__only_click)
             any_pressed = (get_pressed[0] or get_pressed[1] or get_pressed[2])
 
             if self.active_cursor is not None and ismousehover:
@@ -979,7 +747,8 @@ class Button(ButtonInterface):
         """
         Render the inactive button.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
@@ -992,7 +761,8 @@ class Button(ButtonInterface):
         """
         Render the hover button.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
@@ -1005,7 +775,8 @@ class Button(ButtonInterface):
         """
         Render the active button.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
@@ -1040,6 +811,7 @@ class Range(ButtonInterface):
         hide_thumb: bool = False,
         hide_track: bool = False,
         hide_track_fill: bool = False,
+        alpha_transparency: int = 255,
         all_click: bool = True,
         min_value: _RealNumber = 0,
         max_value: _RealNumber = 100,
@@ -1056,41 +828,43 @@ class Range(ButtonInterface):
 
         """
         Parameters:
-            * `surface_screen`: screen surface -> pygame.display.set_mode((x, y)) or pygame.Surface
-            * `rect`: rect track (as well a rect Button)
-            * `id`: ID Range for events
-            * `thumb_size`: thumb size (width, height) or set the default to None to not show it
-            * `outline_size`: outline size of the range track button
-            * `thumb_color`: thumb color
-            * `track_color`: track color
-            * `track_fill_color`: track fill color
-            * `outline_color`: outline color
-            * `inactive_cursor`: change the cursor (un-hover)
-            * `active_cursor`: change the cursor (hover)
-            * `active_cursor_outside`: the active cursor will be active if it is in the track_rect area and also outside the track_rect area when dragging
-            * `horizontal`: makes the drag move horizontally or vertically if the value is False. (width and height of the rect adjust)
-            * `reversed`: reversed the drag in the opposite direction [(min -> max) => (max <- min)]
-            * `reversed_scroller_mouse`: reverse drag on mouse scroll
-            * `drag_scroller_mouse`: use the mouse scroll to drag the track (Requires handle_event method)
-            * `hide_thumb`: hide thumb
-            * `hide_track`: hide track
-            * `hide_track_fill`: hide track fill
-            * `all_click`: loads all clicks that occur. (Valid for without event handle)
-            * `min_value`: minimum value output
-            * `max_value`: maximum value output
-            * `value`: value output / default value
-            * `step`: step value. None if there are no steps given
-            * `range_value_output`: The type of numeric value output. In the form of int or float
-            * `only_click`: click response ('r', 'c', 'l')
-            * `click_speed`: click speed (ms)
-            * `borders_thumb`: pygame.draw.rect thumb borders. Use border_radius class
-            * `borders_track`: pygame.draw.rect track borders. Use border_radius class
-            * `borders_track_fill`: pygame.draw.rect track borders. Use border_radius class
+            :param `surface_screen`: screen surface, `pygame.display.set_mode((x, y))` or `pygame.Surface`.
+            :param `rect`: rect track (as well a rect Button).
+            :param `id`: ID Range for events.
+            :param `thumb_size`: thumb size (width, height) or set the default to None to not show it.
+            :param `outline_size`: outline size of the range track button.
+            :param `thumb_color`: thumb color.
+            :param `track_color`: track color.
+            :param `track_fill_color`: track fill color.
+            :param `outline_color`: outline color.
+            :param `inactive_cursor`: change the cursor (un-hover).
+            :param `active_cursor`: change the cursor (hover).
+            :param `active_cursor_outside`: the active cursor will be active if it is in the track_rect area and also outside the track_rect area when dragging.
+            :param `horizontal`: makes the drag move horizontally or vertically if the value is False. (width and height of the rect adjust).
+            :param `reversed`: reversed the drag in the opposite direction [(min -> max) => (max <- min)].
+            :param `reversed_scroller_mouse`: reverse drag on mouse scroll.
+            :param `drag_scroller_mouse`: use the mouse scroll to drag the track (Requires handle_event method).
+            :param `hide_thumb`: hide thumb.
+            :param `hide_track`: hide track.
+            :param `hide_track_fill`: hide track fill.
+            :param `alpha_transparency`: change alpha transparency.
+            :param `all_click`: loads all clicks that occur. (Valid for without event handle).
+            :param `min_value`: minimum value output.
+            :param `max_value`: maximum value output.
+            :param `value`: value output / default value.
+            :param `step`: step value. None if there are no steps given.
+            :param `range_value_output`: The type of numeric value output. In the form of int or float.
+            :param `only_click`: click response 'r' or 'c' or 'l'.
+            :param `click_speed`: click speed (ms).
+            :param `borders_thumb`: pygame.draw.rect thumb borders. Use border_radius class.
+            :param `borders_track`: pygame.draw.rect track borders. Use border_radius class.
+            :param `borders_track_fill`: pygame.draw.rect track borders. Use border_radius class.
         """
 
         self.ishandlebyevent: bool = False
         self.button_event: ElementEvent = ElementEvent('Range', id)
 
+        self.__initialization: bool = True
         self.__min_value = min_value
         self.__max_value = max_value
 
@@ -1098,6 +872,7 @@ class Range(ButtonInterface):
             surface_screen = surface_screen,
             rect = rect,
             hide = hide_track,
+            alpha_transparency = alpha_transparency,
             all_click = all_click,
             outline_size = outline_size,
             color = track_color,
@@ -1108,8 +883,9 @@ class Range(ButtonInterface):
         )
         self.__button_thumb: Button = Button(
             surface_screen = surface_screen,
-            rect = _prvt.init_rect,
+            rect = _prvt.init_rect.copy(),
             hide = hide_thumb,
+            alpha_transparency = alpha_transparency,
             color = thumb_color,
             borders = borders_thumb
         )
@@ -1137,6 +913,7 @@ class Range(ButtonInterface):
         self.hide_thumb = hide_thumb
         self.hide_track = hide_track
         self.hide_track_fill = hide_track_fill
+        self.alpha_transparency = alpha_transparency
         self.all_click = all_click
         self.min_value = min_value
         self.max_value = max_value
@@ -1151,6 +928,8 @@ class Range(ButtonInterface):
 
         self.thumb_size = thumb_size
 
+        self.button_event.rect_thumb = _prvt.init_rect.copy()
+        self.button_event.rect_track_fill = _prvt.init_rect.copy()
         self.button_event.range_value = self.__value
 
         self.__button_track._send_event = False
@@ -1160,17 +939,34 @@ class Range(ButtonInterface):
         self.__clicked_button: bool = False
         self.__detected_scroller_mouse: bool = False
         self.__button_outside: bool = False
-        self.__rect_thumb: pygame.Rect = _prvt.init_rect
-        self.__rect_track_fill: pygame.Rect = _prvt.init_rect
+
+        self.__initialization = False
 
         self.__set_track_and_thumb_positions()
 
-    def __multiple_value(self, vtype: typing.Literal['value', 'evalue'] = 'value', evalue = None, estep = None) -> None | _RealNumber:
+    def __copy__(self) -> 'Range':
+
+        """
+        Copy the Range button class. (No kwargs).
+
+        Returns:
+            `Range`
+        """
+
+        return self.copy()
+
+    def __multiple_value(self, vtype: typing.Literal['value', 'evalue'] = 'value', value = None, step = None) -> None | _RealNumber:
 
         """
         Private method. Look for the closest multiple value.
 
-        return -> (`None` => vtype='value') or (`RealNumber` => vtype='evalue')
+        Parameters:
+            :param `vtype`: edited value type.
+            :param `evalue`: value.
+            :param `estep`: step.
+
+        Returns:
+            (`None` if `vtype=='value'`) or (`RealNumber` if `vtype=='evalue'`)
         """
 
         if self.__step is not None:
@@ -1185,25 +981,29 @@ class Range(ButtonInterface):
                         self.button_event.range_value = self.__value = self.__range_value_output(self.__value + (self.__step - rest))
 
                 case 'evalue':
-                    rest = evalue % estep
-                    if rest < estep / 2:
-                        return evalue - rest
+                    rest = value % step
+                    if rest < step / 2:
+                        return value - rest
                     else:
-                        return evalue + (estep - rest)
+                        return value + (step - rest)
 
     def __render_thumb_and_track_fill(self, type_draw: typing.Literal['active', 'inactive', 'hover']) -> None:
 
         """
         Private method. Render the thumb and track fill.
 
-        return -> `None`
+        Parameters:
+            :param `type_draw`: the type of button to be rendered.
+
+        Returns:
+            `None`
         """
 
         if not self.__button_outside:
 
             if self.__use_thumb:
-                self.__button_thumb.rect = self.__rect_thumb
-            self.__button_track_fill.rect = self.__rect_track_fill
+                self.__button_thumb.rect = self.button_event.rect_thumb
+            self.__button_track_fill.rect = self.button_event.rect_track_fill
 
             match type_draw:
 
@@ -1227,7 +1027,8 @@ class Range(ButtonInterface):
         """
         Private method. Set the track fill size and thumb position.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__multiple_value()
@@ -1235,7 +1036,7 @@ class Range(ButtonInterface):
         if self.__horizontal:
             if isinstance(self.__rect, pygame.Rect):
                 track_fill_width = ((self.__value - self.__min_value) / (self.__max_value - self.__min_value)) * self.__rect.width
-                self.__rect_track_fill = pygame.Rect(
+                self.button_event.rect_track_fill = pygame.Rect(
                     self.__rect.left,
                     self.__rect.top,
                     track_fill_width,
@@ -1248,12 +1049,12 @@ class Range(ButtonInterface):
                 )
 
             if self.__use_thumb:
-                self.__rect_thumb = pygame.Rect(
-                    self.__rect.left + self.__rect_track_fill.width - self.__thumb_size[0] / 2,
+                self.button_event.rect_thumb = pygame.Rect(
+                    self.__rect.left + self.button_event.rect_track_fill.width - self.__thumb_size[0] / 2,
                     self.__rect.top + (self.__rect.height - self.__thumb_size[1]) / 2,
                     *self.__thumb_size
                 ) if not self.reversed else pygame.Rect(
-                    self.__rect_track_fill.left - self.__thumb_size[0] / 2,
+                    self.button_event.rect_track_fill.left - self.__thumb_size[0] / 2,
                     self.__rect.top + (self.__rect.height - self.__thumb_size[1]) / 2,
                     *self.__thumb_size
                 )
@@ -1261,7 +1062,7 @@ class Range(ButtonInterface):
         else:
             if isinstance(self.__rect, pygame.Rect):
                 track_fill_height = ((self.__value - self.__min_value) / (self.__max_value - self.__min_value)) * self.__rect.height
-                self.__rect_track_fill = pygame.Rect(
+                self.button_event.rect_track_fill = pygame.Rect(
                     self.__rect.left,
                     self.__rect.top,
                     self.__rect.width,
@@ -1274,13 +1075,13 @@ class Range(ButtonInterface):
                 )
 
             if self.__use_thumb:
-                self.__rect_thumb = pygame.Rect(
+                self.button_event.rect_thumb = pygame.Rect(
                     self.__rect.left + (self.__rect.width - self.__thumb_size[0]) / 2,
-                    self.__rect.top + self.__rect_track_fill.height - self.__thumb_size[1] / 2,
+                    self.__rect.top + self.button_event.rect_track_fill.height - self.__thumb_size[1] / 2,
                     *self.__thumb_size
                 ) if not self.__reversed else pygame.Rect(
                     self.__rect.left + (self.__rect.width - self.__thumb_size[0]) / 2,
-                    self.__rect_track_fill.top - self.__thumb_size[1] / 2,
+                    self.button_event.rect_track_fill.top - self.__thumb_size[1] / 2,
                     *self.__thumb_size
                 )
 
@@ -1289,7 +1090,12 @@ class Range(ButtonInterface):
         """
         Private method. Update the Range value.
 
-        return -> `ButtonEvent`
+        Parameters:
+            :param `mouse_pos`: mouse position.
+            :param `get_pressed`: mouse pressed.
+
+        Returns:
+            `ElementEvent`
         """
 
         if self.__horizontal:
@@ -1300,19 +1106,19 @@ class Range(ButtonInterface):
             else:
                 relative_position = (mouse_pos[0] - self.__rect.left) / self.__rect.width
 
-            self.__rect_track_fill.width = relative_position * self.__rect.width
+            self.button_event.rect_track_fill.width = relative_position * self.__rect.width
             if self.__step is not None:
-                self.__rect_track_fill.width = self.__multiple_value('evalue', self.__rect_track_fill.width, self.__rect.width / (self.__max_value - self.__min_value))
+                self.button_event.rect_track_fill.width = self.__multiple_value('evalue', self.button_event.rect_track_fill.width, self.__rect.width / (self.__max_value - self.__min_value))
 
             if self.__reversed:
-                self.__rect_track_fill.width = self.__rect.width - self.__rect_track_fill.width
-                self.__rect_track_fill.left = self.__rect.right - self.__rect_track_fill.width
+                self.button_event.rect_track_fill.width = self.__rect.width - self.button_event.rect_track_fill.width
+                self.button_event.rect_track_fill.left = self.__rect.right - self.button_event.rect_track_fill.width
 
             if self.__use_thumb:
-                self.__rect_thumb.left = (
-                    self.__rect.right - self.__rect_track_fill.width - self.__rect_thumb.width / 2
+                self.button_event.rect_thumb.left = (
+                    self.__rect.right - self.button_event.rect_track_fill.width - self.button_event.rect_thumb.width / 2
                     if self.__reversed else
-                    self.__rect.left + self.__rect_track_fill.width - self.__rect_thumb.width / 2
+                    self.__rect.left + self.button_event.rect_track_fill.width - self.button_event.rect_thumb.width / 2
                 )
 
         else:
@@ -1323,19 +1129,19 @@ class Range(ButtonInterface):
             else:
                 relative_position = (mouse_pos[1] - self.__rect.top) / self.__rect.height
 
-            self.__rect_track_fill.height = relative_position * self.__rect.height
+            self.button_event.rect_track_fill.height = relative_position * self.__rect.height
             if self.__step is not None:
-                self.__rect_track_fill.height = self.__multiple_value('evalue', self.__rect_track_fill.height, self.__rect.height / (self.__max_value - self.__min_value))
+                self.button_event.rect_track_fill.height = self.__multiple_value('evalue', self.button_event.rect_track_fill.height, self.__rect.height / (self.__max_value - self.__min_value))
 
             if self.__reversed:
-                self.__rect_track_fill.height = self.__rect.height - self.__rect_track_fill.height
-                self.__rect_track_fill.top = self.__rect.bottom - self.__rect_track_fill.height
+                self.button_event.rect_track_fill.height = self.__rect.height - self.button_event.rect_track_fill.height
+                self.button_event.rect_track_fill.top = self.__rect.bottom - self.button_event.rect_track_fill.height
 
             if self.__use_thumb:
-                self.__rect_thumb.top = (
-                    self.__rect.bottom - self.__rect_track_fill.height - self.__rect_thumb.height / 2
+                self.button_event.rect_thumb.top = (
+                    self.__rect.bottom - self.button_event.rect_track_fill.height - self.button_event.rect_thumb.height / 2
                     if self.__reversed else
-                    self.__rect.top + self.__rect_track_fill.height - self.__rect_thumb.height / 2
+                    self.__rect.top + self.button_event.rect_track_fill.height - self.button_event.rect_thumb.height / 2
                 )
 
         self.button_event.range_value = self.value = self.range_value_output(
@@ -1451,6 +1257,10 @@ class Range(ButtonInterface):
         return self.__hide_track_fill
     
     @property
+    def alpha_transparency(self) -> int:
+        return self.__alpha_transparency
+    
+    @property
     def all_click(self) -> bool:
         return self.__all_click
 
@@ -1505,6 +1315,8 @@ class Range(ButtonInterface):
     def rect(self, rect: pygame.Rect) -> None:
         self.__rect = rect
         self.__button_track.rect = rect
+        if not self.__initialization:
+            self.__set_track_and_thumb_positions()
 
     @id.setter
     def id(self, id: _ElementID) -> None:
@@ -1516,6 +1328,8 @@ class Range(ButtonInterface):
         self.__use_thumb = isinstance(size, _ArgsList)
         self.__thumb_size = size
         if self.__use_thumb:
+            _prvt.asserting(len(size) == 2, ValueError(f'thumb_size -> size (setter): ArgsList length must be 2 arguments not {len(size)}'))
+            _prvt.asserting(isinstance(size[0], _RealNumber) and isinstance(size[1], _RealNumber), TypeError('thumb_size -> size (setter): The 2 arguments must be a RealNumber'))
             self.__set_track_and_thumb_positions()
 
     @outline_size.setter
@@ -1586,6 +1400,13 @@ class Range(ButtonInterface):
         self.__hide_track_fill = bool(hide)
         self.__button_track_fill.hide = hide
 
+    @alpha_transparency.setter
+    def alpha_transparency(self, alpha: int) -> None:
+        self.__alpha_transparency = alpha
+        self.__button_track.alpha_transparency = alpha
+        self.__button_thumb.alpha_transparency = alpha
+        self.__button_track_fill.alpha_transparency = alpha
+
     @all_click.setter
     def all_click(self, boolean: bool) -> None:
         self.__all_click = bool(boolean)
@@ -1650,24 +1471,30 @@ class Range(ButtonInterface):
         self.__borders_track_fill = borders
         self.__button_track_fill.borders = borders
 
-    def copy(self, **kwargs):
+    def copy(self, **kwargs) -> 'Range':
 
         """
         Copy the Range button class.
 
-        return -> `Range(...)`
+        Parameters:
+            kwargs: in the form of a Range button init parameters.
+
+        Returns:
+            `Range`
         """
 
-        clonerange = Range(**(self.get_param() | kwargs))
-
-        return clonerange
+        return Range(**(self.get_param() | kwargs))
 
     def edit_param(self, **kwargs) -> None:
 
         """
         Edit parameters via the key argument of this function.
 
-        return -> `None`
+        Parameters:
+            kwargs: in the form of an init parameters for the Range button to be edited.        
+
+        Returns:
+            `None`
         """
 
         param = self.get_param()
@@ -1681,7 +1508,8 @@ class Range(ButtonInterface):
         """
         Get class parameters in the form dictionary type.
 
-        return -> `dict[str, object]`
+        Returns:
+            `dict[str, object]`
         """
 
         return {
@@ -1704,6 +1532,7 @@ class Range(ButtonInterface):
             'hide_thumb': self.__hide_thumb,
             'hide_track': self.__hide_track,
             'hide_track_fill': self.__hide_track_fill,
+            'alpha_transparency': self.__alpha_transparency,
             'min_value': self.__min_value,
             'max_value': self.__max_value,
             'value': self.__value,
@@ -1716,37 +1545,16 @@ class Range(ButtonInterface):
             'borders_track_fill': self.__borders_track_fill
         }
 
-    def get_private_attr(self, remove_underscore: bool = False) -> dict[str, object]:
-
-        """
-        Get private property.
-
-        return -> `dict[str, object]`
-        """
-
-        attr_dict = {
-            '__button_track': self.__button_track.copy(),
-            '__button_thumb': self.__button_thumb.copy(),
-            '__button_track_fill': self.__button_track_fill.copy(),
-            '__clicked_button': self.__clicked_button,
-            '__detected_scroller_mouse': self.__detected_scroller_mouse,
-            '__button_outside': self.__button_outside,
-            '__use_thumb': self.__use_thumb,
-            '__rect_thumb': self.__rect_thumb.copy(),
-            '__rect_track_fill': self.__rect_track_fill.copy()
-        }
-
-        if remove_underscore:
-            return {attr.lstrip('_'): value for attr, value in attr_dict}
-
-        return attr_dict
-
     def set_value(self, value: _RealNumber) -> None:
 
         """
         Set the value.
 
-        return -> `None`
+        Parameters:
+            :param `value`: the new range value to be changed.
+
+        Returns:
+            `None`
         """
 
         self.button_event.range_value = self.value = self.range_value_output(value)
@@ -1755,9 +1563,13 @@ class Range(ButtonInterface):
     def handle_event(self, event: pygame.event.Event, handled_button: bool = False) -> None:
 
         """
-        Handling mouse input via pygame events.
+        Handling input via pygame events.
 
-        return -> `None`
+        Parameters:
+            :param `event`: events that occur in the pygame event loop.
+
+        Returns:
+            `None`
         """
 
         self.ishandlebyevent = True
@@ -1804,13 +1616,14 @@ class Range(ButtonInterface):
         """
         Draw and update Range button. Draw a range button and then update it according to the events obtained.
 
-        return -> `ButtonEvent` or via `Range.button_event`
+        Returns:
+            `ElementEvent` or via `Range.button_event`
         """
 
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
 
         mouse_pos = pygame.mouse.get_pos()
-        ismousehover = self.rect.collidepoint(*mouse_pos) or (self.__rect_thumb.collidepoint(*mouse_pos) if self.__use_thumb else None)
+        ismousehover = self.rect.collidepoint(*mouse_pos) or (self.button_event.rect_thumb.collidepoint(*mouse_pos) if self.__use_thumb else None)
 
         self.button_event.click = ''
         self.button_event.ismousehover = ismousehover
@@ -1822,7 +1635,7 @@ class Range(ButtonInterface):
         self.button_event.cursor_inactive = False
 
         if not self.__button_outside:
-            get_pressed = _prvt.get_mouse_pressed(self.__only_click)
+            get_pressed = _prvt.button_get_mouse_pressed(self.__only_click)
             any_pressed = (get_pressed[0] or get_pressed[1] or get_pressed[2])
 
             if not self.__detected_scroller_mouse:
@@ -1861,19 +1674,27 @@ class Range(ButtonInterface):
 
             if self.__detected_scroller_mouse:
                 self.__detected_scroller_mouse = False
-        
+
         return self.button_event
 
     def draw_inactive(self) -> None:
 
         """
-        Render the inactive button.
+        Render the inactive range button.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
+        rect_thumb = self.button_event.rect_thumb
+        rect_track_fill = self.button_event.rect_track_fill
+
         self.button_event._reset_property()
+
+        self.button_event.rect_thumb = rect_thumb
+        self.button_event.rect_track_fill = rect_track_fill
         self.button_event.range_value = self.value = self.range_value_output(self.value)
+
         self.__clicked_button = False
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
         self.__button_track.draw_inactive()
@@ -1882,13 +1703,21 @@ class Range(ButtonInterface):
     def draw_hover(self) -> None:
 
         """
-        Render the hover button.
+        Render the hover range button.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
+        rect_thumb = self.button_event.rect_thumb
+        rect_track_fill = self.button_event.rect_track_fill
+
         self.button_event._reset_property()
+
+        self.button_event.rect_thumb = rect_thumb
+        self.button_event.rect_track_fill = rect_track_fill
         self.button_event.range_value = self.value = self.range_value_output(self.value)
+
         self.__clicked_button = False
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
         self.__button_track.draw_hover()
@@ -1897,13 +1726,21 @@ class Range(ButtonInterface):
     def draw_active(self) -> None:
 
         """
-        Render the active button.
+        Render the active range button.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
+        rect_thumb = self.button_event.rect_thumb
+        rect_track_fill = self.button_event.rect_track_fill
+
         self.button_event._reset_property()
+
+        self.button_event.rect_thumb = rect_thumb
+        self.button_event.rect_track_fill = rect_track_fill
         self.button_event.range_value = self.value = self.range_value_output(self.value)
+
         self.__clicked_button = False
         self.__button_outside = _prvt.is_partially_outside(self.__surface_screen.get_rect(), self.__rect)
         self.__button_track.draw_active()
@@ -1929,12 +1766,13 @@ def set_cursor_buttons(
     Sets the cursor set_mode of the double or more button functions.
 
     Parameters:
-        * `*buttons`: button class (already initialized)
-        * `inactive_cursor`: inactive cursor type
-        * `active_cursor`: active cursor type
-        * `set_active_cursor_button`: set the active type of cursor on each button
+        :param `buttons`: button class (already initialized).
+        :param `inactive_cursor`: inactive cursor type.
+        :param `active_cursor`: active cursor type.
+        :param `set_active_cursor_button`: set the active type of cursor on each button.
 
-    return -> `None`
+    Returns:
+        `None`
     """
 
     _prvt.asserting(buttons, ValueError('*buttons: requires at least one positional argument'))
@@ -1975,8 +1813,10 @@ class Manager(ButtonInterface):
 
         """
         Parameters:
-            * `*buttons`: Target buttons (already initialized)
-            * **kw of set_cursor_buttons
+            :param `buttons`: Target buttons (already initialized).
+            :param `inactive_cursor`: inactive cursor type.
+            :param `active_cursor`: active cursor type.
+            :param `set_active_cursor_button`: set the active type of cursor on each button.
         """
 
         _prvt.asserting(buttons, ValueError('*buttons: requires at least one positional argument'))
@@ -1989,12 +1829,24 @@ class Manager(ButtonInterface):
         self.active_cursor = active_cursor
         self.set_active_cursor_button = set_active_cursor_button
 
+    def __copy__(self) -> 'Manager':
+
+        """
+        Copy the Manager class. (No kwargs).
+
+        Returns:
+            `Manager`
+        """
+
+        return self.copy()
+
     def __set_all_cursor_button(self) -> None:
 
         """
-        Sets all the cursor on the button.
+        Private method. Sets all the cursor on the button.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         set_cursor_buttons(
@@ -2004,16 +1856,21 @@ class Manager(ButtonInterface):
             set_active_cursor_button=self.set_active_cursor_button
         )
 
-    def copy(self, *new_buttons: ButtonsType):
+    def copy(self, *new_buttons: ButtonsType) -> 'Manager':
 
         """
         Copy the Manager class.
-        Enter the button arguments to replace the new button.
 
-        return -> `Manager(...)`
+        Parameters:
+            :param `new_buttons`: Load new buttons manager.
+
+        Returns:
+            `Manager`
         """
 
-        button_list = new_buttons or self.buttons
+        button_list = list(self.buttons)
+        button_list.extend(new_buttons)
+
         return Manager(
             *button_list,
             inactive_cursor = self.inactive_cursor,
@@ -2025,9 +1882,13 @@ class Manager(ButtonInterface):
 
         """
         Edit button parameters via the key argument of this function.
-        Enter button id to edit specific parameters.
 
-        return -> `None`
+        Parameters:
+            :param `id`: id for edit specific parameters button.
+            kwargs: parameters to edited.
+
+        Returns:
+            `None`
         """
 
         for button in self.buttons:
@@ -2038,9 +1899,12 @@ class Manager(ButtonInterface):
 
         """
         Get class button parameters in the form dictionary type.
-        Enter button id to get specific parameters.
 
-        return -> `list[dict[str, object]]`
+        Parameters:
+            :param `id`: id to get specific parameters.
+
+        Returns:
+            `list[dict[str, object]]`
         """
 
         buttons_param = []
@@ -2050,31 +1914,17 @@ class Manager(ButtonInterface):
                 buttons_param.append(button.get_param())
 
         return buttons_param
-
-    def get_private_attr(self, id: _ElementID, remove_underscore: bool = False) -> list[dict[str, object]]:
-
-        """
-        Get buttons private property.
-        Enter button id to get specific private attribute.
-
-        return -> `list[dict[str, object]]`
-        """
-
-        buttons_param = []
-
-        for button in self.buttons:
-            if id == button.id:
-                buttons_param.append(button.get_private_attr(remove_underscore))
-
-        return buttons_param
     
     def get_button(self, id: _ElementID) -> ButtonsType:
 
         """
-        Get button.
-        Enter button id to get the button target.
+        Get the button.
 
-        return -> `ButtonsType`
+        Parameters:
+            :param `id`: id to get the button target.
+
+        Returns:
+            `ButtonsType`
         """
 
         for button in self.buttons:
@@ -2086,9 +1936,13 @@ class Manager(ButtonInterface):
     def handle_event(self, event: pygame.event.Event, range_handled_button: bool = False) -> None:
 
         """
-        Handling mouse input via pygame events.
+        Handling input via pygame events.
 
-        return -> `None`
+        Parameters:
+            :param `event`: events that occur in the pygame event loop.
+
+        Returns:
+            `None`
         """
 
         for button in self.buttons:
@@ -2104,7 +1958,8 @@ class Manager(ButtonInterface):
         """
         Draw, update, and set cursor buttons. Draw a button and then update it according to the events obtained.
 
-        return -> `ButtonEvent` or via `Button.button_event`
+        Returns:
+            `None`
         """
 
         self.__set_all_cursor_button()
@@ -2117,7 +1972,8 @@ class Manager(ButtonInterface):
         """
         Render the inactive buttons.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__set_all_cursor_button()
@@ -2130,7 +1986,8 @@ class Manager(ButtonInterface):
         """
         Render the hover buttons.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__set_all_cursor_button()
@@ -2143,7 +2000,8 @@ class Manager(ButtonInterface):
         """
         Render the active buttons.
 
-        return -> `None`
+        Returns:
+            `None`
         """
 
         self.__set_all_cursor_button()
@@ -2152,7 +2010,6 @@ class Manager(ButtonInterface):
             button.draw_active()
 
 
-__version__ = '1.2.0'
 __all__ = [
     'BUTTON_CLICK',
     'border_radius',

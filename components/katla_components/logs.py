@@ -34,7 +34,7 @@ class Logs:
                 )
 
             case _:
-                raise TypeError('type:', type)
+                raise TypeError('unknown type:', type)
 
         self.messages.append({
             'message': message,

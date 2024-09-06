@@ -1,203 +1,3 @@
-"""
-MARKDOWN DOCUMENTATION
-
-# `pygameui.scroller` / `pygamescroller` module
-Version: beta 1.0.0
-
-pygame scrollers. Scroller, X and Y
-
-Explanations
-------------
-pygamescroller is a special tool module for create a scroll element object.
-Pygame does not have a medium to make elements move with user movement.
-However, the functions and methods provided by the pygame module provide
-various ways to create this scroller elements. And this module is used as a
-scrollers function that is ready-made and ready to use.
-
-Events
-------
-How to get input from pygame scroller? Here will be explained with several
-methods that you can use.
-
-1. Method `ElementEvent`
-
-Each scroller class has a scroller_event attribute that functions to get all
-events that occur on the scroller such as anchor offsets and others. Each
-scroller has different properties.
-
-How to use:
-
-Create a variable to contain the scroller.
-```py
-scroller1 = scroller.Scroller(
-    max_scrolled=(500, 500),
-    clock=clock # optional
-)
-```
-
-Then create an event loop and call the update method for interaction.
-```py
-# loops game
-while ...:
-    for event in pygame.event.get():
-        ... # your events
-        scroller1.handle_event(event)
-
-    scroller1.update()
-```
-
-And now you get an event with attributes:
-```py
-scroller1.scroller_event # event
-```
-or
-```py
-    scevent = scroller1.update()
-    scevent # event
-```
-
-2. Method `pygame.Event`
-
-This event method continuously captures scroller events from the pygame event
-loop. However, it requires an id parameter to distinguish between scrollers.
-
-How to use:
-
-Create a variable to contain the scroller, enter the id type of the scroller.
-```py
-scroller1 = scroller.Scroller(
-    max_scrolled=(500, 500),
-    id='scroller1', # enter the id
-    clock=clock # optional
-)
-```
-
-How to catch the events.
-```py
-# loops game
-while ...:
-    for event in pygame.event.get():
-        ... # your events
-        scroller1.handle_event(event)
-
-        if event.type == scroller.SCROLLER:
-            if event.id == scroller1.id:
-                # do something..
-            ...
-
-    scroller1.update()
-```
-
-Examples
---------
-Here is a example of a basic setup (opens the window, updates the screen, and
-handles events):
-```py
-import pygame # import the pygame
-from pygameui import scroller # import the pygame scroller
-
-# pygame setup
-pygame.init()
-
-running = True
-screen = pygame.display.set_mode((500, 500))
-clock = pygame.time.Clock()
-
-pygame.display.set_caption('Scroller Test')
-
-# just a surface test, for example is a text
-font = pygame.font.SysFont(None, 60)
-
-testsurf = font.render('Hi!', True, 'white', 'magenta')
-surfx = font.render('[]', True, 'red')
-surfy = font.render('[]', True, 'blue')
-
-sx, sy = screen.get_width(), screen.get_height()
-
-# initialization the scrollers (Do not initialization Scrollers in the game loop because this will be affected by time, events, etc)
-scroller1 = scroller.Scroller(
-    max_scrolled=(sx - testsurf.get_width(), sy - testsurf.get_height()),
-    clock=clock,
-    reversed_keyboard=True
-)
-scroller2 = scroller.ScrollerX(
-    min_max_scrolled=(0, sx - surfx.get_width()),
-    y_pos=0,
-    clock=clock,
-    reversed_keyboard=True
-)
-scroller3 = scroller.ScrollerY(
-    min_max_scrolled=(0, sy - surfy.get_height()),
-    x_pos=sx - surfy.get_width(),
-    clock=clock, 
-    reversed_keyboard=True
-)
-
-# screen loop
-while running:
-
-    # events
-    for event in pygame.event.get():
-        # when the user clicks the X to close the screen (pygame)
-        if event.type == pygame.QUIT:
-            running = False
-
-        # handle scroller events
-        scroller1.handle_event(event)
-        scroller2.handle_event(event)
-        scroller3.handle_event(event)
-
-        if event.type == scroller.SCROLLER:
-
-            if event.element == 'Scroller':
-                print(f'button event property: id:{event.id}, ' +
-                    f'element:{event.element}, ' +
-                    f'offset:{event.offset}, ' + 
-                    f'offset_x:{event.offset_x}, ' +
-                    f'offset_y:{event.offset_y}, ' +
-                    f'ElementEvent:({event.element_event})'
-                )
- 
-            if event.element == 'ScrollerX':
-                print(f'button event property: id:{event.id}, ' +
-                    f'element:{event.element}, ' +
-                    f'offset:{event.offset}, ' + 
-                    f'offset_x:{event.offset_x}, ' +
-                    f'ElementEvent:({event.element_event})'
-                )
-
-            if event.element == 'ScrollerY':
-                print(f'button event property: id:{event.id}, ' +
-                    f'element:{event.element}, ' +
-                    f'offset:{event.offset}, ' + 
-                    f'offset_y:{event.offset_y}, ' +
-                    f'ElementEvent:({event.element_event})'
-                )
-
-    # fill screen black
-    screen.fill('black')
-    # update the scrollers
-    scroller1.update()
-    scroller2.update()
-    scroller3.update()
-    # displays the image with scroller offset
-    scroller1.apply(screen, testsurf)
-    scroller2.apply(screen, surfx)
-    scroller3.apply(screen, surfy)
-
-    # flip() the display to put your work on screen
-    pygame.display.flip()
-    # Set the frame-rate speed to 60 (fps)
-    clock.tick(60)
-
-# clean up pygame resources
-pygame.quit()
-```
-
-Thank you to those of you who have read the documentation and code examples.
-"""
-
-
 from .__private.private import (
     pygame,
     typing,
@@ -205,6 +5,7 @@ from .__private.private import (
 )
 from .__private.const import (
     RealNumber as _RealNumber,
+    ArgsList as _ArgsList,
     ElementID as _ElementID,
     Direction as _Direction,
     ListDirection as _ListDirection
@@ -213,20 +14,20 @@ from .__private.event import (
     SCROLLER,
     ElementEvent
 )
-from .__decorator.decorator import (
-    ClassInterface
+from .__private.decorator import (
+    ElementInterface
 )
 
 
-class Scroller(ClassInterface):
+class Scroller(ElementInterface):
 
     """ Scroller - Scroller class, to handle scrolling in Pygame applicationsto handle scrolling in Pygame applications """
 
     def __init__(
 
             self,
-            max_scrolled: tuple[_RealNumber, _RealNumber],
-            min_scrolled: tuple[_RealNumber, _RealNumber] = (0, 0),
+            max_scrolled: _ArgsList,
+            min_scrolled: _ArgsList = (0, 0),
             id: _ElementID = None,
             clock: typing.Optional[pygame.time.Clock] = None,
             momentum: float = 0.9,
@@ -242,17 +43,17 @@ class Scroller(ClassInterface):
 
         """
         Parameters:
-            * `max_scrolled`: maximum scroll values (x, y)
-            * `min_scrolled`: minimum scroll values (x, y)
-            * `clock`: pygame clock or set the default to None to initial new Clock
-            * `momentum`: momentum factor for smooth scrolling
-            * `stop_threshold`: threshold to stop scrolling
-            * `mouse_scroller_speed`: speed for mouse scrolling
-            * `keyboard_speed`: speed for keyboard scrolling
-            * `mouse_scroller_to`: direction for mouse scrolling
-            * `keyboard_to`: direction for keyboard scrolling
-            * `reversed_mouse_scroller`: reversed the mouse scroller offset
-            * `reversed_keyboard`: reversed the keyboard offset
+            :param `max_scrolled`: maximum scroll values (x, y).
+            :param `min_scrolled`: minimum scroll values (x, y).
+            :param `clock`: pygame clock or set the default to None to initial new Clock.
+            :param `momentum`: momentum factor for smooth scrolling.
+            :param `stop_threshold`: threshold to stop scrolling.
+            :param `mouse_scroller_speed`: speed for mouse scrolling.
+            :param `keyboard_speed`: speed for keyboard scrolling.
+            :param `mouse_scroller_to`: direction for mouse scrolling.
+            :param `keyboard_to`: direction for keyboard scrolling.
+            :param `reversed_mouse_scroller`: reversed the mouse scroller offset.
+            :param `reversed_keyboard`: reversed the keyboard offset.
         """
 
         self.scroller_event = ElementEvent('Scroller', id)
@@ -284,6 +85,17 @@ class Scroller(ClassInterface):
 
         if self.clock is None:
             self.clock = pygame.time.Clock()
+
+    def __copy__(self) -> 'Scroller':
+
+        """
+        Copy the Scroller class. (No kwargs).
+
+        Returns:
+            `Scroller`
+        """
+
+        return self.copy()
 
     @property
     def max_scrolled(self) -> tuple[_RealNumber, _RealNumber]:
@@ -342,18 +154,18 @@ class Scroller(ClassInterface):
         return self.__offset_y
 
     @max_scrolled.setter
-    def max_scrolled(self, tuple_scrolled: tuple[_RealNumber, _RealNumber]) -> None:
-        _prvt.asserting(isinstance(tuple_scrolled, tuple), TypeError(f'max_scrolled -> tuple_scrolled (setter): must be tuple type not {_prvt.get_type(tuple_scrolled)}'))
-        _prvt.asserting(len(tuple_scrolled) == 2, ValueError(f'max_scrolled -> tuple_scrolled (setter): tuple length must be 2 arguments not {len(tuple_scrolled)}'))
-        _prvt.asserting(isinstance(tuple_scrolled[0], _RealNumber) and isinstance(tuple_scrolled[1], _RealNumber), TypeError('max_scrolled -> tuple_scrolled (setter): The 2 arguments must be a RealNumber'))
-        self.__max_scrolled = tuple_scrolled
+    def max_scrolled(self, argslist_scrolled: tuple[_RealNumber, _RealNumber]) -> None:
+        _prvt.asserting(isinstance(argslist_scrolled, _ArgsList), TypeError(f'max_scrolled -> argslist_scrolled (setter): must be ArgsList type not {_prvt.get_type(argslist_scrolled)}'))
+        _prvt.asserting(len(argslist_scrolled) == 2, ValueError(f'max_scrolled -> argslist_scrolled (setter): ArgsList length must be 2 arguments not {len(argslist_scrolled)}'))
+        _prvt.asserting(isinstance(argslist_scrolled[0], _RealNumber) and isinstance(argslist_scrolled[1], _RealNumber), TypeError('max_scrolled -> argslist_scrolled (setter): The 2 arguments must be a RealNumber'))
+        self.__max_scrolled = argslist_scrolled
 
     @min_scrolled.setter
-    def min_scrolled(self, tuple_scrolled: tuple[_RealNumber, _RealNumber]) -> None:
-        _prvt.asserting(isinstance(tuple_scrolled, tuple), TypeError(f'min_scrolled -> tuple_scrolled (setter): must be tuple type not {_prvt.get_type(tuple_scrolled)}'))
-        _prvt.asserting(len(tuple_scrolled) == 2, ValueError(f'min_scrolled -> tuple_scrolled (setter): tuple length must be 2 arguments not {len(tuple_scrolled)}'))
-        _prvt.asserting(isinstance(tuple_scrolled[0], _RealNumber) and isinstance(tuple_scrolled[1], _RealNumber), TypeError('min_scrolled -> tuple_scrolled (setter): The 2 arguments must be a RealNumber'))
-        self.__min_scrolled = tuple_scrolled
+    def min_scrolled(self, argslist_scrolled: tuple[_RealNumber, _RealNumber]) -> None:
+        _prvt.asserting(isinstance(argslist_scrolled, _ArgsList), TypeError(f'min_scrolled -> argslist_scrolled (setter): must be ArgsList type not {_prvt.get_type(argslist_scrolled)}'))
+        _prvt.asserting(len(argslist_scrolled) == 2, ValueError(f'min_scrolled -> argslist_scrolled (setter): ArgsList length must be 2 arguments not {len(argslist_scrolled)}'))
+        _prvt.asserting(isinstance(argslist_scrolled[0], _RealNumber) and isinstance(argslist_scrolled[1], _RealNumber), TypeError('min_scrolled -> argslist_scrolled (setter): The 2 arguments must be a RealNumber'))
+        self.__min_scrolled = argslist_scrolled
 
     @id.setter
     def id(self, id: _ElementID) -> None:
@@ -413,24 +225,30 @@ class Scroller(ClassInterface):
         _prvt.asserting(isinstance(offset, _RealNumber), TypeError(f'offset_y -> offset (setter): must be RealNumber type not {_prvt.get_type(offset)}'))
         self.__offset_y = offset
 
-    def copy(self, **kwargs) -> None:
+    def copy(self, **kwargs) -> 'Scroller':
 
         """
         Copy the Scroller class.
 
-        return -> `Scroller(...)`
+        Parameters:
+            kwargs: in the form of a Scroller init parameters.
+
+        Returns:
+            `Scroller`
         """
 
-        clonescroller = Scroller(**(self.get_param() | kwargs))
-
-        return clonescroller
+        return Scroller(**(self.get_param() | kwargs))
 
     def edit_param(self, **kwargs) -> None:
 
         """
         Edit parameters via the key argument of this function.
 
-        return -> `None`
+        Parameters:
+            kwargs: in the form of an init parameters for the scroller to be edited.
+
+        Returns:
+            `None`
         """
 
         param = self.get_param()
@@ -444,7 +262,8 @@ class Scroller(ClassInterface):
         """
         Get class parameters in the form dictionary type.
 
-        return -> `dict[str, object]`
+        Returns:
+            `dict[str, object]`
         """
 
         return {
@@ -459,36 +278,17 @@ class Scroller(ClassInterface):
             'mouse_scroller_to': self.__mouse_scroller_to,
             'keyboard_to': self.__keyboard_to
         }
-    
-    def get_private_attr(self, remove_underscore: bool = False) -> dict[str, object]:
-
-        """
-        Get private property.
-
-        return -> `dict[str, object]`
-        """
-
-        attr_dict = {
-            '__scroll_speed_x': self.__scroll_speed_x,
-            '__scroll_speed_y': self.__scroll_speed_y,
-            '__last_mouse_pos': self.__last_mouse_pos,
-            '__stopped_time': self.__stopped_time,
-            '__rscrolling': self.__rscrolling,
-            '__click_detected': self.__click_detected,
-            '__initial_anchor_drag_state': self.__initial_anchor_drag_state
-        }
-
-        if remove_underscore:
-            return {attr.lstrip('_'): value for attr, value in attr_dict}
-
-        return attr_dict
 
     def handle_event(self, event: pygame.event.Event) -> None:
 
         """
-        Handling mouse input via pygame events.
+        Handling input via pygame events.
 
-        return -> `None`
+        Parameters:
+            :param `event`: events that occur in the pygame event loop.
+
+        Returns:
+            `None`
         """
 
         _prvt.asserting(isinstance(event, pygame.event.Event), TypeError(f'event: must be event.Event type not {_prvt.get_type(event)}'))
@@ -554,7 +354,8 @@ class Scroller(ClassInterface):
         """
         Update the scroller.
 
-        return -> `ElementEvent`
+        Returns:
+            `ElementEvent` or via `Scroller.scroller_event`
         """
 
         self.scroller_event.isanchor = anchor
@@ -656,7 +457,8 @@ class Scroller(ClassInterface):
         """
         Get current offset values.
 
-        return -> `tuple[RealNumber, RealNumber]`
+        Returns:
+            `tuple[RealNumber, RealNumber]`
         """
 
         return (self.__offset_x, self.__offset_y)
@@ -694,15 +496,15 @@ class ScrollerX(Scroller):
 
         """
         Parameters:
-            * `min_max_scrolled`: minimum and maximum scroll values (x direction)
-            * `y_pos`: fixed y position
-            * `clock`: pygame clock or set the default to None to initial new Clock
-            * `momentum`: momentum factor for smooth scrolling
-            * `stop_threshold`: threshold to stop scrolling
-            * `mouse_scroller_speed`: speed for mouse scrolling
-            * `keyboard_speed`: speed for keyboard scrolling
-            * `reversed_mouse_scroller`: reversed the mouse scroller offset
-            * `reversed_keyboard`: reversed the keyboard offset
+            :param `min_max_scrolled`: minimum and maximum scroll values (x direction).
+            :param `y_pos`: fixed y position.
+            :param `clock`: pygame clock or set the default to None to initial new Clock.
+            :param `momentum`: momentum factor for smooth scrolling.
+            :param `stop_threshold`: threshold to stop scrolling.
+            :param `mouse_scroller_speed`: speed for mouse scrolling.
+            :param `keyboard_speed`: speed for keyboard scrolling.
+            :param `reversed_mouse_scroller`: reversed the mouse scroller offset.
+            :param `reversed_keyboard`: reversed the keyboard offset.
         """
 
         self.__min_max_scrolled = min_max_scrolled
@@ -726,6 +528,17 @@ class ScrollerX(Scroller):
         self.scroller_event = ElementEvent('ScrollerX', id)
         self._send_event = False
 
+    def __copy__(self) -> 'ScrollerX':
+
+        """
+        Copy the ScrollerX class. (No kwargs).
+
+        Returns:
+            `ScrollerX`
+        """
+
+        return self.copy()
+
     @property
     def y_pos(self) -> _RealNumber:
         return self.__y_pos
@@ -746,24 +559,30 @@ class ScrollerX(Scroller):
         self.min_scrolled = (value[0], self.__y_pos)
         self.__min_max_scrolled = value
 
-    def copy(self, **kwargs):
+    def copy(self, **kwargs) -> 'ScrollerX':
 
         """
         Copy the ScrollerX class.
 
-        return -> `ScrollerX(...)`
+        Parameters:
+            kwargs: in the form of a ScrollerX init parameters.
+
+        Returns:
+            `ScrollerX`
         """
 
-        clonescrollerx = ScrollerX(**(self.get_param() | kwargs))
-
-        return clonescrollerx
+        return ScrollerX(**(self.get_param() | kwargs))
     
     def edit_param(self, **kwargs) -> None:
 
         """
         Edit parameters via the key argument of this function.
 
-        return -> `None`
+        Parameters:
+            kwargs: in the form of an init parameters for the scroller to be edited.
+
+        Returns:
+            `None`
         """
 
         param = self.get_param()
@@ -777,17 +596,18 @@ class ScrollerX(Scroller):
         """
         Get class parameters in the form dictionary type.
 
-        return -> `dict[str, object]`
+        Returns:
+            `dict[str, object]`
         """
 
         return {
             'min_max_scrolled': self.__min_max_scrolled,
             'y_pos': self.__y_pos,
-            'clock': self.__clock,
-            'momentum': self.__momentum,
-            'stop_threshold': self.__stop_threshold,
-            'mouse_scroller_speed': self.__mouse_scroller_speed,
-            'keyboard_speed': self.__keyboard_speed
+            'clock': self._Scroller__clock,
+            'momentum': self._Scroller__momentum,
+            'stop_threshold': self._Scroller__stop_threshold,
+            'mouse_scroller_speed': self._Scroller__mouse_scroller_speed,
+            'keyboard_speed': self._Scroller__keyboard_speed
         }
     
     def update(
@@ -800,13 +620,20 @@ class ScrollerX(Scroller):
 
         ) -> ElementEvent:
 
-        scroller_event = super().update(anchor, anchor_drag, anchor_mouse_scroller, anchor_keyboard)
+        """
+        Update the scroller.
+
+        Returns:
+            `ElementEvent` or via `ScrollerX.scroller_event`
+        """
+
+        super().update(anchor, anchor_drag, anchor_mouse_scroller, anchor_keyboard)
 
         self.scroller_event.offset_x = self.offset_x
         self.scroller_event.y_pos = self.__y_pos
         self.scroller_event._send_event()
 
-        return scroller_event
+        return self.scroller_event
 
 
 class ScrollerY(Scroller):
@@ -831,15 +658,15 @@ class ScrollerY(Scroller):
 
         """
         Parameters:
-            * `min_max_scrolled`: minimum and maximum scroll values (y direction)
-            * `x_pos`: fixed x position
-            * `clock`: pygame clock or set the default to None to initial new Clock
-            * `momentum`: momentum factor for smooth scrolling
-            * `stop_threshold`: threshold to stop scrolling
-            * `mouse_scroller_speed`: speed for mouse scrolling
-            * `keyboard_speed`: speed for keyboard scrolling
-            * `reversed_mouse_scroller`: reversed the mouse scroller offset
-            * `reversed_keyboard`: reversed the keyboard offset
+            :param `min_max_scrolled`: minimum and maximum scroll values (y direction).
+            :param `x_pos`: fixed x position.
+            :param `clock`: pygame clock or set the default to None to initial new Clock.
+            :param `momentum`: momentum factor for smooth scrolling.
+            :param `stop_threshold`: threshold to stop scrolling.
+            :param `mouse_scroller_speed`: speed for mouse scrolling.
+            :param `keyboard_speed`: speed for keyboard scrolling.
+            :param `reversed_mouse_scroller`: reversed the mouse scroller offset.
+            :param `reversed_keyboard`: reversed the keyboard offset.
         """
 
         self.__min_max_scrolled = min_max_scrolled
@@ -863,6 +690,17 @@ class ScrollerY(Scroller):
         self.scroller_event = ElementEvent('ScrollerY', id)
         self._send_event = False
 
+    def __copy__(self) -> 'ScrollerY':
+
+        """
+        Copy the ScrollerY class. (No kwargs).
+
+        Returns:
+            `ScrollerY`
+        """
+
+        return self.copy()
+
     @property
     def x_pos(self) -> _RealNumber:
         return self.__x_pos
@@ -876,31 +714,37 @@ class ScrollerY(Scroller):
         self.max_scrolled = (value, self.min_max_scrolled[1])
         self.min_scrolled = (value, self.min_max_scrolled[0])
         self.__x_pos = value
-    
+
     @min_max_scrolled.setter
     def min_max_scrolled(self, value: tuple[_RealNumber, _RealNumber]) -> None:
         self.max_scrolled = (self.__x_pos, value[1])
         self.min_scrolled = (self.__x_pos, value[0])
         self.__min_max_scrolled = value
 
-    def copy(self, **kwargs):
+    def copy(self, **kwargs) -> 'ScrollerY':
 
         """
         Copy the ScrollerY class.
 
-        return -> `ScrollerY(...)`
+        Parameters:
+            kwargs: in the form of a ScrollerY init parameters.
+
+        Returns:
+            `ScrollerY`
         """
 
-        clonescrollerx = ScrollerY(**(self.get_param() | kwargs))
-
-        return clonescrollerx
+        return ScrollerY(**(self.get_param() | kwargs))
 
     def edit_param(self, **kwargs) -> None:
 
         """
         Edit parameters via the key argument of this function.
 
-        return -> `None`
+        Parameters:
+            kwargs: in the form of an init parameters for the scroller to be edited.
+
+        Returns:
+            `None`
         """
 
         param = self.get_param()
@@ -914,17 +758,18 @@ class ScrollerY(Scroller):
         """
         Get class parameters in the form dictionary type.
 
-        return -> `dict[str, object]`
+        Returns:
+            `dict[str, object]`
         """
 
         return {
             'min_max_scrolled': self.__min_max_scrolled,
             'x_pos': self.__x_pos,
-            'clock': self.__clock,
-            'momentum': self.__momentum,
-            'stop_threshold': self.__stop_threshold,
-            'mouse_scroller_speed': self.__mouse_scroller_speed,
-            'keyboard_speed': self.__keyboard_speed
+            'clock': self._Scroller__clock,
+            'momentum': self._Scroller__momentum,
+            'stop_threshold': self._Scroller__stop_threshold,
+            'mouse_scroller_speed': self._Scroller__mouse_scroller_speed,
+            'keyboard_speed': self._Scroller__keyboard_speed
         }
 
     def update(
@@ -937,13 +782,20 @@ class ScrollerY(Scroller):
 
         ) -> ElementEvent:
 
-        scroller_event = super().update(anchor, anchor_drag, anchor_mouse_scroller, anchor_keyboard)
+        """
+        Update the scroller.
+
+        Returns:
+            `ElementEvent` or via `ScrollerY.scroller_event`
+        """
+
+        super().update(anchor, anchor_drag, anchor_mouse_scroller, anchor_keyboard)
 
         self.scroller_event.offset_y = self.offset_y
         self.scroller_event.x_pos = self.__x_pos
         self.scroller_event._send_event()
 
-        return scroller_event
+        return self.scroller_event
 
 
 # Type buttons
@@ -953,7 +805,6 @@ ScrollerYType = ScrollerY
 ScrollersType = ScrollerType | ScrollerXType | ScrollerYType
 
 
-__version__ = '1.0.0.beta'
 __all__ = [
     'SCROLLER'
     'Scroller',
@@ -965,6 +816,6 @@ __all__ = [
 del (
     _ElementID,
     _Direction,
-    ClassInterface,
+    ElementInterface,
     typing
 )

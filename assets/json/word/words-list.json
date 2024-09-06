@@ -1,0 +1,12 @@
+[
+    {
+        "id": "en-us",
+        "name": "English (US)",
+        "path": "en-us.word.json"
+    },
+    {
+        "id": "idn",
+        "name": "Indonesia",
+        "path": "idn.word.json"
+    }
+]

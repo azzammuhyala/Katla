@@ -1,16 +1,3 @@
-"""
-MARKDOWN DOCUMENTATION
-
-# `pygameui.textwrap` / `pygametextwrap` module
-Version: beta 1.0.0
-
-pygame wraped text.
-
-
-*next documentation will be created soon..*
-"""
-
-
 from .__private.private import (
     pygame,
     typing,
@@ -20,6 +7,7 @@ from .__private.const import (
     RealNumber as _RealNumber,
     WrappedList as _WrappedList,
     WrapFunc as _WrapFunc,
+    WrapType as _WrapType,
     PygameColorValue as _PygameColorValue
 )
 
@@ -30,15 +18,17 @@ def wrap_mono(font: pygame.font.Font, word: str, wraplength: _RealNumber) -> _Wr
     Wraps a single word to fit within the specified width.
 
     Parameters:
-        * `font`: font text
-        * `word`: main text or word
-        * `wraplength`: Length to be wrapped
+        :param `font`: font text.
+        :param `word`: main text or word.
+        :param `wraplength`: Length to be wrapped.
 
-    return -> `WrappedList`
+    Returns:
+        `WrappedList`
     """
 
-    _prvt.asserting(isinstance(font, pygame.font.Font), TypeError(f"font: must be pygame.font.Font not {_prvt.get_type(font)}"))
-    _prvt.asserting(isinstance(wraplength, _RealNumber), TypeError(f"wraplength: must be RealNumber not {_prvt.get_type(wraplength)}"))
+    _prvt.asserting(isinstance(font, pygame.font.Font), TypeError(f'font: must be pygame.font.Font not {_prvt.get_type(font)}'))
+    _prvt.asserting(isinstance(wraplength, _RealNumber), TypeError(f'wraplength: must be RealNumber not {_prvt.get_type(wraplength)}'))
+    _prvt.asserting(wraplength > 0, ValueError(f'wraplength: illegal below 0 -> {wraplength}'))
 
     word = str(word)
 
@@ -67,15 +57,17 @@ def wrap_word(font: pygame.font.Font, text: str, wraplength: _RealNumber) -> _Wr
     Wraps a text of text to fit within the specified width.
 
     Parameters:
-        * `font`: font text
-        * `text`: main text or word
-        * `wraplength`: Length to be wrapped
+        :param `font`: font text.
+        :param `text`: main text or word.
+        :param `wraplength`: Length to be wrapped.
 
-    return -> `WrappedList`
+    Returns:
+        `WrappedList`
     """
 
-    _prvt.asserting(isinstance(font, pygame.font.Font), TypeError(f"font: must be pygame.font.Font not {_prvt.get_type(font)}"))
-    _prvt.asserting(isinstance(wraplength, _RealNumber), TypeError(f"wraplength: must be RealNumber not {_prvt.get_type(wraplength)}"))
+    _prvt.asserting(isinstance(font, pygame.font.Font), TypeError(f'font: must be pygame.font.Font not {_prvt.get_type(font)}'))
+    _prvt.asserting(isinstance(wraplength, _RealNumber), TypeError(f'wraplength: must be RealNumber not {_prvt.get_type(wraplength)}'))
+    _prvt.asserting(wraplength > 0, ValueError(f'wraplength: illegal below 0 -> {wraplength}'))
 
     text = str(text)
 
@@ -114,18 +106,17 @@ def wrap_text(font: pygame.font.Font, text: str, wraplength: int, wrap_fn: _Wrap
     Wraps text, supporting the newline character.
 
     Parameters:
-        * `font`: font text
-        * `text`: main text or word
-        * `wraplength`: Length to be wrapped
-        * `wrap_fn`: wrap function type
+        :param `font`: font text.
+        :param `text`: main text or word.
+        :param `wraplength`: Length to be wrapped.
+        :param `wrap_fn`: wrap function type.
 
-    return -> `WrappedList`
+    Returns:
+        `WrappedList`
     """
 
-    _prvt.asserting(isinstance(font, pygame.font.Font), TypeError(f"font: must be pygame.font.Font not {_prvt.get_type(font)}"))
-    _prvt.asserting(isinstance(wraplength, _RealNumber), TypeError(f"wraplength: must be RealNumber not {_prvt.get_type(wraplength)}"))
-
     text = str(text)
+    wrap_fn = str(wrap_fn).lower()
     lines = text.split('\n')
     wrapped_lines = []
 
@@ -140,7 +131,7 @@ def wrap_text(font: pygame.font.Font, text: str, wraplength: int, wrap_fn: _Wrap
                 wrapped_lines.extend(wrap_mono(font, line, wraplength))
 
             case _:
-                raise TypeError(f'wrap_fn: unknown wrap function -> {wrap_fn}')
+                raise TypeError(f'wrap_fn: unknown wrap function -> {repr(wrap_fn)}')
 
     return wrapped_lines
 
@@ -154,7 +145,8 @@ def render_wrap(
         color: _PygameColorValue,
         background: typing.Optional[_PygameColorValue] = None,
         wrap_fn: _WrapFunc = 'word',
-        gap: int = 0,
+        wrap_type: _WrapType = 'left',
+        lngap: int = 0,
 
     ) -> pygame.Surface:
 
@@ -162,36 +154,80 @@ def render_wrap(
     Render wraps text returns the wrapped text surface and supporting the newline character.
 
     Parameters:
-        * `font`: font text
-        * `text`: main text or word
-        * `wraplength`: Length to be wrapped
-        * **kwargs render font method
-        * `wrap_fn`: wrap function type
-        * `gap`: text line distance
+        :param `font`: font text.
+        :param `text`: main text or word.
+        :param `wraplength`: Length to be wrapped.
+        :param **kwargs render font method.
+        :param `wrap_fn`: wrap function type.
+        :param `wrap_type`: text wrapping position. In the form of left, center, right, and fill (justify).
+        :param `lngap`: text line distance.
 
-    return -> `pygame.Surface`
+    Returns:
+        `pygame.Surface`
     """
 
+    _prvt.asserting(isinstance(lngap, _RealNumber), TypeError(f'lngap: must be RealNumber not {_prvt.get_type(lngap)}'))
+
+    wrap_type = str(wrap_type).lower()
     wrapped_lines = wrap_text(font, text, wraplength, wrap_fn)
-    max_width = max(font.size(line)[0] for line in wrapped_lines)
-    total_height = sum(font.size(line)[1] for line in wrapped_lines) + gap * (len(wrapped_lines) - 1)
+
+    if wrap_type == 'fill':
+        if str(text):
+            max_width = wraplength
+        else:
+            max_width = 0
+    else:
+        max_width = max(font.size(line)[0] for line in wrapped_lines)
+    total_height = sum(font.size(line)[1] for line in wrapped_lines) + lngap * (len(wrapped_lines) - 1)
     y_offset = 0
 
-    if background == None:
+    if background is None:
         surface = pygame.Surface((max_width, total_height), pygame.SRCALPHA)
     else:
         surface = pygame.Surface((max_width, total_height))
         surface.fill(background)
 
     for line in wrapped_lines:
-        text_surface = font.render(line, antialias, color)
-        surface.blit(text_surface, (0, y_offset))
-        y_offset += font.size(line)[1] + gap
+
+        if wrap_type == 'fill':
+            x_offset = 0
+            words = line.split()
+            total_words_width = sum(font.size(word)[0] for word in words)
+            extra_space = wraplength - total_words_width
+
+            if len(words) > 1:
+                space_between_words = extra_space / (len(words) - 1)
+            else:
+                space_between_words = extra_space
+
+            for word in words:
+                word_surface = font.render(word, antialias, color)
+                surface.blit(word_surface, (x_offset, y_offset))
+                x_offset += word_surface.get_width() + space_between_words
+
+        else:
+            text_surface = font.render(line, antialias, color)
+            text_width = text_surface.get_width()
+
+            match wrap_type:
+
+                case 'left':
+                    surface.blit(text_surface, (0, y_offset))
+
+                case 'center':
+                    surface.blit(text_surface, ((max_width - text_width) / 2, y_offset))
+
+                case 'right':
+                    surface.blit(text_surface, ((max_width - text_width), y_offset))
+
+                case _:
+                    raise TypeError(f'wrap_type: unknown wrap type -> {repr(wrap_type)}')
+
+        y_offset += font.size(line)[1] + lngap
 
     return surface
 
 
-__version__ = '1.0.0.beta'
 __all__ = [
     'wrap_mono',
     'wrap_word',
@@ -202,6 +238,7 @@ __all__ = [
 
 del (
     _WrapFunc,
+    _WrapType,
     _WrappedList,
     _PygameColorValue,
     typing

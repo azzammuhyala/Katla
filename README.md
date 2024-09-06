@@ -71,23 +71,21 @@ _Kekurangan petunjuk ini_:
 
 Fitur / Peningkatan
 ---
-1. Perbaikan kata
-2. Perbaikan kode
-3. Perbaikan bahasa
-4. Perbaikan performa
-5. Perbaikan front-end
-6. Perbaikan data katla
-7. Perbaikan pengaturan
-8. Perbaikan dokumentasi
-9. Perbaikan popup statistik
-10. Perubahan kode
-11. Perubahan total modul
-12. Perubahan simpan data
-13. Perubahan popup statistik
-14. Penambahan game data baru
-15. Penambahan pengaturan baru
-16. Minimal FPS adalah 15
-17. Maksimal kesempatan berubah saat tidak menggunakan kata valid
+- Perbaikan kata
+- Perbaikan kode
+- Perbaikan popup
+- Perbaikan bahasa
+- Perbaikan notifikasi
+- Perbaikan front-end
+- Perbaikan pengaturan
+- Perbaikan dokumentasi
+- Perbaikan struktur folder dan file
+- Perubahan scroller
+- Perubahan notifikasi
+- Perubahan total modul
+- Perubahan font papan ketik dan keyboard
+- Penambahan bahasa baru
+
 
 Daftar versi
 ---
@@ -100,13 +98,14 @@ Daftar versi
 * `1.1.4`: Selasa, 18/06/2024 - 18:06:24
 * `1.1.5 (BETA)`: Minggu, 23/06/2024 - 21:40:24
 * `1.2.0`: Minggu, 14/07/2024 12:44:59
-* `1.2.1 (TEST)`: Sabtu, 17/08/2024 00:00:00 (baru)
+* `1.2.1 (TEST)`: Sabtu, 17/08/2024 00:00:00
+* `1.2.2`: Jumat, 06/09/2024 20:30:22 (baru)
 
 Daftar aplikasi permainan saya
 ---
 _Google Drive: https://drive.google.com/drive/folders/1WSkXju5i4SUJocQLp1yyA0ELSaff6wpo?usp=sharing_
 
-_Github: Katla: https://github.com/azzammuhyala/Katla.git_
+_Github: **Katla**: https://github.com/azzammuhyala/Katla.git_
 
 * `Snake`
 * `Minesweeper`
@@ -129,7 +128,7 @@ Kamus
 
 Tanggal dirilis
 ---
-**Sabtu, 17/08/2024 00:00:00 _(Kemerdekaan Indonesia yang ke 79)_**
+**Jumat, 06/09/2024 20:30:22**
 
 "_Terima kasih sudah membaca / memainkan permainan yang saya buat :)_"
 

@@ -4,6 +4,8 @@ from math import (isinf as _isinf, isnan as _isnan)
 
 RealNumber = int | float
 
+MAX_NUMBER_IEEE_754 = 1.7976 * 10 ** 308
+
 class Exponents:
 
     ExponentName = _Literal[
@@ -19,7 +21,9 @@ class Exponents:
         "sextillion",
         "septillion",
         "octillion",
-        "nonillion"
+        "nonillion",
+        "nan",
+        "inf"
     ]
 
     en_us: dict[ExponentName, str] = {
@@ -35,7 +39,9 @@ class Exponents:
         "sextillion": "Sx",
         "septillion": "Sp",
         "octillion": "Oc",
-        "nonillion": "Nn"
+        "nonillion": "Nn",
+        "nan": "NaN",
+        "inf": "INF"
     }
 
     idn: dict[ExponentName, str] = {
@@ -51,7 +57,9 @@ class Exponents:
         "sextillion": "St",
         "septillion": "Sp",
         "octillion": "Ok",
-        "nonillion": "Nn"
+        "nonillion": "Nn",
+        "nan": "NaN",
+        "inf": "INF"
     }
 
 class NumberFormat:
@@ -164,8 +172,13 @@ class NumberFormat:
         abs_number = abs(number)
         self.decimal_places = self._const_decimal_places
 
-        if _isinf(number) or _isnan(number):
-            return str(number)
+        if number >= MAX_NUMBER_IEEE_754:
+            number = float('inf')
+
+        if _isinf(number):
+            return self.config_exponents['inf']
+        elif _isnan(number):
+            return self.config_exponents['nan']
         elif abs_number < self.exponents_mapping['thousand']:
             if not self.anchor_decimal_places:
                 self.decimal_places = 0

@@ -14,9 +14,9 @@ from ..module.jsonfl import Json, json, _fernet, JsonObj
 from .katla_crypt import KatlaEncryptor
 from .constants import (
     MIN_SCREEN_X, MIN_SCREEN_Y, MIN_SOUND, MIN_MUSIC, MIN_CHANGE_GUESS, MIN_WORD_LENGTH, MIN_FPS, MIN_GEOMATRY,
-    MAX_SCREEN_X, MAX_SCREEN_Y, MAX_SOUND, MAX_MUSIC, MAX_CHANGE_GUESS, MAX_WORD_LENGTH, MAX_FPS, MAX_GEOMATRY, MAX_INT,
+    MAX_SCREEN_X, MAX_SCREEN_Y, MAX_SOUND, MAX_MUSIC, MAX_CHANGE_GUESS, MAX_WORD_LENGTH, MAX_FPS, MAX_GEOMATRY,
     STEP_FPS,
-    Keyboard, File, Logs, JsonData, isinf, mkdir_data
+    Keyboard, File, Logs, JsonData, mkdir_data
 )
 
 _file = File()
@@ -47,7 +47,7 @@ class Languages:
         for item_spec in self.datajson:
             if item_spec['id'] == lang_id:
                 return item_spec
-            
+
 class Themes:
 
     def __init__(self) -> None:
@@ -152,12 +152,12 @@ class WordsValidator:
 class SettingsValidator:
 
     def __init__(self, logs: Logs | None = None) -> None:
-        self.__key = b'OMv5ELkug3vciuGQwnk-GuQEabAx47DVeWWeIBQPqus='
+        self.key = b'OMv5ELkug3vciuGQwnk-GuQEabAx47DVeWWeIBQPqus='
         self.file_corrupt = False
         self.words_validator = WordsValidator('idn')
         self.languages_validator = Languages()
         self.themes_validator = Themes()
-        self.katla_crypt = KatlaEncryptor(self.__key)
+        self.katla_crypt = KatlaEncryptor(self.key)
         if logs is None:
             self.logs = _logs
         else:
@@ -167,7 +167,7 @@ class SettingsValidator:
 
     def encrypt_data(self, data) -> None:
         self.md()
-        fernet = _fernet.Fernet(self.__key)
+        fernet = _fernet.Fernet(self.key)
         json_string = json.dumps(data)
         encrypted_data = fernet.encrypt(json_string.encode())
         try:
@@ -181,7 +181,7 @@ class SettingsValidator:
         try:
             with open(_file.SETTINGS, 'rb') as f:
                 decrypted_data = self.katla_crypt.decrypt(f.read())
-            fernet = _fernet.Fernet(self.__key)
+            fernet = _fernet.Fernet(self.key)
             decrypted_json = fernet.decrypt(decrypted_data.encode())
             return json.loads(decrypted_json.decode())
         except Exception as e:
@@ -296,9 +296,9 @@ class SettingsValidator:
 class GameDataValidator:
 
     def __init__(self, logs: Logs | None = None) -> None:
-        self.__key = b'6B4qF6oZ64V4_Z7sdCNKErkF_eT1A_qTP8HQMAbu2Uw='
+        self.key = b'6B4qF6oZ64V4_Z7sdCNKErkF_eT1A_qTP8HQMAbu2Uw='
         self.file_corrupt = False
-        self.katla_crypt = KatlaEncryptor(self.__key)
+        self.katla_crypt = KatlaEncryptor(self.key)
         if logs is None:
             self.logs = _logs
         else:
@@ -308,7 +308,7 @@ class GameDataValidator:
 
     def encrypt_data(self, data) -> None:
         self.md()
-        fernet = _fernet.Fernet(self.__key)
+        fernet = _fernet.Fernet(self.key)
         json_string = json.dumps(data)
         encrypted_data = fernet.encrypt(json_string.encode())
         try:
@@ -322,7 +322,7 @@ class GameDataValidator:
         try:
             with open(_file.GAME, 'rb') as f:
                 decrypted_data = self.katla_crypt.decrypt(f.read())
-            fernet = _fernet.Fernet(self.__key)
+            fernet = _fernet.Fernet(self.key)
             decrypted_json = fernet.decrypt(decrypted_data.encode())
             return json.loads(decrypted_json.decode())
         except Exception as e:
@@ -350,12 +350,8 @@ class GameDataValidator:
 
                 if key == 'coins':
                     if not isinstance(value, int):
-                        if not isinf(value):
-                            self.set_default('coins: Not an int or inf value')
-                            break
-                    else:
-                        if value > MAX_INT:
-                            self.file_data['coins'] = float('inf')
+                        self.set_default('coins: Not an int value')
+                        break
 
                 elif key in ['prize-claim-time', 'played-time']:
                     if not isinstance(value, str):
