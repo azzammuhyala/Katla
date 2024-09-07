@@ -134,7 +134,7 @@ class Katla:
         self.input_history            : list[list[str]]               = [[]]
         self.input_point              : list[int, int]                = [0, 0]
         self.isshow_popup_warn        : list[bool, bool, bool]        = [False, False, False]
-        self.selected_word            : str                           = 'LARON'# choice(self.words_list)
+        self.selected_word            : str                           = choice(self.words_list)
         self.last_word_input          : str                           = ''
 
         self.corrector = Correction(self.words_list, 0.6)
